@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:provider/provider.dart';
@@ -8,6 +9,7 @@ import 'package:provider/provider.dart';
 import '../models/dictionary.dart';
 import '../services/audio_service.dart';
 import '../state/typing_controller.dart';
+import 'statistics_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -206,6 +208,22 @@ class SettingsScreen extends StatelessWidget {
                         },
                 ),
               ],
+              if (_isMobilePlatform()) ...<Widget>[
+                const SizedBox(height: 24),
+                const _SectionHeader(label: '统计'),
+                ListTile(
+                  leading: const Icon(Icons.insights),
+                  title: const Text('查看练习统计'),
+                  subtitle: const Text('查看历史练习次数、用时、准确率等详细数据。'),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => const StatisticsScreen(),
+                      ),
+                    );
+                  },
+                ),
+              ],
             ],
           );
         },
@@ -307,6 +325,13 @@ class SettingsScreen extends StatelessWidget {
       SnackBar(content: Text(message)),
     );
   }
+}
+
+bool _isMobilePlatform() {
+  if (kIsWeb) {
+    return false;
+  }
+  return defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.iOS;
 }
 
 class _SectionHeader extends StatelessWidget {

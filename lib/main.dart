@@ -1,10 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'screens/typing_screen.dart';
 import 'services/audio_service.dart';
 import 'services/dictionary_repository.dart';
+import 'services/statistics_repository.dart';
 import 'state/typing_controller.dart';
+import 'state/statistics_controller.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,10 +27,21 @@ class LoopraApp extends StatelessWidget {
           create: (_) => AudioService(),
           dispose: (_, AudioService service) => service.dispose(),
         ),
+        Provider<StatisticsRepository>(create: (_) => const StatisticsRepository()),
+        ChangeNotifierProvider<StatisticsController>(
+          create: (BuildContext context) {
+            final StatisticsController controller = StatisticsController(
+              context.read<StatisticsRepository>(),
+            );
+            unawaited(controller.initialise());
+            return controller;
+          },
+        ),
         ChangeNotifierProvider<TypingController>(
           create: (BuildContext context) => TypingController(
             context.read<DictionaryRepository>(),
             context.read<AudioService>(),
+            context.read<StatisticsController>(),
           ),
         ),
       ],

@@ -10,6 +10,7 @@ import '../models/word_entry.dart';
 import '../services/audio_service.dart';
 import '../state/typing_controller.dart';
 import 'settings_screen.dart';
+import 'statistics_screen.dart';
 
 class TypingScreen extends StatefulWidget {
   const TypingScreen({super.key});
@@ -65,6 +66,16 @@ class _TypingScreenState extends State<TypingScreen> {
             appBar: AppBar(
               title: const _AppBarBranding(),
               actions: <Widget>[
+                IconButton(
+                  icon: const Icon(Icons.insights),
+                  tooltip: '查看统计',
+                  onPressed: () {
+                    showDialog<void>(
+                      context: context,
+                      builder: (_) => const StatisticsDialog(),
+                    );
+                  },
+                ),
                 IconButton(
                   icon: const Icon(Icons.settings),
                   onPressed: () {

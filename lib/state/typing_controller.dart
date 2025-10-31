@@ -4,17 +4,20 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import '../models/dictionary.dart';
+import '../models/practice_statistics.dart';
 import '../models/word_entry.dart';
 import '../services/audio_service.dart';
 import '../services/dictionary_repository.dart';
+import 'statistics_controller.dart';
 
 enum LetterState { idle, correct, wrong }
 
 class TypingController extends ChangeNotifier {
-  TypingController(this._repository, this._audioService);
+  TypingController(this._repository, this._audioService, this._statistics);
 
   final DictionaryRepository _repository;
   final AudioService _audioService;
+  final StatisticsController _statistics;
 
   DictionaryMeta? _selectedDictionary;
   List<DictionaryMeta> _dictionaries = const <DictionaryMeta>[];
@@ -46,6 +49,8 @@ class TypingController extends ChangeNotifier {
   int _correctKeystrokes = 0;
   int _wrongKeystrokes = 0;
   int _completedWords = 0;
+  DateTime? _sessionStartedAt;
+  bool _sessionRecorded = false;
 
   bool _disposed = false;
 
@@ -91,6 +96,7 @@ class TypingController extends ChangeNotifier {
   Future<void> initialise() async {
     _isLoading = true;
     notifyListeners();
+    unawaited(_statistics.initialise());
 
     final List<DictionaryMeta> dictionaries = await _repository.loadManifest();
     _dictionaries = dictionaries;
@@ -365,6 +371,7 @@ class TypingController extends ChangeNotifier {
       _cancelTimer();
     } else {
       _isTyping = true;
+      _ensureSessionStarted();
       _ensureTimer();
     }
     notifyListeners();
@@ -418,6 +425,7 @@ class TypingController extends ChangeNotifier {
 
     if (!_isTyping) {
       _isTyping = true;
+      _ensureSessionStarted();
       _ensureTimer();
       notifyListeners();
     }
@@ -569,6 +577,7 @@ class TypingController extends ChangeNotifier {
     _correctKeystrokes = 0;
     _wrongKeystrokes = 0;
     _completedWords = 0;
+    _resetSessionTracking();
 
     _isTyping = false;
     _isFinished = false;
@@ -604,6 +613,78 @@ class TypingController extends ChangeNotifier {
     );
   }
 
+  void _ensureSessionStarted() {
+    if (_sessionStartedAt == null) {
+      _sessionStartedAt = DateTime.now();
+      _sessionRecorded = false;
+    }
+  }
+
+  void _resetSessionTracking() {
+    _sessionStartedAt = null;
+    _sessionRecorded = false;
+  }
+
+  void _recordCompletedSession() {
+    if (_sessionRecorded) {
+      return;
+    }
+    final DictionaryMeta? dictionary = _selectedDictionary;
+    if (dictionary == null) {
+      _sessionRecorded = true;
+      _sessionStartedAt = null;
+      return;
+    }
+    final int total = totalWords;
+    if (total <= 0 || _completedWords <= 0) {
+      _sessionRecorded = true;
+      _sessionStartedAt = null;
+      return;
+    }
+    final int completed = _completedWords > total ? total : _completedWords;
+    final DateTime completedAt = DateTime.now();
+    final DateTime startedAt =
+        _sessionStartedAt ?? completedAt.subtract(Duration(seconds: _elapsedSeconds));
+
+    final PracticeSessionRecord session = PracticeSessionRecord(
+      id: '${dictionary.id}-${completedAt.microsecondsSinceEpoch}',
+      dictionaryId: dictionary.id,
+      dictionaryName: dictionary.name,
+      chapterIndex: _selectedChapter,
+      totalWords: total,
+      completedWords: completed,
+      elapsedSeconds: _elapsedSeconds,
+      correctKeystrokes: _correctKeystrokes,
+      wrongKeystrokes: _wrongKeystrokes,
+      startedAt: startedAt,
+      completedAt: completedAt,
+      platform: _platformLabel,
+    );
+    _sessionRecorded = true;
+    _sessionStartedAt = null;
+    unawaited(_statistics.recordSession(session));
+  }
+
+  String get _platformLabel {
+    if (kIsWeb) {
+      return 'web';
+    }
+    switch (defaultTargetPlatform) {
+      case TargetPlatform.android:
+        return 'android';
+      case TargetPlatform.iOS:
+        return 'ios';
+      case TargetPlatform.macOS:
+        return 'macos';
+      case TargetPlatform.windows:
+        return 'windows';
+      case TargetPlatform.linux:
+        return 'linux';
+      case TargetPlatform.fuchsia:
+        return 'fuchsia';
+    }
+  }
+
   void _announceCurrentWord() {
     if (!_autoPronunciationEnabled || !supportsPronunciation) {
       return;
@@ -624,6 +705,7 @@ class TypingController extends ChangeNotifier {
     _isFinished = true;
     _isTyping = false;
     _cancelTimer();
+    _recordCompletedSession();
   }
 
   void _ensureTimer() {
