@@ -195,15 +195,39 @@ jobs:
 
           COMMITS_FILE=$(mktemp)
           if [ -n "${PREVIOUS_TAG}" ]; then
-            git log "${PREVIOUS_TAG}..${TAG_NAME}" --pretty=format:'- %an: %s' --no-merges > "${COMMITS_FILE}"
+            git log "${PREVIOUS_TAG}..${TAG_NAME}" --pretty=format:'%H%x09%an%x09%s' --no-merges > "${COMMITS_FILE}"
           else
-            git log "${TAG_NAME}" --pretty=format:'- %an: %s' --no-merges > "${COMMITS_FILE}"
+            git log "${TAG_NAME}" --pretty=format:'%H%x09%an%x09%s' --no-merges > "${COMMITS_FILE}"
+          fi
+
+          TOKEN="${GH_TOKEN:-${GITHUB_TOKEN:-}}"
+          declare -a API_HEADERS
+          API_HEADERS=(-H "Accept: application/vnd.github+json")
+          if [ -n "${TOKEN}" ]; then
+            API_HEADERS+=(-H "Authorization: Bearer ${TOKEN}")
+          fi
+          HAS_JQ=0
+          if command -v jq >/dev/null 2>&1; then
+            HAS_JQ=1
           fi
 
           if [ ! -s "${COMMITS_FILE}" ]; then
             echo "- No commits found." >> changelog.md
           else
-            cat "${COMMITS_FILE}" >> changelog.md
+            while IFS=$'\t' read -r COMMIT_SHA AUTHOR_NAME COMMIT_SUBJECT; do
+              AUTHOR_HANDLE="${AUTHOR_NAME}"
+              if [ -n "${COMMIT_SHA}" ] && [ "${HAS_JQ}" -eq 1 ]; then
+                API_RESPONSE=$(curl -sS "${API_HEADERS[@]}" "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/${COMMIT_SHA}" || true)
+                if [ -n "${API_RESPONSE}" ]; then
+                  AUTHOR_LOGIN=$(printf '%s' "${API_RESPONSE}" | jq -r '.author.login // empty' 2>/dev/null || true)
+                  if [ -n "${AUTHOR_LOGIN}" ]; then
+                    AUTHOR_HANDLE="@${AUTHOR_LOGIN}"
+                  fi
+                fi
+              fi
+
+              printf -- "- %s: %s\n" "${AUTHOR_HANDLE}" "${COMMIT_SUBJECT}" >> changelog.md
+            done < "${COMMITS_FILE}"
           fi
 
           rm "${COMMITS_FILE}"
