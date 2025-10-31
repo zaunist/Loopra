@@ -2,18 +2,67 @@
 
 把练习变成本能。
 
-## 自定义词典
+Loopra 是一个由 Flutter 构建的跨平台词汇/短语打字训练应用，目标是在沉浸式的练习循环中让肌肉记忆快速建立。项目同时覆盖桌面、移动端与 Web，让你在任意设备上都能保持节奏。
 
-应用现在支持导入与删除自定义词典。入口位于「设置 → 词库」，在该区域可以使用：
+## 功能亮点
 
-- `导入词库`：从本地选择一个符合规范的 JSON 文件并立即启用。
-- `删除词库`：仅对自定义词典可用，删除后词典文件会从本地存储中移除。
+- 多平台支持：同一套代码即可在 Android、iOS、Windows、macOS、Linux 与 Web 上运行。
+- 词库驱动训练：内置多套章节式词库，可按章节推进，也可自由导入自定义词典。
+- 实时反馈：展示用时、完成度、每分钟单词数（WPM）与准确率，练习表现一目了然。
+- 沉浸式体验：桌面端自动聚焦输入区域；支持暂停/继续、章节重练与跳过卡住的单词。
+- 声音与发音：提供按键音、正确/错误提示音，以及美式/英式发音（词库支持时）。
 
-> **提示**：Web 端会将自定义词典存储在浏览器本地存储中，清除站点数据会同时删除已导入词典。
+## 快速开始
+
+### 环境准备
+
+- Flutter stable（建议 3.22 及以上）与 Dart 3.9+。
+- 已安装对应平台的构建依赖（如 Android SDK、Xcode、桌面端工具链等）。
+
+### 启动开发环境
+
+```bash
+flutter pub get
+flutter run -d chrome     # Web
+flutter run -d macos      # macOS
+flutter run -d windows    # Windows
+flutter run -d linux      # Linux
+flutter run -d ios        # iOS（需配置签名）
+flutter run -d android    # Android
+```
+
+### 构建发行包
+
+```bash
+flutter build web --release
+flutter build apk --release
+flutter build appbundle --release
+flutter build macos --release
+flutter build windows --release
+flutter build linux --release
+flutter build ios --release --no-codesign
+```
+
+GitHub Actions 中的 `.github/workflows/build.yml` 已配置上述目标的自动构建与打包。
+
+## 使用技巧
+
+- **章节管理**：在「设置」或桌面端顶部控件中选择词库与章节，完成后可一键进入下一章。
+- **练习节奏**：首次按键自动开始计时；暂停后任意键继续，保持注意力集中。
+- **过滤开关**：通过 FilterChip/开关切换「显示释义」「忽略大小写」「按键音」「提示音」等偏好。
+- **发音辅助**：支持的词库可切换美音/英音，或直接播放当前单词的发音，辅助听写练习。
+- **卡词应对**：错误尝试超过 4 次会出现「跳过」按钮，帮助快速进入下一个单词。
+- **统计复盘**：底部状态栏实时刷新 WPM、准确率等指标，方便记录每日练习质量。
+
+## 自带与自定义词库
+
+- 内置资源位于 `assets/dicts/`，覆盖常见考试词库与示例数据。
+- 自定义词典入口位于「设置 → 词库」，可导入 JSON 文件并随时删除。
+- Web 端在浏览器本地存储中保存自定义词库，清除站点数据会同步清空。
 
 ### 词典文件格式
 
-词典文件需要是一个 JSON 对象，包含 `meta` 与 `entries` 两个字段，可以参考示例文件 [`custom_en_dictionary.json`](custom_en_dictionary.json)：
+词典文件需要是一个 JSON 对象，包含 `meta` 与 `entries` 两个字段，可参考示例文件 [`custom_en_dictionary.json`](custom_en_dictionary.json)：
 
 ```json
 {
@@ -47,4 +96,8 @@
   - `usphone` / `ukphone`（可选）：美式 / 英式音标。
   - `notation`（可选）：额外备注（如词性）。
 
-导入时应用会校验基本结构，并将内容保存到本地数据目录（`Application Support/Loopra/dictionaries` 等平台对应位置）。要更新词典，可重新导入同一个文件；若名称重复，系统会为词典分配新的 ID 以确保不同版本可以共存。
+导入时应用会校验基本结构，并将内容保存到本地数据目录（例如 `Application Support/Loopra/dictionaries`）。要更新词典，可重新导入同一个文件；若名称重复，系统会为词典分配新的 ID 以确保不同版本共存。
+
+## 贡献指南
+
+欢迎提交 Issue 或 Pull Request，与社区一起打磨更高效的练习体验。

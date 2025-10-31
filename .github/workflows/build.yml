@@ -223,7 +223,64 @@ jobs:
             exit 1
           fi
 
-          RELEASE_TITLE="Release ${TAG_NAME}"
+          mapfile -t QUOTES <<'EOF'
+          Stay hungry, stay foolish.
+          行百里者半九十。Keep going.
+          希望の光は諦める心に宿らない。
+          Adelante, que lo mejor está por venir.
+          只要路是对的，就不怕路远。
+          Great things are done by a series of small things brought together.
+          心臓を捧げよ！
+          自由はこの壁の向こうにある。
+          人は戦うことをやめたとき初めて敗北する。
+          その日人類は思い出した、巨人に支配されていた恐怖を。
+          進め！進め！進め！
+          お前は自由だ。
+          To strive, to seek, to find, and not to yield.
+          The only limit to our realization of tomorrow is our doubts of today.
+          天行健，君子以自强不息。
+          地势坤，君子以厚德载物。
+          千里之行，始于足下。
+          不积跬步，无以至千里。
+          路漫漫其修远兮，吾将上下而求索。
+          长风破浪会有时，直挂云帆济沧海。
+          海内存知己，天涯若比邻。
+          有志者事竟成。
+          苟日新，日日新，又日新。
+          青，取之于蓝而青于蓝。
+          业精于勤，荒于嬉。
+          读万卷书，行万里路。
+          山重水复疑无路，柳暗花明又一村。
+          会当凌绝顶，一览众山小。
+          If I cannot do great things, I can do small things in a great way.
+          Success is the sum of small efforts repeated day in and day out.
+          It always seems impossible until it is done.
+          The future belongs to those who believe in the beauty of their dreams.
+          Courage is grace under pressure.
+          All we have to decide is what to do with the time that is given us.
+          We are all in the gutter, but some of us are looking at the stars.
+          It is not in the stars to hold our destiny but in ourselves.
+          Not all those who wander are lost.
+          Il faut imaginer Sisyphe heureux.
+          L'espoir n'est pas un rêve mais une manière de traduire les rêves en réalité.
+          La vita è bella, non smettere mai di sognare.
+          Las estrellas están ahí para recordarnos que siempre hay algo más grande.
+          Freiheit beginnt im Herzen.
+          Der Weg entsteht, indem du ihn gehst.
+          Свобода стоит каждого шага.
+          Надежда умирает последней.
+          Per aspera ad astra.
+          Audentes fortuna iuvat.
+          Non desistas, non exieris.
+          星は自分の道を迷わない。
+          自分の足で立て、それが自由への第一歩だ。
+          EOF
+
+          SEED="${TAG_NAME}${GITHUB_SHA:-}${#ASSETS[@]}"
+          HASH=$(printf '%s' "${SEED}" | cksum | cut -d' ' -f1)
+          INDEX=$((HASH % ${#QUOTES[@]}))
+          INSPIRATION=${QUOTES[$INDEX]}
+          RELEASE_TITLE="Release ${TAG_NAME} — ${INSPIRATION}"
 
           if gh release view "${TAG_NAME}" >/dev/null 2>&1; then
             gh release edit "${TAG_NAME}" --title "${RELEASE_TITLE}" --notes-file changelog.md
