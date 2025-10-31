@@ -11,7 +11,10 @@ enum PronunciationVariant { us, uk }
 
 class AudioService {
   AudioService() {
-    final AudioCache cache = AudioCache.instance = AudioCache(prefix: kIsWeb ? '' : 'assets/');
+    // Keep the Flutter default prefix so both mobile and web resolve to assets/assets/… on web builds.
+    final AudioCache cache = AudioCache.instance = AudioCache(
+      prefix: 'assets/',
+    );
 
     if (!kIsWeb) {
       AudioPlayer.global.setAudioContext(
@@ -23,7 +26,9 @@ class AudioService {
           ),
           iOS: AudioContextIOS(
             category: AVAudioSessionCategory.playback,
-            options: <AVAudioSessionOptions>[AVAudioSessionOptions.mixWithOthers],
+            options: <AVAudioSessionOptions>[
+              AVAudioSessionOptions.mixWithOthers,
+            ],
           ),
         ),
       );
@@ -45,7 +50,7 @@ class AudioService {
     unawaited(_preloadAssets());
   }
 
-  static const String _keySoundAsset = 'sounds/key-sound/Default.wav';
+  static const String _keySoundAsset = 'sounds/key.wav';
   static const String _correctSoundAsset = 'sounds/correct.wav';
   static const String _wrongSoundAsset = 'sounds/beep.wav';
 
