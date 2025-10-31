@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../models/dictionary.dart';
@@ -75,6 +77,27 @@ class SettingsScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                   ),
                 ),
+              if (controller.canManageDictionaries) ...<Widget>[
+                const SizedBox(height: 12),
+                Wrap(
+                  spacing: 12,
+                  runSpacing: 12,
+                  children: <Widget>[
+                    FilledButton.icon(
+                      onPressed: controller.isLoading ? null : () async => _importDictionary(context),
+                      icon: const Icon(Icons.upload_file),
+                      label: const Text('导入词库'),
+                    ),
+                    if (selected?.isCustom == true)
+                      OutlinedButton.icon(
+                        onPressed:
+                            controller.isLoading ? null : () async => _confirmDeleteDictionary(context, selected!),
+                        icon: const Icon(Icons.delete),
+                        label: const Text('删除词库'),
+                      ),
+                  ],
+                ),
+              ],
               const SizedBox(height: 24),
               const _SectionHeader(label: '章节'),
               InputDecorator(
@@ -178,6 +201,101 @@ class SettingsScreen extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+
+  Future<void> _importDictionary(BuildContext context) async {
+    final TypingController controller = context.read<TypingController>();
+    try {
+      final FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: const <String>['json'],
+        withData: true,
+      );
+      if (result == null) {
+        return;
+      }
+      final PlatformFile file = result.files.single;
+      DictionaryMeta imported;
+      if (file.bytes != null) {
+        final String content = utf8.decode(file.bytes!);
+        imported = await controller.importDictionaryFromContent(content);
+      } else if (file.path != null) {
+        imported = await controller.importDictionaryFromPath(file.path!);
+      } else {
+        throw const FormatException('无法读取词典文件内容。');
+      }
+
+      if (!context.mounted) {
+        return;
+      }
+      _showSnack(context, '已导入词库：${imported.name}');
+    } on FormatException catch (error) {
+      if (!context.mounted) {
+        return;
+      }
+      _showSnack(context, error.message);
+    } on UnsupportedError catch (error) {
+      if (!context.mounted) {
+        return;
+      }
+      final String message = error.message?.toString() ?? '当前平台暂不支持导入词库。';
+      _showSnack(context, message);
+    } catch (error) {
+      if (!context.mounted) {
+        return;
+      }
+      _showSnack(context, '导入失败：$error');
+    }
+  }
+
+  Future<void> _confirmDeleteDictionary(BuildContext context, DictionaryMeta meta) async {
+    final TypingController controller = context.read<TypingController>();
+    final bool? confirmed = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext dialogContext) => AlertDialog(
+        title: const Text('删除词库'),
+        content: Text('确定要删除词库「${meta.name}」吗？此操作不可撤销。'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: const Text('取消'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: const Text('删除'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) {
+      return;
+    }
+
+    try {
+      await controller.deleteDictionary(meta.id);
+      if (!context.mounted) {
+        return;
+      }
+      _showSnack(context, '已删除词库：${meta.name}');
+    } on UnsupportedError catch (error) {
+      if (!context.mounted) {
+        return;
+      }
+      final String message = error.message?.toString() ?? '当前平台暂不支持删除词库。';
+      _showSnack(context, message);
+    } catch (error) {
+      if (!context.mounted) {
+        return;
+      }
+      _showSnack(context, '删除失败：$error');
+    }
+  }
+
+  void _showSnack(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
     );
   }
 }

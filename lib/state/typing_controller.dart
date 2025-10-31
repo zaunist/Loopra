@@ -99,6 +99,10 @@ class TypingController extends ChangeNotifier {
 
   DictionaryMeta? get selectedDictionary => _selectedDictionary;
 
+  bool get canManageDictionaries => _repository.supportsDictionaryManagement;
+
+  bool get canDeleteSelectedDictionary => _selectedDictionary?.isCustom == true;
+
   int get selectedChapter => _selectedChapter;
 
   int get chapterCount => _chapterCount;
@@ -179,22 +183,64 @@ class TypingController extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    final List<DictionaryMeta> dictionaries = await _repository.loadManifest();
-    _dictionaries = dictionaries;
-
     try {
-      _selectedDictionary = _dictionaries.firstWhere((DictionaryMeta element) => element.id == id);
-    } on StateError {
-      _selectedDictionary = _dictionaries.isNotEmpty ? _dictionaries.first : null;
+      await _refreshDictionaries(
+        preferId: id,
+        resetChapter: true,
+        refresh: false,
+      );
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
-    if (!supportsPronunciation && _autoPronunciationEnabled) {
-      _autoPronunciationEnabled = false;
-    }
-    _selectedChapter = 0;
-    await _reloadDictionaryChapter();
+  }
 
-    _isLoading = false;
+  Future<DictionaryMeta> importDictionaryFromContent(String content) async {
+    _isLoading = true;
     notifyListeners();
+    try {
+      final DictionaryMeta meta = await _repository.importDictionary(content);
+      await _refreshDictionaries(
+        preferId: meta.id,
+        resetChapter: true,
+        ignorePreviousSelection: true,
+        refresh: true,
+      );
+      return meta;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<DictionaryMeta> importDictionaryFromPath(String path) async {
+    final String content = await _repository.readExternalFile(path);
+    return importDictionaryFromContent(content);
+  }
+
+  Future<void> deleteDictionary(String id) async {
+    final bool deletingSelected = _selectedDictionary?.id == id;
+    _isLoading = true;
+    notifyListeners();
+    try {
+      await _repository.deleteDictionary(id);
+      await _refreshDictionaries(
+        resetChapter: true,
+        ignorePreviousSelection: deletingSelected,
+        refresh: true,
+      );
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> deleteSelectedDictionary() async {
+    final DictionaryMeta? meta = _selectedDictionary;
+    if (meta == null) {
+      return;
+    }
+    await deleteDictionary(meta.id);
   }
 
   Future<void> selectChapter(int chapter) async {
@@ -419,6 +465,53 @@ class TypingController extends ChangeNotifier {
 
     _advanceToNextWord();
     notifyListeners();
+  }
+
+  Future<void> _refreshDictionaries({
+    String? preferId,
+    bool resetChapter = false,
+    bool ignorePreviousSelection = false,
+    bool refresh = true,
+  }) async {
+    final String? previousId = ignorePreviousSelection ? null : _selectedDictionary?.id;
+    final List<DictionaryMeta> fetched = await _repository.loadManifest(refresh: refresh);
+    _dictionaries = fetched;
+
+    DictionaryMeta? next;
+    if (preferId != null) {
+      next = _findDictionaryById(fetched, preferId);
+    }
+    if (next == null && previousId != null) {
+      next = _findDictionaryById(fetched, previousId);
+    }
+    next ??= fetched.isNotEmpty ? fetched.first : null;
+
+    final bool dictionaryChanged = next?.id != previousId;
+    _selectedDictionary = next;
+
+    if (_selectedDictionary == null) {
+      _selectedChapter = 0;
+      _chapterCount = 0;
+      _chapterWords = const <WordEntry>[];
+      _currentIndex = 0;
+      _resetCurrentWordState();
+      return;
+    }
+
+    if (resetChapter || dictionaryChanged) {
+      _selectedChapter = 0;
+    }
+
+    await _reloadDictionaryChapter();
+  }
+
+  DictionaryMeta? _findDictionaryById(List<DictionaryMeta> source, String id) {
+    for (final DictionaryMeta meta in source) {
+      if (meta.id == id) {
+        return meta;
+      }
+    }
+    return null;
   }
 
   Future<void> _reloadDictionaryChapter() async {

@@ -1,0 +1,221 @@
+{
+  "meta": {
+    "id": "custom_en_test_20251031115234",
+    "name": "我的英语词库（测试版）",
+    "description": "用于导入验证的示例词库：涵盖常见单词、多义词、编程相关术语；包含多种可选字段组合以测试解析健壮性。",
+    "language": "en",
+    "category": "自定义/测试"
+  },
+  "entries": [
+    {
+      "name": "apple",
+      "trans": [
+        "苹果",
+        "苹果树",
+        "【计算机】Apple 公司"
+      ],
+      "usphone": "ˈæpəl",
+      "ukphone": "ˈæpl",
+      "notation": "n."
+    },
+    {
+      "name": "run",
+      "trans": [
+        "跑；运行（程序）"
+      ],
+      "usphone": "rʌn",
+      "ukphone": "rʌn",
+      "notation": "v.; n."
+    },
+    {
+      "name": "set",
+      "trans": [
+        "设置",
+        "一套；集合"
+      ],
+      "usphone": "sɛt",
+      "ukphone": "sɛt",
+      "notation": "v.; n.; adj."
+    },
+    {
+      "name": "function",
+      "trans": [
+        "功能",
+        "【数/编】函数"
+      ],
+      "usphone": "ˈfʌŋkʃən",
+      "ukphone": "ˈfʌŋkʃ(ə)n",
+      "notation": "n.; v."
+    },
+    {
+      "name": "bug",
+      "trans": "臭虫；（口）小毛病；【计】缺陷/故障",
+      "usphone": "bʌɡ",
+      "ukphone": "bʌɡ",
+      "notation": "n.; v."
+    },
+    {
+      "name": "cloud",
+      "trans": [
+        "云",
+        "云计算"
+      ],
+      "usphone": "klaʊd",
+      "ukphone": "klaʊd",
+      "notation": "n.; v."
+    },
+    {
+      "name": "table",
+      "trans": [
+        "桌子",
+        "表格"
+      ],
+      "usphone": "ˈteɪbəl",
+      "ukphone": "ˈteɪbəl",
+      "notation": "n."
+    },
+    {
+      "name": "bank",
+      "trans": [
+        "银行",
+        "堤岸",
+        "（飞机）倾斜"
+      ],
+      "usphone": "bæŋk",
+      "ukphone": "bæŋk",
+      "notation": "n.; v."
+    },
+    {
+      "name": "light",
+      "trans": [
+        "光；灯",
+        "轻的；浅色的"
+      ],
+      "usphone": "laɪt",
+      "ukphone": "laɪt",
+      "notation": "n.; adj.; v."
+    },
+    {
+      "name": "lead",
+      "trans": [
+        "带领；引导"
+      ],
+      "usphone": "liːd",
+      "ukphone": "liːd",
+      "notation": "v.; n."
+    },
+    {
+      "name": "lead",
+      "trans": [
+        "铅（金属）"
+      ],
+      "usphone": "lɛd",
+      "ukphone": "lɛd",
+      "notation": "n."
+    },
+    {
+      "name": "project",
+      "trans": [
+        "项目；方案"
+      ],
+      "usphone": "ˈprɑːdʒekt",
+      "ukphone": "ˈprɒdʒɛkt",
+      "notation": "n."
+    },
+    {
+      "name": "project",
+      "trans": [
+        "投射；预测；投影"
+      ],
+      "usphone": "prəˈdʒɛkt",
+      "ukphone": "prəˈdʒɛkt",
+      "notation": "v."
+    },
+    {
+      "name": "commit",
+      "trans": [
+        "提交（代码）",
+        "犯（错/罪）",
+        "承诺"
+      ],
+      "usphone": "kəˈmɪt",
+      "ukphone": "kəˈmɪt",
+      "notation": "v."
+    },
+    {
+      "name": "array",
+      "trans": [
+        "【计】数组",
+        "排列；阵列"
+      ],
+      "usphone": "əˈreɪ",
+      "ukphone": "əˈreɪ",
+      "notation": "n.; v."
+    },
+    {
+      "name": "null",
+      "trans": [
+        "【计】空值；无效的"
+      ],
+      "usphone": "nʌl",
+      "ukphone": "nʌl",
+      "notation": "adj.; n."
+    },
+    {
+      "name": "python",
+      "trans": [
+        "蟒蛇",
+        "【计】Python 编程语言"
+      ],
+      "usphone": "ˈpaɪθən",
+      "ukphone": "ˈpaɪθən",
+      "notation": "n."
+    },
+    {
+      "name": "variable",
+      "trans": [
+        "变量；可变的"
+      ],
+      "usphone": "ˈvɛriəbəl",
+      "ukphone": "ˈvɛːrɪəb(ə)l",
+      "notation": "n.; adj."
+    },
+    {
+      "name": "loop",
+      "trans": [
+        "环；循环",
+        "【计】循环结构"
+      ],
+      "usphone": "luːp",
+      "ukphone": "luːp",
+      "notation": "n.; v."
+    },
+    {
+      "name": "class",
+      "trans": [
+        "班级；类别",
+        "【计】类（面向对象）"
+      ],
+      "usphone": "klæs",
+      "ukphone": "klɑːs",
+      "notation": "n."
+    },
+    {
+      "name": "interface",
+      "trans": [
+        "接口；交互界面",
+        "（两系统间的）界面/分界面"
+      ],
+      "usphone": "ˈɪntərˌfeɪs",
+      "ukphone": "ˈɪntəfeɪs",
+      "notation": "n.; v."
+    },
+    {
+      "name": "queue",
+      "trans": "队列；排队",
+      "usphone": "kjuː",
+      "ukphone": "kjuː",
+      "notation": "n.; v."
+    }
+  ]
+}
