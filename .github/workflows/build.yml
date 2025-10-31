@@ -21,42 +21,42 @@ jobs:
             build_cmd: flutter build apk --release
             artifact_name: android-apk
             package_file: android-app.apk
-            package_script: |
+            package_script_bash: |
               set -euo pipefail
               mkdir -p dist
               cp build/app/outputs/flutter-apk/app-release.apk "dist/${PACKAGE_FILE}"
-            shell: bash
+            package_script_pwsh: ""
           - name: Android App Bundle
             os: ubuntu-latest
             build_cmd: flutter build appbundle --release
             artifact_name: android-appbundle
             package_file: android-appbundle.aab
-            package_script: |
+            package_script_bash: |
               set -euo pipefail
               mkdir -p dist
               cp build/app/outputs/bundle/release/app-release.aab "dist/${PACKAGE_FILE}"
-            shell: bash
+            package_script_pwsh: ""
           - name: Web
             os: ubuntu-latest
             build_cmd: flutter build web --release
             artifact_name: web
             package_file: web-build.zip
-            package_script: |
+            package_script_bash: |
               set -euo pipefail
               mkdir -p dist
               cd build/web
               zip -r "../../dist/${PACKAGE_FILE}" .
-            shell: bash
+            package_script_pwsh: ""
           - name: Linux Desktop
             os: ubuntu-latest
             build_cmd: flutter build linux --release
             artifact_name: linux-desktop
             package_file: linux-bundle.tar.gz
-            package_script: |
+            package_script_bash: |
               set -euo pipefail
               mkdir -p dist
               tar -C build/linux/x64/release -czf "dist/${PACKAGE_FILE}" bundle
-            shell: bash
+            package_script_pwsh: ""
             linux_deps: true
             enable_desktop: flutter config --enable-linux-desktop
           - name: Windows Desktop
@@ -64,18 +64,18 @@ jobs:
             build_cmd: flutter build windows --release
             artifact_name: windows-desktop
             package_file: windows-bundle.zip
-            package_script: |
+            package_script_bash: ""
+            package_script_pwsh: |
               $dist = Join-Path (Get-Location) 'dist'
               New-Item -ItemType Directory -Path $dist -Force | Out-Null
               Compress-Archive -Path "build/windows/x64/runner/Release/*" -DestinationPath (Join-Path $dist $env:PACKAGE_FILE) -Force
-            shell: pwsh
             enable_desktop: flutter config --enable-windows-desktop
           - name: macOS Desktop
             os: macos-latest
             build_cmd: flutter build macos --release
             artifact_name: macos-desktop
             package_file: macos-app.zip
-            package_script: |
+            package_script_bash: |
               set -euo pipefail
               mkdir -p dist
               APP_PATH=$(find build/macos/Build/Products/Release -type d -name "*.app" -print | head -n 1)
@@ -84,14 +84,14 @@ jobs:
                 exit 1
               fi
               ditto -c -k --keepParent "${APP_PATH}" "dist/${PACKAGE_FILE}"
-            shell: bash
+            package_script_pwsh: ""
             enable_desktop: flutter config --enable-macos-desktop
           - name: iOS
             os: macos-latest
             build_cmd: flutter build ios --release --no-codesign
             artifact_name: ios
             package_file: ios-app.zip
-            package_script: |
+            package_script_bash: |
               set -euo pipefail
               mkdir -p dist
               APP_PATH=$(find build/ios/iphoneos -type d -name "*.app" -print | head -n 1)
@@ -100,7 +100,7 @@ jobs:
                 exit 1
               fi
               ditto -c -k --keepParent "${APP_PATH}" "dist/${PACKAGE_FILE}"
-            shell: bash
+            package_script_pwsh: ""
 
     steps:
       - name: Checkout repository
@@ -130,9 +130,18 @@ jobs:
       - name: Build ${{ matrix.name }}
         run: ${{ matrix.build_cmd }}
 
-      - name: Package ${{ matrix.name }}
-        run: ${{ matrix.package_script }}
-        shell: ${{ matrix.shell }}
+      - name: Package ${{ matrix.name }} (Unix)
+        if: runner.os != 'Windows'
+        run: ${{ matrix.package_script_bash }}
+        shell: bash
+        env:
+          PACKAGE_FILE: ${{ matrix.package_file }}
+          TAG_NAME: ${{ github.ref_name }}
+
+      - name: Package ${{ matrix.name }} (Windows)
+        if: runner.os == 'Windows'
+        run: ${{ matrix.package_script_pwsh }}
+        shell: pwsh
         env:
           PACKAGE_FILE: ${{ matrix.package_file }}
           TAG_NAME: ${{ github.ref_name }}
