@@ -104,7 +104,7 @@ class _TypingScreenState extends State<TypingScreen> {
                         ),
                       ),
                     if (controller.isFinished) const SizedBox(height: 16),
-                    _WordListView(controller: controller),
+                    const _SloganFooter(),
                   ],
                 ),
               ),
@@ -501,173 +501,393 @@ class _HeaderControls extends StatelessWidget {
     final List<DictionaryMeta> dictionaries = controller.dictionaries;
     final DictionaryMeta? selected = controller.selectedDictionary;
     final ThemeData theme = Theme.of(context);
-    final String? selectedDescription =
-        selected != null && selected.description.isNotEmpty
-        ? selected.description
-        : null;
-    final String? selectedCategory =
-        selected != null &&
-            selected.category != null &&
-            selected.category!.isNotEmpty
-        ? selected.category
-        : null;
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints _) {
+        final bool enableToggles = !controller.isLoading;
+        final bool enableSessionActions = !controller.isLoading && controller.isSessionReady;
 
-    return Wrap(
-      runSpacing: 12,
-      spacing: 12,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      children: <Widget>[
-        SizedBox(
-          width: 220,
-          child: InputDecorator(
-            decoration: InputDecoration(
-              labelText: '词库',
-              helperText: selectedDescription,
-            ),
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
-                isExpanded: true,
-                value: selected?.id,
-                items: dictionaries
-                    .map(
-                      (DictionaryMeta dict) => DropdownMenuItem<String>(
-                        value: dict.id,
-                        child: Text(dict.name),
-                      ),
-                    )
-                    .toList(),
-                onChanged: controller.isLoading || dictionaries.isEmpty
-                    ? null
-                    : (String? id) {
-                        if (id != null) {
-                          unawaited(controller.selectDictionary(id));
-                        }
-                      },
-              ),
-            ),
+        final List<Widget> headerItems = <Widget>[];
+        void addHeaderItem(Widget widget) {
+          if (headerItems.isNotEmpty) {
+            headerItems.add(const SizedBox(width: 8));
+          }
+          headerItems.add(widget);
+        }
+
+        addHeaderItem(
+          _IconMenuButton<String>(
+            icon: Icons.menu_book_rounded,
+            tooltip: selected?.name ?? '选择词库',
+            enabled: dictionaries.isNotEmpty && !controller.isLoading,
+            selectedValue: selected?.id,
+            options: dictionaries
+                .map(
+                  (DictionaryMeta dict) => _MenuOption<String>(
+                    value: dict.id,
+                    label: dict.name,
+                  ),
+                )
+                .toList(),
+            onSelected: (String value) {
+              unawaited(controller.selectDictionary(value));
+            },
           ),
-        ),
-        if (selectedCategory != null)
-          Chip(
-            label: Text(selectedCategory),
-            backgroundColor: theme.colorScheme.secondaryContainer,
-          ),
-        SizedBox(
-          width: 160,
-          child: InputDecorator(
-            decoration: const InputDecoration(labelText: '章节'),
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton<int>(
-                isExpanded: true,
-                value: controller.chapterCount == 0
-                    ? null
-                    : (controller.selectedChapter < controller.chapterCount
-                          ? controller.selectedChapter
-                          : 0),
-                items: controller.chapterCount == 0
-                    ? const <DropdownMenuItem<int>>[]
-                    : List<DropdownMenuItem<int>>.generate(
-                        controller.chapterCount,
-                        (int index) => DropdownMenuItem<int>(
-                          value: index,
-                          child: Text('第 ${index + 1} 章'),
-                        ),
-                      ),
-                onChanged: controller.isLoading || controller.chapterCount == 0
-                    ? null
-                    : (int? chapter) {
-                        if (chapter != null) {
-                          unawaited(controller.selectChapter(chapter));
-                        }
-                      },
-              ),
-            ),
-          ),
-        ),
-        FilterChip(
-          label: const Text('显示释义'),
-          selected: controller.showTranslation,
-          onSelected: controller.toggleTranslationVisibility,
-        ),
-        FilterChip(
-          label: const Text('忽略大小写'),
-          selected: controller.ignoreCase,
-          onSelected: controller.toggleIgnoreCase,
-        ),
-        FilterChip(
-          label: const Text('按键音'),
-          selected: controller.keySoundEnabled,
-          onSelected: controller.toggleKeySound,
-        ),
-        FilterChip(
-          label: const Text('提示音'),
-          selected: controller.feedbackSoundEnabled,
-          onSelected: controller.toggleFeedbackSound,
-        ),
-        if (controller.supportsPronunciation)
-          FilterChip(
-            label: const Text('自动发音'),
-            selected: controller.autoPronunciationEnabled,
-            onSelected: controller.toggleAutoPronunciation,
-          ),
-        if (controller.supportsPronunciation)
-          SizedBox(
-            width: 140,
-            child: InputDecorator(
-              decoration: const InputDecoration(labelText: '发音偏好'),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<PronunciationVariant>(
-                  isExpanded: true,
-                  value: controller.pronunciationVariant,
-                  items: const <DropdownMenuItem<PronunciationVariant>>[
-                    DropdownMenuItem<PronunciationVariant>(
-                      value: PronunciationVariant.us,
-                      child: Text('美音'),
+        );
+
+        final String chapterTooltip = controller.chapterCount == 0
+            ? '章节'
+            : '第 ${controller.selectedChapter + 1} 章';
+        addHeaderItem(
+          _IconMenuButton<int>(
+            icon: Icons.layers_rounded,
+            tooltip: chapterTooltip,
+            enabled: controller.chapterCount > 0 && !controller.isLoading,
+            selectedValue: controller.chapterCount == 0
+                ? null
+                : (controller.selectedChapter < controller.chapterCount
+                      ? controller.selectedChapter
+                      : 0),
+            options: controller.chapterCount == 0
+                ? const <_MenuOption<int>>[]
+                : List<_MenuOption<int>>.generate(
+                    controller.chapterCount,
+                    (int index) => _MenuOption<int>(
+                      value: index,
+                      label: '第 ${index + 1} 章',
                     ),
-                    DropdownMenuItem<PronunciationVariant>(
-                      value: PronunciationVariant.uk,
-                      child: Text('英音'),
-                    ),
-                  ],
-                  onChanged: controller.isLoading
-                      ? null
-                      : (PronunciationVariant? variant) {
-                          if (variant != null) {
-                            controller.setPronunciationVariant(variant);
-                          }
-                        },
+                  ),
+            onSelected: (int value) {
+              unawaited(controller.selectChapter(value));
+            },
+          ),
+        );
+
+        if (controller.supportsPronunciation) {
+          final String pronunciationTooltip = controller.pronunciationVariant == PronunciationVariant.us
+              ? '美音'
+              : '英音';
+          addHeaderItem(
+            _IconMenuButton<PronunciationVariant>(
+              icon: Icons.graphic_eq_rounded,
+              tooltip: pronunciationTooltip,
+              enabled: !controller.isLoading,
+              selectedValue: controller.pronunciationVariant,
+              options: const <_MenuOption<PronunciationVariant>>[
+                _MenuOption<PronunciationVariant>(
+                  value: PronunciationVariant.us,
+                  label: '美音',
                 ),
+                _MenuOption<PronunciationVariant>(
+                  value: PronunciationVariant.uk,
+                  label: '英音',
+                ),
+              ],
+              onSelected: (PronunciationVariant variant) {
+                controller.setPronunciationVariant(variant);
+              },
+            ),
+          );
+        }
+
+        final List<_ToggleAction> toggleActions = <_ToggleAction>[
+          _ToggleAction(
+            label: '显示释义',
+            icon: Icons.menu_book_outlined,
+            selected: controller.showTranslation,
+            enabled: enableToggles,
+            onChanged: controller.toggleTranslationVisibility,
+          ),
+          _ToggleAction(
+            label: '忽略大小写',
+            icon: Icons.text_fields,
+            selected: controller.ignoreCase,
+            enabled: enableToggles,
+            onChanged: controller.toggleIgnoreCase,
+          ),
+          _ToggleAction(
+            label: '按键音',
+            icon: Icons.keyboard,
+            selected: controller.keySoundEnabled,
+            enabled: enableToggles,
+            onChanged: controller.toggleKeySound,
+          ),
+          _ToggleAction(
+            label: '提示音',
+            icon: Icons.volume_up,
+            selected: controller.feedbackSoundEnabled,
+            enabled: enableToggles,
+            onChanged: controller.toggleFeedbackSound,
+          ),
+          _ToggleAction(
+            label: '默写模式',
+            icon: Icons.spellcheck,
+            selected: controller.dictationMode,
+            enabled: enableToggles,
+            onChanged: controller.toggleDictationMode,
+          ),
+        ];
+
+        if (controller.supportsPronunciation) {
+          toggleActions.add(
+            _ToggleAction(
+              label: '自动发音',
+              icon: Icons.record_voice_over,
+              selected: controller.autoPronunciationEnabled,
+              enabled: enableToggles,
+              onChanged: controller.toggleAutoPronunciation,
+            ),
+          );
+        }
+
+        for (final _ToggleAction action in toggleActions) {
+          addHeaderItem(_IconToggleChip(action: action));
+        }
+
+        addHeaderItem(
+          Tooltip(
+            message: controller.isTyping ? '暂停' : '开始',
+            waitDuration: const Duration(milliseconds: 200),
+            child: IconButton.filled(
+              style: IconButton.styleFrom(padding: const EdgeInsets.all(10)),
+              onPressed: enableSessionActions
+                  ? () {
+                      controller.toggleTyping();
+                    }
+                  : null,
+              icon: Icon(controller.isTyping ? Icons.pause : Icons.play_arrow),
+            ),
+          ),
+        );
+
+        addHeaderItem(
+          Tooltip(
+            message: '重新开始',
+            waitDuration: const Duration(milliseconds: 200),
+            child: IconButton.outlined(
+              style: IconButton.styleFrom(padding: const EdgeInsets.all(10)),
+              onPressed: enableSessionActions
+                  ? () {
+                      unawaited(controller.restartChapter());
+                    }
+                  : null,
+              icon: const Icon(Icons.refresh),
+            ),
+          ),
+        );
+
+        addHeaderItem(
+          Tooltip(
+            message: '跳过',
+            waitDuration: const Duration(milliseconds: 200),
+            child: IconButton.outlined(
+              style: IconButton.styleFrom(
+                padding: const EdgeInsets.all(10),
+                foregroundColor: theme.colorScheme.error,
               ),
+              onPressed: controller.canSkipCurrentWord
+                  ? () {
+                      controller.skipCurrentWord();
+                    }
+                  : null,
+              icon: const Icon(Icons.skip_next),
             ),
           ),
-        ElevatedButton.icon(
-          onPressed: controller.isLoading || !controller.isSessionReady
-              ? null
-              : () {
-                  controller.toggleTyping();
-                },
-          icon: Icon(controller.isTyping ? Icons.pause : Icons.play_arrow),
-          label: Text(controller.isTyping ? '暂停' : '开始'),
-        ),
-        OutlinedButton(
-          onPressed: controller.isLoading || !controller.isSessionReady
-              ? null
-              : () {
-                  unawaited(controller.restartChapter());
-                },
-          child: const Text('重新开始'),
-        ),
-        if (controller.canSkipCurrentWord)
-          OutlinedButton(
-            onPressed: controller.skipCurrentWord,
-            style: OutlinedButton.styleFrom(
-              foregroundColor: theme.colorScheme.error,
+        );
+
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: headerItems,
             ),
-            child: const Text('跳过'),
           ),
-      ],
+        );
+      },
     );
   }
+}
+
+class _IconToggleChip extends StatelessWidget {
+  const _IconToggleChip({required this.action});
+
+  final _ToggleAction action;
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
+    final bool enabled = action.enabled;
+    final bool selected = action.selected;
+
+    final Color iconColor;
+    if (!enabled) {
+      iconColor = colorScheme.onSurface.withValues(alpha: 0.38);
+    } else if (selected) {
+      iconColor = colorScheme.primary;
+    } else {
+      iconColor = colorScheme.onSurfaceVariant;
+    }
+
+    return Tooltip(
+      message: action.label,
+      waitDuration: const Duration(milliseconds: 200),
+      child: FilterChip(
+        showCheckmark: false,
+        visualDensity: VisualDensity.compact,
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+        label: Icon(action.icon, size: 18, color: iconColor),
+        selected: selected,
+        onSelected: enabled
+            ? (_) {
+                action.onChanged(!selected);
+              }
+            : null,
+        backgroundColor: colorScheme.surfaceContainerHighest,
+        selectedColor: colorScheme.primary.withValues(alpha: 0.16),
+        disabledColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
+        side: BorderSide(
+          color: selected ? colorScheme.primary : Colors.transparent,
+        ),
+      ),
+    );
+  }
+}
+
+class _IconMenuButton<T> extends StatelessWidget {
+  const _IconMenuButton({
+    required this.icon,
+    required this.tooltip,
+    required this.options,
+    required this.onSelected,
+    required this.enabled,
+    this.selectedValue,
+  });
+
+  final IconData icon;
+  final String tooltip;
+  final List<_MenuOption<T>> options;
+  final ValueChanged<T> onSelected;
+  final bool enabled;
+  final T? selectedValue;
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
+    final Color iconColor = enabled
+        ? colorScheme.primary
+        : colorScheme.onSurface.withValues(alpha: 0.38);
+
+    return Tooltip(
+      message: tooltip,
+      waitDuration: const Duration(milliseconds: 200),
+      child: PopupMenuButton<T>(
+        enabled: enabled,
+        tooltip: tooltip,
+        splashRadius: 24,
+        offset: const Offset(0, 40),
+        onSelected: onSelected,
+        itemBuilder: (BuildContext context) {
+          if (options.isEmpty) {
+            return <PopupMenuEntry<T>>[
+              PopupMenuItem<T>(
+                enabled: false,
+                height: 36,
+                child: Text(
+                  '暂无选项',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
+            ];
+          }
+          return options.map(( _MenuOption<T> option) => _buildItem(context, option)).toList();
+        },
+        child: Container(
+          height: 40,
+          width: 44,
+          decoration: BoxDecoration(
+            color: enabled
+                ? colorScheme.surfaceContainerHighest
+                : colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: enabled
+                  ? colorScheme.outlineVariant
+                  : colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+            ),
+          ),
+          child: Stack(
+            alignment: Alignment.center,
+            children: <Widget>[
+              Icon(icon, color: iconColor, size: 20),
+              Positioned(
+                bottom: 6,
+                right: 6,
+                child: Icon(
+                  Icons.expand_more_rounded,
+                  size: 14,
+                  color: enabled
+                      ? colorScheme.onSurfaceVariant.withValues(alpha: 0.8)
+                      : colorScheme.onSurface.withValues(alpha: 0.38),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  PopupMenuEntry<T> _buildItem(BuildContext context, _MenuOption<T> option) {
+    final ThemeData theme = Theme.of(context);
+    final bool isSelected = selectedValue != null && selectedValue == option.value;
+    final ColorScheme colorScheme = theme.colorScheme;
+
+    return PopupMenuItem<T>(
+      value: option.value,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          SizedBox(
+            width: 20,
+            child: isSelected
+                ? Icon(Icons.check, size: 18, color: colorScheme.primary)
+                : const SizedBox.shrink(),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(option.label, overflow: TextOverflow.ellipsis),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MenuOption<T> {
+  const _MenuOption({required this.value, required this.label});
+
+  final T value;
+  final String label;
+}
+
+class _ToggleAction {
+  const _ToggleAction({
+    required this.label,
+    required this.icon,
+    required this.selected,
+    required this.onChanged,
+    this.enabled = true,
+  });
+
+  final String label;
+  final IconData icon;
+  final bool selected;
+  final bool enabled;
+  final ValueChanged<bool> onChanged;
 }
 
 class _WordPanel extends StatelessWidget {
@@ -698,7 +918,11 @@ class _WordPanel extends StatelessWidget {
     final Widget wordBody = Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        _WordDisplay(word: word, states: controller.letterStates),
+        _WordDisplay(
+          word: word,
+          states: controller.letterStates,
+          dictationMode: controller.dictationMode,
+        ),
         const SizedBox(height: 12),
         if (word.usPhonetic != null || word.ukPhonetic != null)
           Text(
@@ -811,10 +1035,15 @@ class _WordPanel extends StatelessWidget {
 }
 
 class _WordDisplay extends StatelessWidget {
-  const _WordDisplay({required this.word, required this.states});
+  const _WordDisplay({
+    required this.word,
+    required this.states,
+    required this.dictationMode,
+  });
 
   final WordEntry word;
   final List<LetterState> states;
+  final bool dictationMode;
 
   @override
   Widget build(BuildContext context) {
@@ -830,7 +1059,11 @@ class _WordDisplay extends StatelessWidget {
       final LetterState state = i < states.length
           ? states[i]
           : LetterState.idle;
-      letters.add(_LetterTile(letter: letter, state: state, style: baseStyle));
+      final bool shouldHideLetter = dictationMode && state != LetterState.correct;
+      final String visibleLetter = shouldHideLetter ? '_' : letter;
+      letters.add(
+        _LetterTile(letter: visibleLetter, state: state, style: baseStyle),
+      );
     }
 
     return LayoutBuilder(
@@ -1029,61 +1262,23 @@ class _StatTile extends StatelessWidget {
   }
 }
 
-class _WordListView extends StatelessWidget {
-  const _WordListView({required this.controller});
-
-  final TypingController controller;
+class _SloganFooter extends StatelessWidget {
+  const _SloganFooter();
 
   @override
   Widget build(BuildContext context) {
-    final List<WordEntry> words = controller.words;
-    if (words.isEmpty) {
-      return const SizedBox.shrink();
-    }
+    final ThemeData theme = Theme.of(context);
+    final TextStyle? style = theme.textTheme.bodyMedium?.copyWith(
+      color: theme.colorScheme.onSurfaceVariant,
+      fontStyle: FontStyle.italic,
+    );
 
-    return SizedBox(
-      height: 80,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: words.length,
-        itemBuilder: (BuildContext context, int index) {
-          final bool isCurrent =
-              index == controller.currentIndex && !controller.isFinished;
-          final bool isCompleted = index < controller.currentIndex;
-          final WordEntry word = words[index];
-          return Container(
-            width: 120,
-            margin: const EdgeInsets.only(right: 8),
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              color: isCurrent
-                  ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.2)
-                  : isCompleted
-                  ? Theme.of(context).colorScheme.secondaryContainer
-                  : Theme.of(context).colorScheme.surfaceContainerHighest,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  word.headword,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  word.translations.isEmpty ? '' : word.translations.first,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-              ],
-            ),
-          );
-        },
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      child: Text(
+        '坚持练习，进步就在眼前。',
+        style: style,
+        textAlign: TextAlign.center,
       ),
     );
   }

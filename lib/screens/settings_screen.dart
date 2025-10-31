@@ -133,6 +133,15 @@ class SettingsScreen extends StatelessWidget {
                       },
               ),
               SwitchListTile(
+                title: const Text('默写模式'),
+                value: controller.dictationMode,
+                onChanged: controller.isLoading
+                    ? null
+                    : (bool value) {
+                        controller.toggleDictationMode(value);
+                      },
+              ),
+              SwitchListTile(
                 title: const Text('忽略大小写'),
                 value: controller.ignoreCase,
                 onChanged: controller.isLoading

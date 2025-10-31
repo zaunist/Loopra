@@ -35,6 +35,7 @@ class TypingController extends ChangeNotifier {
   bool _feedbackSoundEnabled = true;
   bool _autoPronunciationEnabled = false;
   PronunciationVariant _pronunciationVariant = PronunciationVariant.us;
+  bool _dictationMode = false;
 
   bool _isLoading = false;
   bool _isTyping = false;
@@ -134,6 +135,8 @@ class TypingController extends ChangeNotifier {
   bool get autoPronunciationEnabled => _autoPronunciationEnabled;
 
   PronunciationVariant get pronunciationVariant => _pronunciationVariant;
+
+  bool get dictationMode => _dictationMode;
 
   bool get supportsPronunciation {
     final DictionaryMeta? dict = _selectedDictionary;
@@ -318,6 +321,14 @@ class TypingController extends ChangeNotifier {
     if (_autoPronunciationEnabled) {
       _announceCurrentWord();
     }
+  }
+
+  void toggleDictationMode(bool value) {
+    if (_dictationMode == value) {
+      return;
+    }
+    _dictationMode = value;
+    notifyListeners();
   }
 
   void setPronunciationVariant(PronunciationVariant variant) {

@@ -54,13 +54,5 @@
     "asset": "SAT_3_T.json",
     "language": "en",
     "category": "国际考试"
-  },
-  {
-    "id": "python_builtin",
-    "name": "Python 内置函数",
-    "description": "Python 内置函数和关键字",
-    "asset": "python-builtin.json",
-    "language": "code",
-    "category": "程序员"
   }
 ]
