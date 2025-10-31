@@ -157,7 +157,7 @@ class _MobileTypingScaffold extends StatelessWidget {
             ),
             const Divider(height: 1),
             Padding(
-              padding: const EdgeInsets.fromLTRB(12, 12, 12, 24),
+              padding: const EdgeInsets.fromLTRB(6, 12, 6, 24),
               child: _MobileKeyboard(controller: controller),
             ),
           ],
@@ -219,9 +219,9 @@ class _MobileWordArea extends StatelessWidget {
             resumePrompt: '点击键盘继续',
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 12),
         _StatsBar(controller: controller),
-        const SizedBox(height: 16),
+        const SizedBox(height: 12),
         _MobileActionButtons(controller: controller),
       ],
     );
@@ -280,73 +280,131 @@ class _MobileKeyboard extends StatelessWidget {
     <String>['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
     <String>['Z', 'X', 'C', 'V', 'B', 'N', 'M'],
   ];
-
-  static const List<int> _offsetFlex = <int>[0, 1, 2];
+  static const double _keyboardHeightDivisor = 4.0;
+  static const double _keyAspectRatio = 0.75;
+  static const double _horizontalMargin = 2;
+  static const double _keySpacing = 4;
 
   @override
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
+    final double keyboardHeight = screenSize.height / _keyboardHeightDivisor;
     final bool disabled =
         controller.isLoading ||
         !controller.isSessionReady ||
         controller.isFinished;
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: List<Widget>.generate(_rows.length, (int rowIndex) {
-        final List<String> rowKeys = _rows[rowIndex];
-        final int offset = _offsetFlex[rowIndex];
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: rowIndex == _rows.length - 1 ? 0 : 12,
-          ),
-          child: Row(
-            children: <Widget>[
-              if (offset > 0) Spacer(flex: offset),
-              ...rowKeys.map(
-                (String letter) => Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                    child: _KeyboardKey(
-                      label: letter,
-                      onPressed: disabled
-                          ? null
-                          : () => controller.handleCharacterInput(
-                              letter.toLowerCase(),
-                            ),
-                    ),
+    return SizedBox(
+      height: keyboardHeight,
+      child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          final double maxWidth =
+              constraints.maxWidth - _horizontalMargin * 2;
+          const int maxKeysPerRow = 10;
+          final double keyWidth = (maxWidth -
+                  _keySpacing * (maxKeysPerRow - 1))
+              / maxKeysPerRow;
+          final double keyHeight = keyWidth / _keyAspectRatio;
+
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: List<Widget>.generate(_rows.length, (int rowIndex) {
+              final List<String> rowKeys = _rows[rowIndex];
+              final double rowContentWidth = rowKeys.length * keyWidth +
+                  (rowKeys.length - 1) * _keySpacing;
+              final double sidePadding =
+                  (maxWidth - rowContentWidth).clamp(0.0, double.infinity) / 2;
+              return Padding(
+                padding: EdgeInsets.fromLTRB(
+                  _horizontalMargin + sidePadding,
+                  0,
+                  _horizontalMargin + sidePadding,
+                  rowIndex == _rows.length - 1 ? 0 : _keySpacing,
+                ),
+                child: SizedBox(
+                  height: keyHeight,
+                  child: Row(
+                    children: List<Widget>.generate(rowKeys.length, (int index) {
+                      final String letter = rowKeys[index];
+                      return Padding(
+                        padding: EdgeInsets.only(
+                          right: index == rowKeys.length - 1 ? 0 : _keySpacing,
+                        ),
+                        child: SizedBox(
+                          width: keyWidth,
+                          child: _KeyboardKey(
+                            label: letter,
+                            enableFeedback: controller.keySoundEnabled,
+                            onPressed: disabled
+                                ? null
+                                : () => controller.handleCharacterInput(
+                                      letter.toLowerCase(),
+                                    ),
+                          ),
+                        ),
+                      );
+                    }),
                   ),
                 ),
-              ),
-              if (offset > 0) Spacer(flex: offset),
-            ],
-          ),
-        );
-      }),
+              );
+            }),
+          );
+        },
+      ),
     );
   }
 }
 
 class _KeyboardKey extends StatelessWidget {
-  const _KeyboardKey({required this.label, required this.onPressed});
+  const _KeyboardKey({
+    required this.label,
+    required this.onPressed,
+    required this.enableFeedback,
+  });
 
   final String label;
   final VoidCallback? onPressed;
+  final bool enableFeedback;
+
+  bool get _shouldUseSystemFeedback {
+    if (kIsWeb) {
+      return false;
+    }
+    return defaultTargetPlatform == TargetPlatform.android ||
+        defaultTargetPlatform == TargetPlatform.iOS;
+  }
 
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    return SizedBox(
-      height: 52,
-      child: FilledButton(
-        onPressed: onPressed,
-        style: FilledButton.styleFrom(
-          padding: EdgeInsets.zero,
-          minimumSize: const Size(0, 52),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        ),
+    return FilledButton(
+      onPressed: onPressed == null
+          ? null
+          : () {
+              if (enableFeedback && _shouldUseSystemFeedback) {
+                Feedback.forTap(context);
+              }
+              onPressed!();
+            },
+      style: FilledButton.styleFrom(
+        padding: EdgeInsets.zero,
+        minimumSize: Size.zero,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+      ).copyWith(
+        alignment: Alignment.center,
+      ),
+      child: Center(
         child: Text(
           label,
-          style: theme.textTheme.titleMedium?.copyWith(letterSpacing: 1.2),
+          textAlign: TextAlign.center,
+          style: (theme.textTheme.titleLarge ??
+                  theme.textTheme.titleMedium ??
+                  const TextStyle(fontSize: 16))
+              .copyWith(
+            fontSize: 24,
+            letterSpacing: 1.2,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
     );
@@ -754,34 +812,50 @@ class _StatsBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
     final double accuracy = controller.accuracy * 100;
 
-    return Wrap(
-      spacing: 24,
-      runSpacing: 8,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      children: <Widget>[
-        _StatTile(
-          label: '用时',
-          value: _formatDuration(controller.elapsedSeconds),
-          icon: Icons.timer,
-        ),
-        _StatTile(
-          label: '完成',
-          value: '${controller.completedWords}/${controller.totalWords}',
-          icon: Icons.playlist_add_check,
-        ),
-        _StatTile(
-          label: '每分钟单词数',
-          value: controller.wordsPerMinute.toString(),
-          icon: Icons.speed,
-        ),
-        _StatTile(
-          label: '准确率',
-          value: '${accuracy.toStringAsFixed(0)}%',
-          icon: Icons.check_circle,
-        ),
-      ],
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: _StatTile(
+              label: '用时',
+              value: _formatDuration(controller.elapsedSeconds),
+              icon: Icons.timer,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: _StatTile(
+              label: '完成',
+              value: '${controller.completedWords}/${controller.totalWords}',
+              icon: Icons.playlist_add_check,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: _StatTile(
+              label: '每分钟单词数',
+              value: controller.wordsPerMinute.toString(),
+              icon: Icons.speed,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: _StatTile(
+              label: '准确率',
+              value: '${accuracy.toStringAsFixed(0)}%',
+              icon: Icons.check_circle,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -812,14 +886,33 @@ class _StatTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    return Chip(
-      avatar: Icon(icon, size: 18, color: theme.colorScheme.primary),
-      label: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    final Color iconColor = theme.colorScheme.primary;
+    final TextStyle valueStyle =
+        (theme.textTheme.titleMedium ?? const TextStyle(fontSize: 16))
+            .copyWith(fontWeight: FontWeight.w600);
+    final TextStyle labelStyle =
+        (theme.textTheme.bodySmall ?? const TextStyle(fontSize: 12))
+            .copyWith(color: theme.colorScheme.onSurfaceVariant);
+
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Text(value, style: theme.textTheme.titleMedium),
-          Text(label, style: theme.textTheme.bodySmall),
+          Icon(icon, size: 18, color: iconColor),
+          const SizedBox(width: 4),
+          Text.rich(
+            TextSpan(
+              text: value,
+              style: valueStyle,
+              children: <InlineSpan>[
+                TextSpan(text: ' $label', style: labelStyle),
+              ],
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.fade,
+            softWrap: false,
+          ),
         ],
       ),
     );

@@ -48,6 +48,14 @@ class TypingController extends ChangeNotifier {
 
   bool _disposed = false;
 
+  bool get _shouldUseSystemKeyFeedback {
+    if (kIsWeb) {
+      return false;
+    }
+    final TargetPlatform platform = defaultTargetPlatform;
+    return platform == TargetPlatform.android || platform == TargetPlatform.iOS;
+  }
+
   static const Duration _resetDelay = Duration(milliseconds: 320);
 
   static final Set<LogicalKeyboardKey> _ignoredKeys = <LogicalKeyboardKey>{
@@ -406,7 +414,7 @@ class TypingController extends ChangeNotifier {
 
     final String effectiveChar = character[0];
 
-    if (_keySoundEnabled) {
+    if (_keySoundEnabled && !_shouldUseSystemKeyFeedback) {
       unawaited(_audioService.playKeySound());
     }
 
