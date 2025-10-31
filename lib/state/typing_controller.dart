@@ -115,6 +115,8 @@ class TypingController extends ChangeNotifier {
 
   int get chapterCount => _chapterCount;
 
+  bool get hasNextChapter => _chapterCount > 0 && (_selectedChapter + 1) < _chapterCount;
+
   bool get isLoading => _isLoading;
 
   bool get isTyping => _isTyping;
@@ -263,6 +265,13 @@ class TypingController extends ChangeNotifier {
 
     _isLoading = false;
     notifyListeners();
+  }
+
+  Future<void> goToNextChapter() async {
+    if (!hasNextChapter || _isLoading) {
+      return;
+    }
+    await selectChapter(_selectedChapter + 1);
   }
 
   void toggleTranslationVisibility(bool value) {

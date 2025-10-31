@@ -92,6 +92,18 @@ class _TypingScreenState extends State<TypingScreen> {
                     const SizedBox(height: 16),
                     _StatsBar(controller: controller),
                     const SizedBox(height: 16),
+                    if (controller.isFinished)
+                      AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 200),
+                        child: Padding(
+                          key: const ValueKey<String>('desktop-finish-actions'),
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: _DesktopCompletionActions(
+                            controller: controller,
+                          ),
+                        ),
+                      ),
+                    if (controller.isFinished) const SizedBox(height: 16),
                     _WordListView(controller: controller),
                   ],
                 ),
@@ -122,10 +134,113 @@ class _TypingScreenState extends State<TypingScreen> {
   }
 }
 
-class _MobileTypingScaffold extends StatelessWidget {
+class _MobileTypingScaffold extends StatefulWidget {
   const _MobileTypingScaffold({required this.controller});
 
   final TypingController controller;
+
+  @override
+  State<_MobileTypingScaffold> createState() => _MobileTypingScaffoldState();
+}
+
+class _MobileTypingScaffoldState extends State<_MobileTypingScaffold> {
+  late final TextEditingController _textController;
+  late final FocusNode _inputFocusNode;
+  bool _suppressInputCallback = false;
+
+  TypingController get _controller => widget.controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _textController = TextEditingController();
+    _inputFocusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    _inputFocusNode.dispose();
+    super.dispose();
+  }
+
+  void _requestKeyboard() {
+    if (!_inputFocusNode.hasFocus) {
+      _inputFocusNode.requestFocus();
+    }
+  }
+
+  void _hideKeyboard() {
+    if (_inputFocusNode.hasFocus) {
+      _inputFocusNode.unfocus();
+    }
+    FocusScope.of(context).unfocus();
+  }
+
+  void _handleToggleTyping() {
+    if (_controller.isLoading || !_controller.isSessionReady) {
+      return;
+    }
+    final bool wasTyping = _controller.isTyping;
+    _controller.toggleTyping();
+    if (!wasTyping) {
+      _requestKeyboard();
+    } else {
+      _hideKeyboard();
+    }
+  }
+
+  void _handleRestart() {
+    if (_controller.isLoading || !_controller.isSessionReady) {
+      return;
+    }
+    _hideKeyboard();
+    unawaited(_controller.restartChapter());
+  }
+
+  void _handleSkip() {
+    if (_controller.isLoading ||
+        !_controller.isSessionReady ||
+        !_controller.canSkipCurrentWord) {
+      return;
+    }
+    _controller.skipCurrentWord();
+    _requestKeyboard();
+  }
+
+  void _handleNextChapter() {
+    if (_controller.isLoading || !_controller.hasNextChapter) {
+      return;
+    }
+    _hideKeyboard();
+    unawaited(_controller.goToNextChapter());
+  }
+
+  void _handleWordAreaTap() {
+    if (_controller.isLoading || !_controller.isSessionReady) {
+      return;
+    }
+    if (!_controller.isTyping && !_controller.isFinished) {
+      _controller.toggleTyping();
+    }
+    _requestKeyboard();
+  }
+
+  void _handleInputChanged(String value) {
+    if (_suppressInputCallback || value.isEmpty) {
+      return;
+    }
+    _suppressInputCallback = true;
+    for (final int codePoint in value.runes) {
+      final String character = String.fromCharCode(codePoint);
+      if (character == '\n' || character == '\r') {
+        continue;
+      }
+      _controller.handleCharacterInput(character);
+    }
+    _textController.clear();
+    _suppressInputCallback = false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -152,13 +267,52 @@ class _MobileTypingScaffold extends StatelessWidget {
                   horizontal: 16,
                   vertical: 12,
                 ),
-                child: _MobileWordArea(controller: controller),
+                child: _MobileWordArea(
+                  controller: _controller,
+                  onWordAreaTap: _handleWordAreaTap,
+                ),
               ),
             ),
-            const Divider(height: 1),
             Padding(
-              padding: const EdgeInsets.fromLTRB(6, 12, 6, 24),
-              child: _MobileKeyboard(controller: controller),
+              padding: const EdgeInsets.fromLTRB(12, 12, 12, 16),
+              child: _MobileActionButtons(
+                controller: _controller,
+                onToggleTyping: _handleToggleTyping,
+                onRestart: _handleRestart,
+                onSkip: _controller.canSkipCurrentWord ? _handleSkip : null,
+                onGoToNextChapter:
+                    _controller.isFinished && _controller.hasNextChapter
+                    ? _handleNextChapter
+                    : null,
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: SizedBox(
+                height: 1,
+                width: double.infinity,
+                child: TextField(
+                  focusNode: _inputFocusNode,
+                  controller: _textController,
+                  onChanged: _handleInputChanged,
+                  enableSuggestions: false,
+                  autocorrect: false,
+                  keyboardType: TextInputType.text,
+                  textCapitalization: TextCapitalization.none,
+                  textInputAction: TextInputAction.done,
+                  smartDashesType: SmartDashesType.disabled,
+                  smartQuotesType: SmartQuotesType.disabled,
+                  autofillHints: const <String>[],
+                  cursorColor: Colors.transparent,
+                  style: const TextStyle(color: Colors.transparent, height: 1),
+                  decoration: const InputDecoration(
+                    isCollapsed: true,
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                  onEditingComplete: _hideKeyboard,
+                ),
+              ),
             ),
           ],
         ),
@@ -175,22 +329,25 @@ class _AppBarBranding extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     final appBarTheme = theme.appBarTheme;
     final TextTheme textTheme = theme.textTheme;
-    final TextStyle titleStyle = (appBarTheme.titleTextStyle ??
-            textTheme.titleLarge ??
-            const TextStyle(fontSize: 20, fontWeight: FontWeight.w600))
-        .copyWith(
-      color: appBarTheme.titleTextStyle?.color ??
-          appBarTheme.foregroundColor ??
-          theme.colorScheme.onSurface,
-    );
-    final Color baseSubtitleColor = appBarTheme.titleTextStyle?.color ??
+    final TextStyle titleStyle =
+        (appBarTheme.titleTextStyle ??
+                textTheme.titleLarge ??
+                const TextStyle(fontSize: 20, fontWeight: FontWeight.w600))
+            .copyWith(
+              color:
+                  appBarTheme.titleTextStyle?.color ??
+                  appBarTheme.foregroundColor ??
+                  theme.colorScheme.onSurface,
+            );
+    final Color baseSubtitleColor =
+        appBarTheme.titleTextStyle?.color ??
         appBarTheme.foregroundColor ??
         theme.colorScheme.onSurfaceVariant;
     final Color subtitleColor = baseSubtitleColor.withValues(alpha: 0.72);
     final TextStyle subtitleStyle =
         (textTheme.bodySmall ?? const TextStyle(fontSize: 12)).copyWith(
-      color: subtitleColor,
-    );
+          color: subtitleColor,
+        );
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -204,64 +361,88 @@ class _AppBarBranding extends StatelessWidget {
 }
 
 class _MobileWordArea extends StatelessWidget {
-  const _MobileWordArea({required this.controller});
+  const _MobileWordArea({
+    required this.controller,
+    required this.onWordAreaTap,
+  });
 
   final TypingController controller;
+  final VoidCallback onWordAreaTap;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
         Expanded(
-          child: _WordPanel(
-            controller: controller,
-            startPrompt: '点击键盘开始',
-            resumePrompt: '点击键盘继续',
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: onWordAreaTap,
+            child: _WordPanel(
+              controller: controller,
+              startPrompt: '点击任意位置开始练习',
+              resumePrompt: '点击任意位置开始练习',
+            ),
           ),
         ),
         const SizedBox(height: 12),
         _StatsBar(controller: controller),
-        const SizedBox(height: 12),
-        _MobileActionButtons(controller: controller),
       ],
     );
   }
 }
 
 class _MobileActionButtons extends StatelessWidget {
-  const _MobileActionButtons({required this.controller});
+  const _MobileActionButtons({
+    required this.controller,
+    required this.onToggleTyping,
+    required this.onRestart,
+    this.onSkip,
+    this.onGoToNextChapter,
+  });
 
   final TypingController controller;
+  final VoidCallback onToggleTyping;
+  final VoidCallback onRestart;
+  final VoidCallback? onSkip;
+  final VoidCallback? onGoToNextChapter;
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
     return Wrap(
       alignment: WrapAlignment.center,
       spacing: 12,
       runSpacing: 12,
       children: <Widget>[
+        if (controller.isFinished && controller.hasNextChapter)
+          FilledButton.icon(
+            onPressed: controller.isLoading ? null : onGoToNextChapter,
+            icon: const Icon(Icons.arrow_forward),
+            label: const Text('进入下一章'),
+          ),
         FilledButton.icon(
-          onPressed: controller.isLoading || !controller.isSessionReady
+          onPressed:
+              controller.isLoading ||
+                  !controller.isSessionReady ||
+                  controller.isFinished
               ? null
-              : () {
-                  controller.toggleTyping();
-                },
+              : onToggleTyping,
           icon: Icon(controller.isTyping ? Icons.pause : Icons.play_arrow),
           label: Text(controller.isTyping ? '暂停' : '开始'),
         ),
         OutlinedButton(
           onPressed: controller.isLoading || !controller.isSessionReady
               ? null
-              : () {
-                  unawaited(controller.restartChapter());
-                },
+              : onRestart,
           child: const Text('重新开始'),
         ),
         if (controller.canSkipCurrentWord)
           OutlinedButton(
-            onPressed: controller.skipCurrentWord,
+            onPressed: controller.isLoading || !controller.isSessionReady
+                ? null
+                : onSkip,
             style: OutlinedButton.styleFrom(
-              foregroundColor: Theme.of(context).colorScheme.error,
+              foregroundColor: theme.colorScheme.error,
             ),
             child: const Text('跳过'),
           ),
@@ -270,143 +451,42 @@ class _MobileActionButtons extends StatelessWidget {
   }
 }
 
-class _MobileKeyboard extends StatelessWidget {
-  const _MobileKeyboard({required this.controller});
+class _DesktopCompletionActions extends StatelessWidget {
+  const _DesktopCompletionActions({required this.controller});
 
   final TypingController controller;
 
-  static const List<List<String>> _rows = <List<String>>[
-    <String>['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
-    <String>['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
-    <String>['Z', 'X', 'C', 'V', 'B', 'N', 'M'],
-  ];
-  static const double _keyboardHeightDivisor = 4.0;
-  static const double _keyAspectRatio = 0.75;
-  static const double _horizontalMargin = 2;
-  static const double _keySpacing = 4;
-
   @override
   Widget build(BuildContext context) {
-    final Size screenSize = MediaQuery.of(context).size;
-    final double keyboardHeight = screenSize.height / _keyboardHeightDivisor;
-    final bool disabled =
-        controller.isLoading ||
-        !controller.isSessionReady ||
-        controller.isFinished;
-
-    return SizedBox(
-      height: keyboardHeight,
-      child: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-          final double maxWidth =
-              constraints.maxWidth - _horizontalMargin * 2;
-          const int maxKeysPerRow = 10;
-          final double keyWidth = (maxWidth -
-                  _keySpacing * (maxKeysPerRow - 1))
-              / maxKeysPerRow;
-          final double keyHeight = keyWidth / _keyAspectRatio;
-
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: List<Widget>.generate(_rows.length, (int rowIndex) {
-              final List<String> rowKeys = _rows[rowIndex];
-              final double rowContentWidth = rowKeys.length * keyWidth +
-                  (rowKeys.length - 1) * _keySpacing;
-              final double sidePadding =
-                  (maxWidth - rowContentWidth).clamp(0.0, double.infinity) / 2;
-              return Padding(
-                padding: EdgeInsets.fromLTRB(
-                  _horizontalMargin + sidePadding,
-                  0,
-                  _horizontalMargin + sidePadding,
-                  rowIndex == _rows.length - 1 ? 0 : _keySpacing,
-                ),
-                child: SizedBox(
-                  height: keyHeight,
-                  child: Row(
-                    children: List<Widget>.generate(rowKeys.length, (int index) {
-                      final String letter = rowKeys[index];
-                      return Padding(
-                        padding: EdgeInsets.only(
-                          right: index == rowKeys.length - 1 ? 0 : _keySpacing,
-                        ),
-                        child: SizedBox(
-                          width: keyWidth,
-                          child: _KeyboardKey(
-                            label: letter,
-                            enableFeedback: controller.keySoundEnabled,
-                            onPressed: disabled
-                                ? null
-                                : () => controller.handleCharacterInput(
-                                      letter.toLowerCase(),
-                                    ),
-                          ),
-                        ),
-                      );
-                    }),
-                  ),
-                ),
-              );
-            }),
-          );
-        },
-      ),
-    );
-  }
-}
-
-class _KeyboardKey extends StatelessWidget {
-  const _KeyboardKey({
-    required this.label,
-    required this.onPressed,
-    required this.enableFeedback,
-  });
-
-  final String label;
-  final VoidCallback? onPressed;
-  final bool enableFeedback;
-
-  bool get _shouldUseSystemFeedback {
-    if (kIsWeb) {
-      return false;
-    }
-    return defaultTargetPlatform == TargetPlatform.android ||
-        defaultTargetPlatform == TargetPlatform.iOS;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    return FilledButton(
-      onPressed: onPressed == null
-          ? null
-          : () {
-              if (enableFeedback && _shouldUseSystemFeedback) {
-                Feedback.forTap(context);
-              }
-              onPressed!();
-            },
-      style: FilledButton.styleFrom(
-        padding: EdgeInsets.zero,
-        minimumSize: Size.zero,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-      ).copyWith(
-        alignment: Alignment.center,
-      ),
-      child: Center(
-        child: Text(
-          label,
-          textAlign: TextAlign.center,
-          style: (theme.textTheme.titleLarge ??
-                  theme.textTheme.titleMedium ??
-                  const TextStyle(fontSize: 16))
-              .copyWith(
-            fontSize: 24,
-            letterSpacing: 1.2,
-            fontWeight: FontWeight.w500,
-          ),
+    final bool hasNext = controller.hasNextChapter;
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        FilledButton.icon(
+          onPressed: (!hasNext || controller.isLoading)
+              ? null
+              : () {
+                  unawaited(controller.goToNextChapter());
+                },
+          icon: const Icon(Icons.arrow_forward),
+          label: const Text('进入下一章'),
         ),
-      ),
+        if (!hasNext)
+          const Padding(
+            padding: EdgeInsets.only(top: 8),
+            child: Text('已经是最后一章', textAlign: TextAlign.center),
+          ),
+        const SizedBox(height: 12),
+        OutlinedButton(
+          onPressed: controller.isLoading
+              ? null
+              : () {
+                  unawaited(controller.restartChapter());
+                },
+          child: const Text('重新练习本章'),
+        ),
+      ],
     );
   }
 }
@@ -753,11 +833,39 @@ class _WordDisplay extends StatelessWidget {
       letters.add(_LetterTile(letter: letter, state: state, style: baseStyle));
     }
 
-    return Wrap(
-      alignment: WrapAlignment.center,
-      spacing: 4,
-      runSpacing: 8,
-      children: letters,
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final List<Widget> spacedLetters = <Widget>[];
+        for (int i = 0; i < letters.length; i += 1) {
+          if (i > 0) {
+            spacedLetters.add(const SizedBox(width: 4));
+          }
+          spacedLetters.add(letters[i]);
+        }
+
+        final Widget wordRow = Row(
+          mainAxisSize: MainAxisSize.min,
+          children: spacedLetters,
+        );
+
+        final Widget scaledWord = FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.center,
+          child: wordRow,
+        );
+
+        if (!constraints.hasBoundedWidth) {
+          return scaledWord;
+        }
+
+        return Align(
+          alignment: Alignment.center,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: constraints.maxWidth),
+            child: scaledWord,
+          ),
+        );
+      },
     );
   }
 }
@@ -888,11 +996,13 @@ class _StatTile extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     final Color iconColor = theme.colorScheme.primary;
     final TextStyle valueStyle =
-        (theme.textTheme.titleMedium ?? const TextStyle(fontSize: 16))
-            .copyWith(fontWeight: FontWeight.w600);
+        (theme.textTheme.titleMedium ?? const TextStyle(fontSize: 16)).copyWith(
+          fontWeight: FontWeight.w600,
+        );
     final TextStyle labelStyle =
-        (theme.textTheme.bodySmall ?? const TextStyle(fontSize: 12))
-            .copyWith(color: theme.colorScheme.onSurfaceVariant);
+        (theme.textTheme.bodySmall ?? const TextStyle(fontSize: 12)).copyWith(
+          color: theme.colorScheme.onSurfaceVariant,
+        );
 
     return FittedBox(
       fit: BoxFit.scaleDown,
@@ -1001,9 +1111,25 @@ class _FinishCard extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             FilledButton(
-              onPressed: () {
-                unawaited(controller.restartChapter());
-              },
+              onPressed: (!controller.hasNextChapter || controller.isLoading)
+                  ? null
+                  : () {
+                      unawaited(controller.goToNextChapter());
+                    },
+              child: const Text('进入下一章'),
+            ),
+            if (!controller.hasNextChapter)
+              const Padding(
+                padding: EdgeInsets.only(top: 8),
+                child: Text('已经是最后一章', textAlign: TextAlign.center),
+              ),
+            const SizedBox(height: 12),
+            OutlinedButton(
+              onPressed: controller.isLoading
+                  ? null
+                  : () {
+                      unawaited(controller.restartChapter());
+                    },
               child: const Text('重新练习本章'),
             ),
           ],
