@@ -10,6 +10,7 @@ import '../models/dictionary.dart';
 import '../services/audio_service.dart';
 import '../state/typing_controller.dart';
 import 'statistics_screen.dart';
+import 'dictionary_picker_dialog.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -41,25 +42,56 @@ class SettingsScreen extends StatelessWidget {
               const _SectionHeader(label: '词库'),
               InputDecorator(
                 decoration: const InputDecoration(labelText: '选择词库'),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                    isExpanded: true,
-                    value: selected?.id,
-                    items: dictionaries
-                        .map(
-                          (DictionaryMeta meta) => DropdownMenuItem<String>(
-                            value: meta.id,
-                            child: Text(meta.name),
-                          ),
-                        )
-                        .toList(),
-                    onChanged: controller.isLoading || dictionaries.isEmpty
+                child: Material(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(12),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(12),
+                    onTap: controller.isLoading || dictionaries.isEmpty
                         ? null
-                        : (String? id) {
-                            if (id != null) {
-                              unawaited(controller.selectDictionary(id));
+                        : () async {
+                            final String? result = await DictionaryPickerDialog.show(
+                              context,
+                              dictionaries: dictionaries,
+                              initialDictionaryId: selected?.id,
+                            );
+                            if (result != null && result.isNotEmpty && result != selected?.id) {
+                              unawaited(controller.selectDictionary(result));
                             }
                           },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  selected?.name ?? '暂无可用词库',
+                                  style: Theme.of(context).textTheme.titleMedium,
+                                ),
+                                if (selected != null)
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 4),
+                                    child: Text(
+                                      selected.languageLabel,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall
+                                          ?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                          Icon(
+                            Icons.open_in_new_rounded,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -71,12 +103,28 @@ class SettingsScreen extends StatelessWidget {
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ),
-              if (selected != null && (selected.category ?? '').isNotEmpty)
+              if (selected != null)
                 Padding(
                   padding: const EdgeInsets.only(top: 8),
-                  child: Chip(
-                    label: Text(selected.category!),
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: <Widget>[
+                      Chip(
+                        label: Text(selected.languageLabel),
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                      ),
+                      if ((selected.category ?? '').isNotEmpty)
+                        Chip(
+                          label: Text(selected.category!),
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                        ),
+                      if (selected.isCustom)
+                        const Chip(
+                          label: Text('自定义词库'),
+                          padding: EdgeInsets.symmetric(horizontal: 8),
+                        ),
+                    ],
                   ),
                 ),
               if (controller.canManageDictionaries) ...<Widget>[

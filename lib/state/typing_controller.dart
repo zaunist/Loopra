@@ -149,7 +149,15 @@ class TypingController extends ChangeNotifier {
     if (dict == null) {
       return false;
     }
-    return dict.language == DictionaryLanguage.english || dict.language == DictionaryLanguage.code;
+    return _audioService.supportsPronunciation(dict.normalizedLanguageCode);
+  }
+
+  bool get supportsPronunciationVariants {
+    final DictionaryMeta? dict = _selectedDictionary;
+    if (dict == null) {
+      return false;
+    }
+    return _audioService.supportsPronunciationVariants(dict.normalizedLanguageCode);
   }
 
   int get elapsedSeconds => _elapsedSeconds;
@@ -354,10 +362,14 @@ class TypingController extends ChangeNotifier {
     if (word == null || dict == null || !supportsPronunciation) {
       return;
     }
+    final String? pronunciationText = _pronunciationTextFor(word, dict);
+    if (pronunciationText == null) {
+      return;
+    }
     unawaited(_audioService.playPronunciation(
-      word.headword,
+      pronunciationText,
       variant: _pronunciationVariant,
-      language: dict.language,
+      languageCode: dict.normalizedLanguageCode,
     ));
   }
 
@@ -694,10 +706,14 @@ class TypingController extends ChangeNotifier {
     if (word == null || dict == null) {
       return;
     }
+    final String? pronunciationText = _pronunciationTextFor(word, dict);
+    if (pronunciationText == null) {
+      return;
+    }
     unawaited(_audioService.playPronunciation(
-      word.headword,
+      pronunciationText,
       variant: _pronunciationVariant,
-      language: dict.language,
+      languageCode: dict.normalizedLanguageCode,
     ));
   }
 
@@ -718,6 +734,65 @@ class TypingController extends ChangeNotifier {
   void _cancelTimer() {
     _timer?.cancel();
     _timer = null;
+  }
+
+  String? _pronunciationTextFor(WordEntry word, DictionaryMeta dictionary) {
+    final List<String?> candidates = <String?>[];
+    // Select pronunciation source based on language capabilities:
+    // some providers expect phonetic text (e.g. Japanese notation),
+    // while others require the original headword.
+    final PronunciationVariant variant = _pronunciationVariant;
+    final bool variantsSupported =
+        _audioService.supportsPronunciationVariants(dictionary.normalizedLanguageCode);
+    final bool preferPhoneticInput =
+        _audioService.prefersPhoneticInput(dictionary.normalizedLanguageCode);
+
+    if (preferPhoneticInput) {
+      if (variantsSupported) {
+        if (variant == PronunciationVariant.us) {
+          candidates
+            ..add(word.usPhonetic)
+            ..add(word.ukPhonetic);
+        } else {
+          candidates
+            ..add(word.ukPhonetic)
+            ..add(word.usPhonetic);
+        }
+      } else {
+        candidates
+          ..add(word.usPhonetic)
+          ..add(word.ukPhonetic);
+      }
+    }
+
+    candidates.add(word.notation);
+    candidates.add(word.headword);
+
+    if (!preferPhoneticInput) {
+      candidates
+        ..add(word.usPhonetic)
+        ..add(word.ukPhonetic);
+    }
+
+    final String languageCode = dictionary.normalizedLanguageCode;
+    for (final String? candidate in candidates) {
+      final String? normalized = _normalizePronunciationCandidate(candidate, languageCode);
+      if (normalized != null) {
+        return normalized;
+      }
+    }
+    return null;
+  }
+
+  String? _normalizePronunciationCandidate(String? value, String languageCode) {
+    if (value == null) {
+      return null;
+    }
+    final String trimmed = value.trim();
+    if (trimmed.isEmpty) {
+      return null;
+    }
+    return _audioService.preparePronunciationText(languageCode, trimmed);
   }
 
   @override

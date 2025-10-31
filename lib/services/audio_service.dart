@@ -4,12 +4,67 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
-import '../models/dictionary.dart';
 import 'pronunciation_audio_player.dart';
 
 enum PronunciationVariant { us, uk }
 
+class _PronunciationProfile {
+  const _PronunciationProfile({
+    this.le,
+    this.supportsVariants = false,
+    this.prefersPhoneticInput = false,
+    this.inputSanitizer,
+  });
+
+  final String? le;
+  final bool supportsVariants;
+  final bool prefersPhoneticInput;
+  final String Function(String text)? inputSanitizer;
+
+  String prepareInput(String text) {
+    final String sanitized = inputSanitizer != null ? inputSanitizer!(text) : text;
+    return sanitized.trim();
+  }
+
+  String buildUrl(String text, PronunciationVariant variant) {
+    final String trimmed = prepareInput(text);
+    if (trimmed.isEmpty) {
+      return '';
+    }
+    final String encoded = Uri.encodeComponent(trimmed);
+    final List<String> params = <String>['audio=$encoded'];
+    if (supportsVariants) {
+      params.add('type=${variant == PronunciationVariant.uk ? '1' : '2'}');
+    }
+    if (le != null && le!.isNotEmpty) {
+      params.add('le=${Uri.encodeComponent(le!)}');
+    }
+    return 'https://dict.youdao.com/dictvoice?${params.join('&')}';
+  }
+}
+
 class AudioService {
+  // Youdao voice service language mappings. Extend this map when new languages are added.
+  static const Map<String, _PronunciationProfile> _profiles =
+      <String, _PronunciationProfile>{
+    'en': _PronunciationProfile(supportsVariants: true),
+    'code': _PronunciationProfile(supportsVariants: true),
+    'ja': _PronunciationProfile(
+      le: 'jap',
+      prefersPhoneticInput: true,
+      inputSanitizer: _stripJapaneseFurigana,
+    ),
+    'zh': _PronunciationProfile(le: 'zh'),
+    'de': _PronunciationProfile(le: 'de'),
+    'fr': _PronunciationProfile(le: 'fr'),
+    'es': _PronunciationProfile(le: 'es'),
+    'ar': _PronunciationProfile(le: 'ar'),
+    'ko': _PronunciationProfile(le: 'ko'),
+    'it': _PronunciationProfile(le: 'it'),
+    'ru': _PronunciationProfile(le: 'ru'),
+    'pt': _PronunciationProfile(le: 'pt'),
+  };
+
   AudioService() {
     // Keep the Flutter default prefix so both mobile and web resolve to assets/assets/… on web builds.
     final AudioCache cache = AudioCache.instance = AudioCache(
@@ -88,20 +143,42 @@ class AudioService {
     await _playAsset(_wrongPlayer, _wrongSoundAsset, volume: volume);
   }
 
+  bool supportsPronunciation(String languageCode) =>
+      _profileFor(languageCode) != null;
+
+  bool supportsPronunciationVariants(String languageCode) =>
+      _profileFor(languageCode)?.supportsVariants ?? false;
+
+  bool prefersPhoneticInput(String languageCode) =>
+      _profileFor(languageCode)?.prefersPhoneticInput ?? false;
+
+  String? preparePronunciationText(String languageCode, String text) {
+    final _PronunciationProfile? profile = _profileFor(languageCode);
+    if (profile == null) {
+      final String trimmed = text.trim();
+      return trimmed.isEmpty ? null : trimmed;
+    }
+    final String prepared = profile.prepareInput(text);
+    if (prepared.isEmpty) {
+      return null;
+    }
+    return prepared;
+  }
+
   Future<void> playPronunciation(
-    String word, {
+    String text, {
     PronunciationVariant variant = PronunciationVariant.us,
-    required DictionaryLanguage language,
+    required String languageCode,
     double volume = 0.8,
   }) async {
     if (!_isAudioPlaybackAvailable) {
       return;
     }
-    final String url = _buildPronunciationUrl(
-      word,
-      variant: variant,
-      language: language,
-    );
+    final _PronunciationProfile? profile = _profileFor(languageCode);
+    if (profile == null) {
+      return;
+    }
+    final String url = profile.buildUrl(text, variant);
     if (url.isEmpty) {
       return;
     }
@@ -117,7 +194,6 @@ class AudioService {
         );
         return;
       }
-      _isAudioPlaybackAvailable = false;
       debugPrint('Pronunciation playback failed for $url: $error');
       debugPrint('$stackTrace');
     } catch (error, stackTrace) {
@@ -126,7 +202,6 @@ class AudioService {
         debugPrint('$stackTrace');
         return;
       }
-      _isAudioPlaybackAvailable = false;
       debugPrint('Pronunciation playback failed for $url: $error');
       debugPrint('$stackTrace');
     }
@@ -176,23 +251,31 @@ class AudioService {
     }
   }
 
-  String _buildPronunciationUrl(
-    String word, {
-    required PronunciationVariant variant,
-    required DictionaryLanguage language,
-  }) {
-    if (word.isEmpty) {
-      return '';
-    }
-    final String encoded = Uri.encodeComponent(word);
-
-    if (language == DictionaryLanguage.english ||
-        language == DictionaryLanguage.code) {
-      final String type = variant == PronunciationVariant.uk ? '1' : '2';
-      return 'https://dict.youdao.com/dictvoice?audio=$encoded&type=$type';
-    }
-
-    // Other languages are not yet supported; returning empty string avoids erroneous requests.
-    return '';
+  static String _stripJapaneseFurigana(String text) {
+    final RegExp parentheses = RegExp(r'[（(][^）)]*[）)]');
+    final String withoutFurigana = text.replaceAll(parentheses, '');
+    final String collapsedWhitespace =
+        withoutFurigana.replaceAll(RegExp(r'\s+'), '');
+    return collapsedWhitespace;
   }
+
+  _PronunciationProfile? _profileFor(String languageCode) {
+    final String normalized = _normalizeLanguageCode(languageCode);
+    if (normalized.isEmpty) {
+      return null;
+    }
+    final _PronunciationProfile? direct = _profiles[normalized];
+    if (direct != null) {
+      return direct;
+    }
+    final int hyphenIndex = normalized.indexOf('-');
+    if (hyphenIndex != -1) {
+      final String base = normalized.substring(0, hyphenIndex);
+      return _profiles[base];
+    }
+    return null;
+  }
+
+  String _normalizeLanguageCode(String languageCode) =>
+      languageCode.trim().toLowerCase().replaceAll('_', '-');
 }

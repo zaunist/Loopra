@@ -54,5 +54,21 @@
     "asset": "SAT_3_T.json",
     "language": "en",
     "category": "国际考试"
+  },
+  {
+    "id": "japanese-basic-en",
+    "name": "日语基础词库（英译）",
+    "description": "日语基础词汇，提供英文释义与假名注音。",
+    "asset": "Japanesebasicword.json",
+    "language": "ja",
+    "category": "日语基础"
+  },
+  {
+    "id": "japanese-basic-zh",
+    "name": "日语基础词库（中译）",
+    "description": "日语基础词汇，提供中文释义与假名注音。",
+    "asset": "Japanesebasicword_zh.json",
+    "language": "ja",
+    "category": "日语基础"
   }
 ]

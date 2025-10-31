@@ -84,7 +84,8 @@ class DictionaryRepository {
     final String name = rawName.isEmpty ? id : rawName;
     final String description = metaRaw['description']?.toString() ?? '';
     final String? category = metaRaw['category']?.toString();
-    final String? languageCode = metaRaw['language']?.toString();
+    final String normalizedLanguageCode = (metaRaw['language']?.toString() ?? '').toLowerCase();
+    final DictionaryLanguage dictionaryLanguage = DictionaryLanguageX.fromCode(normalizedLanguageCode);
 
     final String filePath = await DictionaryStorage.writeDictionaryFile(id, entries);
 
@@ -93,7 +94,8 @@ class DictionaryRepository {
       name: name,
       description: description,
       assetPath: filePath,
-      language: DictionaryLanguageX.fromCode(languageCode),
+      language: dictionaryLanguage,
+      languageCode: normalizedLanguageCode.isEmpty ? dictionaryLanguage.code : normalizedLanguageCode,
       category: category,
       isCustom: true,
     );

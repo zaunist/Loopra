@@ -9,6 +9,7 @@ import '../models/dictionary.dart';
 import '../models/word_entry.dart';
 import '../services/audio_service.dart';
 import '../state/typing_controller.dart';
+import 'dictionary_picker_dialog.dart';
 import 'settings_screen.dart';
 import 'statistics_screen.dart';
 
@@ -526,22 +527,9 @@ class _HeaderControls extends StatelessWidget {
         }
 
         addHeaderItem(
-          _IconMenuButton<String>(
-            icon: Icons.menu_book_rounded,
+          _DictionaryPickerButton(
+            controller: controller,
             tooltip: selected?.name ?? '选择词库',
-            enabled: dictionaries.isNotEmpty && !controller.isLoading,
-            selectedValue: selected?.id,
-            options: dictionaries
-                .map(
-                  (DictionaryMeta dict) => _MenuOption<String>(
-                    value: dict.id,
-                    label: dict.name,
-                  ),
-                )
-                .toList(),
-            onSelected: (String value) {
-              unawaited(controller.selectDictionary(value));
-            },
           ),
         );
 
@@ -573,7 +561,7 @@ class _HeaderControls extends StatelessWidget {
           ),
         );
 
-        if (controller.supportsPronunciation) {
+        if (controller.supportsPronunciationVariants) {
           final String pronunciationTooltip = controller.pronunciationVariant == PronunciationVariant.us
               ? '美音'
               : '英音';
@@ -767,6 +755,75 @@ class _IconToggleChip extends StatelessWidget {
   }
 }
 
+class _DictionaryPickerButton extends StatelessWidget {
+  const _DictionaryPickerButton({
+    required this.controller,
+    required this.tooltip,
+  });
+
+  final TypingController controller;
+  final String tooltip;
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
+    final bool enabled = controller.dictionaries.isNotEmpty && !controller.isLoading;
+    final DictionaryMeta? selected = controller.selectedDictionary;
+    final Color iconColor = enabled
+        ? colorScheme.primary
+        : colorScheme.onSurface.withValues(alpha: 0.38);
+
+    Future<void> handleTap() async {
+      if (!enabled) {
+        return;
+      }
+      final String? result = await DictionaryPickerDialog.show(
+        context,
+        dictionaries: controller.dictionaries,
+        initialDictionaryId: selected?.id,
+      );
+      if (result != null && result.isNotEmpty && result != selected?.id) {
+        unawaited(controller.selectDictionary(result));
+      }
+    }
+
+    return Tooltip(
+      message: tooltip,
+      waitDuration: const Duration(milliseconds: 200),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+        child: InkWell(
+          onTap: enabled ? handleTap : null,
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            height: 40,
+            width: 44,
+            decoration: BoxDecoration(
+              color: enabled
+                  ? colorScheme.surfaceContainerHighest
+                  : colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: enabled
+                    ? colorScheme.outlineVariant
+                    : colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+              ),
+            ),
+            child: Stack(
+              alignment: Alignment.center,
+              children: <Widget>[
+                Icon(Icons.menu_book_rounded, color: iconColor, size: 20),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _IconMenuButton<T> extends StatelessWidget {
   const _IconMenuButton({
     required this.icon,
@@ -925,54 +982,137 @@ class _WordPanel extends StatelessWidget {
     }
 
     final ThemeData theme = Theme.of(context);
+    final bool canPlayPronunciation = controller.supportsPronunciation;
+    final bool playPronunciationEnabled = canPlayPronunciation && !controller.isLoading;
+    final Widget wordDisplay = _WordDisplay(
+      word: word,
+      states: controller.letterStates,
+      dictationMode: controller.dictationMode,
+    );
 
-    final Widget wordBody = Column(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        _WordDisplay(
-          word: word,
-          states: controller.letterStates,
-          dictationMode: controller.dictationMode,
-        ),
-        const SizedBox(height: 12),
-        if (word.usPhonetic != null || word.ukPhonetic != null)
-          Text(
-            _buildPhoneticLine(word),
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.primary,
-            ),
-            textAlign: TextAlign.center,
+    final Widget wordBody = LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        double maxWidth = constraints.maxWidth;
+        if (!constraints.hasBoundedWidth || !maxWidth.isFinite || maxWidth <= 0) {
+          maxWidth = MediaQuery.of(context).size.width - 32;
+        }
+        if (maxWidth <= 0 || !maxWidth.isFinite) {
+          maxWidth = MediaQuery.of(context).size.width;
+        }
+        final double iconButtonSlot = canPlayPronunciation ? 40 : 0;
+        final double iconSpacing = canPlayPronunciation ? 12 : 0;
+        final double wordMaxWidth = maxWidth - iconButtonSlot - iconSpacing;
+        final double effectiveWordWidth = wordMaxWidth > 0 ? wordMaxWidth : maxWidth;
+
+        final TextStyle notationStyle = _resolveTextStyle(
+          <TextStyle?>[
+            theme.textTheme.displaySmall,
+            theme.textTheme.headlineSmall,
+            theme.textTheme.headlineMedium,
+            theme.textTheme.titleLarge,
+            theme.textTheme.titleMedium,
+          ],
+          const TextStyle(fontSize: 32, fontWeight: FontWeight.w600),
+        );
+        final TextStyle translationStyle = _resolveTextStyle(
+          <TextStyle?>[
+            theme.textTheme.titleMedium,
+            theme.textTheme.bodyLarge,
+            theme.textTheme.bodyMedium,
+          ],
+          const TextStyle(fontSize: 18),
+        );
+        final TextStyle phoneticStyle = _resolveTextStyle(
+          <TextStyle?>[
+            theme.textTheme.bodyMedium,
+            theme.textTheme.bodyLarge,
+            theme.textTheme.bodySmall,
+          ],
+          const TextStyle(fontSize: 16),
+        ).copyWith(color: theme.colorScheme.primary);
+
+        final Widget headingRow = Align(
+          alignment: Alignment.center,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: effectiveWordWidth,
+                ),
+                child: wordDisplay,
+              ),
+              if (canPlayPronunciation)
+                Padding(
+                  padding: const EdgeInsets.only(left: 12),
+                  child: IconButton(
+                    tooltip: '播放发音',
+                    visualDensity: VisualDensity.compact,
+                    onPressed: playPronunciationEnabled ? controller.playCurrentPronunciation : null,
+                    style: IconButton.styleFrom(
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      padding: const EdgeInsets.all(6),
+                      minimumSize: const Size(32, 32),
+                    ),
+                    icon: const Icon(Icons.volume_up_rounded),
+                  ),
+                ),
+            ],
           ),
-        if (word.notation != null && word.notation!.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.only(top: 8),
-            child: Text(
-              word.notation!,
-              style: theme.textTheme.titleSmall,
-              textAlign: TextAlign.center,
+        );
+
+        final List<Widget> children = <Widget>[
+          if (word.notation != null && word.notation!.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: SizedBox(
+                width: maxWidth,
+                child: _ScaledSingleLineText(
+                  text: word.notation!,
+                  style: notationStyle,
+                  textAlign: TextAlign.center,
+                ),
+              ),
             ),
-          ),
-        if (controller.supportsPronunciation)
-          Padding(
-            padding: const EdgeInsets.only(top: 12),
-            child: FilledButton.icon(
-              onPressed: controller.isLoading
-                  ? null
-                  : controller.playCurrentPronunciation,
-              icon: const Icon(Icons.volume_up),
-              label: const Text('播放发音'),
+          headingRow,
+          const SizedBox(height: 12),
+        ];
+
+        if (word.usPhonetic != null || word.ukPhonetic != null) {
+          children.add(
+            SizedBox(
+              width: maxWidth,
+              child: _ScaledSingleLineText(
+                text: _buildPhoneticLine(word),
+                style: phoneticStyle,
+                textAlign: TextAlign.center,
+              ),
             ),
-          ),
-        if (controller.showTranslation)
-          Padding(
-            padding: const EdgeInsets.only(top: 12),
-            child: Text(
-              word.translationText.isEmpty ? '（无释义）' : word.translationText,
-              style: theme.textTheme.titleMedium,
-              textAlign: TextAlign.center,
+          );
+        }
+
+        if (controller.showTranslation) {
+          children.add(
+            Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: SizedBox(
+                width: maxWidth,
+                child: _ScaledSingleLineText(
+                  text: word.translationText.isEmpty ? '（无释义）' : word.translationText,
+                  style: translationStyle,
+                  textAlign: TextAlign.center,
+                ),
+              ),
             ),
-          ),
-      ],
+          );
+        }
+
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: children,
+        );
+      },
     );
 
     return Stack(
@@ -1155,6 +1295,82 @@ class _LetterTile extends StatelessWidget {
       child: Text(letter, style: style.copyWith(color: foreground)),
     );
   }
+}
+
+class _ScaledSingleLineText extends StatelessWidget {
+  const _ScaledSingleLineText({
+    required this.text,
+    required this.style,
+    this.textAlign = TextAlign.center,
+  });
+
+  final String text;
+  final TextStyle style;
+  final TextAlign textAlign;
+
+  @override
+  Widget build(BuildContext context) {
+    if (text.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        if (!constraints.hasBoundedWidth || !constraints.maxWidth.isFinite) {
+          return Text(
+            text,
+            style: style,
+            maxLines: 1,
+            softWrap: false,
+            overflow: TextOverflow.visible,
+            textAlign: textAlign,
+          );
+        }
+
+        final Alignment alignment = _alignmentForTextAlign(textAlign);
+
+        return SizedBox(
+          width: constraints.maxWidth,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: alignment,
+            child: Text(
+              text,
+              style: style,
+              maxLines: 1,
+              softWrap: false,
+              overflow: TextOverflow.visible,
+              textAlign: textAlign,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Alignment _alignmentForTextAlign(TextAlign align) {
+    switch (align) {
+      case TextAlign.left:
+      case TextAlign.start:
+        return Alignment.centerLeft;
+      case TextAlign.right:
+      case TextAlign.end:
+        return Alignment.centerRight;
+      case TextAlign.center:
+      case TextAlign.justify:
+        return Alignment.center;
+      default:
+        return Alignment.center;
+    }
+  }
+}
+
+TextStyle _resolveTextStyle(List<TextStyle?> candidates, TextStyle fallback) {
+  for (final TextStyle? style in candidates) {
+    if (style != null) {
+      return style;
+    }
+  }
+  return fallback;
 }
 
 class _StatsBar extends StatelessWidget {
