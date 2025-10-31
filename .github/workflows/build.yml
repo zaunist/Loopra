@@ -1,0 +1,70 @@
+name: Build Flutter Clients
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Android APK
+            os: ubuntu-latest
+            build_cmd: flutter build apk --release
+          - name: Android App Bundle
+            os: ubuntu-latest
+            build_cmd: flutter build appbundle --release
+          - name: Web
+            os: ubuntu-latest
+            build_cmd: flutter build web --release
+          - name: Linux Desktop
+            os: ubuntu-latest
+            build_cmd: flutter build linux --release
+            linux_deps: true
+            enable_desktop: flutter config --enable-linux-desktop
+          - name: Windows Desktop
+            os: windows-latest
+            build_cmd: flutter build windows --release
+            enable_desktop: flutter config --enable-windows-desktop
+          - name: macOS Desktop
+            os: macos-latest
+            build_cmd: flutter build macos --release
+            enable_desktop: flutter config --enable-macos-desktop
+          - name: iOS
+            os: macos-latest
+            build_cmd: flutter build ios --release --no-codesign
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Show Flutter version
+        run: flutter --version
+
+      - name: Enable desktop target
+        if: ${{ matrix.enable_desktop }}
+        run: ${{ matrix.enable_desktop }}
+
+      - name: Install Linux desktop dependencies
+        if: ${{ matrix.linux_deps }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
+
+      - name: Fetch packages
+        run: flutter pub get
+
+      - name: Build ${{ matrix.name }}
+        run: ${{ matrix.build_cmd }}
