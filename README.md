@@ -14,6 +14,16 @@ Loopra 是一个由 Flutter 构建的跨平台词汇/短语打字训练应用，
 
 ## 快速开始
 
+### 在线体验
+
+https://loopra.vercel.app/
+
+### 全平台客户端下载
+
+> 由于没有苹果开发者账号及设备，所以 ios 版本能否使用犹未可知
+
+https://github.com/zaunist/Loopra/releases
+
 ### 环境准备
 
 - Flutter stable（建议 3.22 及以上）与 Dart 3.9+。
@@ -101,3 +111,7 @@ GitHub Actions 中的 `.github/workflows/build.yml` 已配置上述目标的自�
 ## 贡献指南
 
 欢迎提交 Issue 或 Pull Request，与社区一起打磨更高效的练习体验。
+
+## 感谢
+
+[qwerty-learner](https://github.com/RealKai42/qwerty-learner)
