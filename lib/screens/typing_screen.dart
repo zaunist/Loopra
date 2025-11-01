@@ -1244,6 +1244,7 @@ class _WordDisplay extends StatelessWidget {
 
         return Align(
           alignment: Alignment.center,
+          widthFactor: 1,
           child: ConstrainedBox(
             constraints: BoxConstraints(maxWidth: constraints.maxWidth),
             child: scaledWord,
