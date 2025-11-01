@@ -36,7 +36,7 @@ class TypingController extends ChangeNotifier {
   bool _ignoreCase = true;
   bool _keySoundEnabled = true;
   bool _feedbackSoundEnabled = true;
-  bool _autoPronunciationEnabled = false;
+  bool _autoPronunciationEnabled = true;
   PronunciationVariant _pronunciationVariant = PronunciationVariant.us;
   bool _dictationMode = false;
 
