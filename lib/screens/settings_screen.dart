@@ -2,13 +2,18 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../models/dictionary.dart';
+import '../models/subscription.dart';
 import '../services/audio_service.dart';
+import '../state/auth_controller.dart';
+import '../state/subscription_controller.dart';
 import '../state/typing_controller.dart';
+import 'account/account_dialog.dart';
 import 'statistics_screen.dart';
 import 'dictionary_picker_dialog.dart';
 
@@ -18,9 +23,7 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('设置'),
-      ),
+      appBar: AppBar(title: const Text('设置')),
       body: Consumer<TypingController>(
         builder: (BuildContext context, TypingController controller, _) {
           final DictionaryMeta? selected = controller.selectedDictionary;
@@ -39,6 +42,9 @@ class SettingsScreen extends StatelessWidget {
           return ListView(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
             children: <Widget>[
+              const _SectionHeader(label: '账号与同步'),
+              const _AccountSyncSection(),
+              const SizedBox(height: 24),
               const _SectionHeader(label: '词库'),
               InputDecorator(
                 decoration: const InputDecoration(labelText: '选择词库'),
@@ -50,17 +56,23 @@ class SettingsScreen extends StatelessWidget {
                     onTap: controller.isLoading || dictionaries.isEmpty
                         ? null
                         : () async {
-                            final String? result = await DictionaryPickerDialog.show(
-                              context,
-                              dictionaries: dictionaries,
-                              initialDictionaryId: selected?.id,
-                            );
-                            if (result != null && result.isNotEmpty && result != selected?.id) {
+                            final String? result =
+                                await DictionaryPickerDialog.show(
+                                  context,
+                                  dictionaries: dictionaries,
+                                  initialDictionaryId: selected?.id,
+                                );
+                            if (result != null &&
+                                result.isNotEmpty &&
+                                result != selected?.id) {
                               unawaited(controller.selectDictionary(result));
                             }
                           },
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 12,
+                        horizontal: 8,
+                      ),
                       child: Row(
                         children: <Widget>[
                           Expanded(
@@ -69,7 +81,9 @@ class SettingsScreen extends StatelessWidget {
                               children: <Widget>[
                                 Text(
                                   selected?.name ?? '暂无可用词库',
-                                  style: Theme.of(context).textTheme.titleMedium,
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.titleMedium,
                                 ),
                                 if (selected != null)
                                   Padding(
@@ -79,7 +93,11 @@ class SettingsScreen extends StatelessWidget {
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodySmall
-                                          ?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                                          ?.copyWith(
+                                            color: Theme.of(
+                                              context,
+                                            ).colorScheme.onSurfaceVariant,
+                                          ),
                                     ),
                                   ),
                               ],
@@ -87,7 +105,9 @@ class SettingsScreen extends StatelessWidget {
                           ),
                           Icon(
                             Icons.open_in_new_rounded,
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSurfaceVariant,
                           ),
                         ],
                       ),
@@ -134,14 +154,18 @@ class SettingsScreen extends StatelessWidget {
                   runSpacing: 12,
                   children: <Widget>[
                     FilledButton.icon(
-                      onPressed: controller.isLoading ? null : () async => _importDictionary(context),
+                      onPressed: controller.isLoading
+                          ? null
+                          : () async => _importDictionary(context),
                       icon: const Icon(Icons.upload_file),
                       label: const Text('导入词库'),
                     ),
                     if (selected?.isCustom == true)
                       OutlinedButton.icon(
-                        onPressed:
-                            controller.isLoading ? null : () async => _confirmDeleteDictionary(context, selected!),
+                        onPressed: controller.isLoading
+                            ? null
+                            : () async =>
+                                  _confirmDeleteDictionary(context, selected!),
                         icon: const Icon(Icons.delete),
                         label: const Text('删除词库'),
                       ),
@@ -157,8 +181,8 @@ class SettingsScreen extends StatelessWidget {
                     isExpanded: true,
                     value: hasChapters
                         ? (controller.selectedChapter < controller.chapterCount
-                            ? controller.selectedChapter
-                            : 0)
+                              ? controller.selectedChapter
+                              : 0)
                         : null,
                     items: chapterItems,
                     onChanged: controller.isLoading || !hasChapters
@@ -246,7 +270,9 @@ class SettingsScreen extends StatelessWidget {
                       label: Text('英音'),
                     ),
                   ],
-                  selected: <PronunciationVariant>{controller.pronunciationVariant},
+                  selected: <PronunciationVariant>{
+                    controller.pronunciationVariant,
+                  },
                   onSelectionChanged: controller.isLoading
                       ? null
                       : (Set<PronunciationVariant> selection) {
@@ -324,7 +350,10 @@ class SettingsScreen extends StatelessWidget {
     }
   }
 
-  Future<void> _confirmDeleteDictionary(BuildContext context, DictionaryMeta meta) async {
+  Future<void> _confirmDeleteDictionary(
+    BuildContext context,
+    DictionaryMeta meta,
+  ) async {
     final TypingController controller = context.read<TypingController>();
     final bool? confirmed = await showDialog<bool>(
       context: context,
@@ -369,9 +398,9 @@ class SettingsScreen extends StatelessWidget {
   }
 
   void _showSnack(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 }
 
@@ -379,7 +408,8 @@ bool _isMobilePlatform() {
   if (kIsWeb) {
     return false;
   }
-  return defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.iOS;
+  return defaultTargetPlatform == TargetPlatform.android ||
+      defaultTargetPlatform == TargetPlatform.iOS;
 }
 
 class _SectionHeader extends StatelessWidget {
@@ -394,8 +424,283 @@ class _SectionHeader extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 12),
       child: Text(
         label,
-        style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+        style: theme.textTheme.titleMedium?.copyWith(
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
+  }
+}
+
+class _AccountSyncSection extends StatelessWidget {
+  const _AccountSyncSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer2<AuthController, SubscriptionController>(
+      builder:
+          (
+            BuildContext context,
+            AuthController auth,
+            SubscriptionController subscription,
+            _,
+          ) {
+            final bool isBusy =
+                auth.isLoading || subscription.isLoading || subscription.isCreatingCheckout;
+            if (!auth.isConfigured) {
+              return Card(
+                margin: EdgeInsets.zero,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Icon(
+                        Icons.cloud_off,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: const <Widget>[
+                            Text(
+                              '暂未启用云同步',
+                              style: TextStyle(fontWeight: FontWeight.w600),
+                            ),
+                            SizedBox(height: 4),
+                            Text('请提供 Supabase 配置后再启用登录与同步功能。'),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }
+
+            if (!subscription.isConfigured) {
+              return Card(
+                margin: EdgeInsets.zero,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Icon(
+                        Icons.workspace_premium_outlined,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: const <Widget>[
+                            Text(
+                              '订阅功能未配置',
+                              style: TextStyle(fontWeight: FontWeight.w600),
+                            ),
+                            SizedBox(height: 4),
+                            Text('请补充 Creem API 凭证后再启用订阅与云同步功能。'),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }
+
+            if (auth.isLoggedIn) {
+              final String subscribeLabel = _subscribeButtonLabel(subscription);
+              return Card(
+                margin: EdgeInsets.zero,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    ListTile(
+                      leading: const Icon(Icons.verified_user),
+                      title: Text(auth.email ?? '已登录'),
+                      subtitle: const Text('订阅用户可以在登录后同步练习进度。'),
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.workspace_premium),
+                      title: const Text('订阅状态'),
+                      subtitle: Text(subscription.status.describeState()),
+                    ),
+                    if (subscription.note != null &&
+                        subscription.note!.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        child: Text(
+                          subscription.note!,
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurfaceVariant,
+                              ),
+                        ),
+                      ),
+                    if (isBusy) const LinearProgressIndicator(minHeight: 2),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      child: OverflowBar(
+                        alignment: MainAxisAlignment.end,
+                        overflowAlignment: OverflowBarAlignment.end,
+                        spacing: 12,
+                        children: <Widget>[
+                          if (!subscription.status.isActive)
+                            FilledButton(
+                              onPressed: isBusy || subscription.availablePlans.isEmpty
+                                  ? null
+                                  : () => _startLifetimeSubscription(context, subscription),
+                              child: Text(subscribeLabel),
+                            ),
+                          TextButton(
+                            onPressed: auth.isLoading
+                                ? null
+                                : () async {
+                                    final ScaffoldMessengerState messenger =
+                                        ScaffoldMessenger.of(context);
+                                    await auth.signOut();
+                                    messenger.showSnackBar(
+                                      const SnackBar(content: Text('已退出登录')),
+                                    );
+                                  },
+                            child: const Text('退出登录'),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+
+            return Card(
+              margin: EdgeInsets.zero,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  const ListTile(
+                    leading: Icon(Icons.person),
+                    title: Text('未登录'),
+                    subtitle: Text('登录并完成订阅后即可在多设备间同步练习进度。'),
+                  ),
+                  if (auth.isLoading)
+                    const LinearProgressIndicator(minHeight: 2),
+                  if (subscription.note != null &&
+                      subscription.note!.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      child: Text(
+                        subscription.note!,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    child: OverflowBar(
+                      alignment: MainAxisAlignment.end,
+                      overflowAlignment: OverflowBarAlignment.end,
+                      spacing: 12,
+                      children: <Widget>[
+                        FilledButton(
+                          onPressed: isBusy
+                              ? null
+                              : () => AccountDialog.show(context),
+                          child: const Text('登录 / 注册'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+    );
+  }
+
+  Future<void> _startLifetimeSubscription(
+    BuildContext context,
+    SubscriptionController subscription,
+  ) async {
+    final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
+    final SubscriptionPlan? plan =
+        _selectLifetimePlan(subscription.availablePlans);
+    if (plan == null) {
+      messenger.showSnackBar(
+        const SnackBar(content: Text('暂无可用订阅计划，请稍后再试。')),
+      );
+      return;
+    }
+
+    try {
+      final Uri checkoutUrl =
+          await subscription.createCheckoutSession(plan: plan);
+      final LaunchMode mode =
+          kIsWeb ? LaunchMode.platformDefault : LaunchMode.externalApplication;
+      final bool launched = await launchUrl(checkoutUrl, mode: mode);
+      if (!launched) {
+        messenger.showSnackBar(
+          const SnackBar(content: Text('无法打开订阅页面，请稍后重试。')),
+        );
+      }
+    } catch (error) {
+      messenger.showSnackBar(
+        SnackBar(content: Text('订阅失败：$error')),
+      );
+    }
+  }
+
+  String _subscribeButtonLabel(SubscriptionController subscription) {
+    final SubscriptionPlan? plan =
+        _selectLifetimePlan(subscription.availablePlans);
+    if (plan == null) {
+      return '订阅永久会员';
+    }
+    final String priceLabel = _formatPlanPrice(plan);
+    if (priceLabel.isEmpty) {
+      return '订阅永久会员';
+    }
+    return '订阅永久会员（$priceLabel）';
+  }
+
+  SubscriptionPlan? _selectLifetimePlan(List<SubscriptionPlan> plans) {
+    if (plans.isEmpty) {
+      return null;
+    }
+    try {
+      return plans.firstWhere(
+        (SubscriptionPlan plan) => plan.type == SubscriptionPlanType.lifetime,
+      );
+    } on StateError {
+      return plans.first;
+    }
+  }
+
+  String _formatPlanPrice(SubscriptionPlan plan) {
+    if (plan.price == null || plan.currency == null || plan.currency!.isEmpty) {
+      return '';
+    }
+    final double value = plan.price!.toDouble();
+    final bool isWhole = value == value.truncateToDouble();
+    final String amount = isWhole ? value.toStringAsFixed(0) : value.toStringAsFixed(2);
+    return '$amount ${plan.currency}';
   }
 }

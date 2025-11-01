@@ -510,13 +510,13 @@ class _HeaderControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<DictionaryMeta> dictionaries = controller.dictionaries;
     final DictionaryMeta? selected = controller.selectedDictionary;
     final ThemeData theme = Theme.of(context);
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints _) {
         final bool enableToggles = !controller.isLoading;
-        final bool enableSessionActions = !controller.isLoading && controller.isSessionReady;
+        final bool enableSessionActions =
+            !controller.isLoading && controller.isSessionReady;
 
         final List<Widget> headerItems = <Widget>[];
         void addHeaderItem(Widget widget) {
@@ -562,7 +562,8 @@ class _HeaderControls extends StatelessWidget {
         );
 
         if (controller.supportsPronunciationVariants) {
-          final String pronunciationTooltip = controller.pronunciationVariant == PronunciationVariant.us
+          final String pronunciationTooltip =
+              controller.pronunciationVariant == PronunciationVariant.us
               ? '美音'
               : '英音';
           addHeaderItem(
@@ -746,7 +747,9 @@ class _IconToggleChip extends StatelessWidget {
             : null,
         backgroundColor: colorScheme.surfaceContainerHighest,
         selectedColor: colorScheme.primary.withValues(alpha: 0.16),
-        disabledColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
+        disabledColor: colorScheme.surfaceContainerHighest.withValues(
+          alpha: 0.6,
+        ),
         side: BorderSide(
           color: selected ? colorScheme.primary : Colors.transparent,
         ),
@@ -768,7 +771,8 @@ class _DictionaryPickerButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colorScheme = theme.colorScheme;
-    final bool enabled = controller.dictionaries.isNotEmpty && !controller.isLoading;
+    final bool enabled =
+        controller.dictionaries.isNotEmpty && !controller.isLoading;
     final DictionaryMeta? selected = controller.selectedDictionary;
     final Color iconColor = enabled
         ? colorScheme.primary
@@ -808,7 +812,9 @@ class _DictionaryPickerButton extends StatelessWidget {
               border: Border.all(
                 color: enabled
                     ? colorScheme.outlineVariant
-                    : colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+                    : colorScheme.surfaceContainerHighest.withValues(
+                        alpha: 0.4,
+                      ),
               ),
             ),
             child: Stack(
@@ -871,7 +877,9 @@ class _IconMenuButton<T> extends StatelessWidget {
               ),
             ];
           }
-          return options.map(( _MenuOption<T> option) => _buildItem(context, option)).toList();
+          return options
+              .map((_MenuOption<T> option) => _buildItem(context, option))
+              .toList();
         },
         child: Container(
           height: 40,
@@ -911,7 +919,8 @@ class _IconMenuButton<T> extends StatelessWidget {
 
   PopupMenuEntry<T> _buildItem(BuildContext context, _MenuOption<T> option) {
     final ThemeData theme = Theme.of(context);
-    final bool isSelected = selectedValue != null && selectedValue == option.value;
+    final bool isSelected =
+        selectedValue != null && selectedValue == option.value;
     final ColorScheme colorScheme = theme.colorScheme;
 
     return PopupMenuItem<T>(
@@ -926,9 +935,7 @@ class _IconMenuButton<T> extends StatelessWidget {
                 : const SizedBox.shrink(),
           ),
           const SizedBox(width: 8),
-          Expanded(
-            child: Text(option.label, overflow: TextOverflow.ellipsis),
-          ),
+          Expanded(child: Text(option.label, overflow: TextOverflow.ellipsis)),
         ],
       ),
     );
@@ -983,7 +990,8 @@ class _WordPanel extends StatelessWidget {
 
     final ThemeData theme = Theme.of(context);
     final bool canPlayPronunciation = controller.supportsPronunciation;
-    final bool playPronunciationEnabled = canPlayPronunciation && !controller.isLoading;
+    final bool playPronunciationEnabled =
+        canPlayPronunciation && !controller.isLoading;
     final Widget wordDisplay = _WordDisplay(
       word: word,
       states: controller.letterStates,
@@ -993,7 +1001,9 @@ class _WordPanel extends StatelessWidget {
     final Widget wordBody = LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         double maxWidth = constraints.maxWidth;
-        if (!constraints.hasBoundedWidth || !maxWidth.isFinite || maxWidth <= 0) {
+        if (!constraints.hasBoundedWidth ||
+            !maxWidth.isFinite ||
+            maxWidth <= 0) {
           maxWidth = MediaQuery.of(context).size.width - 32;
         }
         if (maxWidth <= 0 || !maxWidth.isFinite) {
@@ -1002,26 +1012,22 @@ class _WordPanel extends StatelessWidget {
         final double iconButtonSlot = canPlayPronunciation ? 40 : 0;
         final double iconSpacing = canPlayPronunciation ? 12 : 0;
         final double wordMaxWidth = maxWidth - iconButtonSlot - iconSpacing;
-        final double effectiveWordWidth = wordMaxWidth > 0 ? wordMaxWidth : maxWidth;
+        final double effectiveWordWidth = wordMaxWidth > 0
+            ? wordMaxWidth
+            : maxWidth;
 
-        final TextStyle notationStyle = _resolveTextStyle(
-          <TextStyle?>[
-            theme.textTheme.displaySmall,
-            theme.textTheme.headlineSmall,
-            theme.textTheme.headlineMedium,
-            theme.textTheme.titleLarge,
-            theme.textTheme.titleMedium,
-          ],
-          const TextStyle(fontSize: 32, fontWeight: FontWeight.w600),
-        );
-        final TextStyle translationStyle = _resolveTextStyle(
-          <TextStyle?>[
-            theme.textTheme.titleMedium,
-            theme.textTheme.bodyLarge,
-            theme.textTheme.bodyMedium,
-          ],
-          const TextStyle(fontSize: 18),
-        );
+        final TextStyle notationStyle = _resolveTextStyle(<TextStyle?>[
+          theme.textTheme.displaySmall,
+          theme.textTheme.headlineSmall,
+          theme.textTheme.headlineMedium,
+          theme.textTheme.titleLarge,
+          theme.textTheme.titleMedium,
+        ], const TextStyle(fontSize: 32, fontWeight: FontWeight.w600));
+        final TextStyle translationStyle = _resolveTextStyle(<TextStyle?>[
+          theme.textTheme.titleMedium,
+          theme.textTheme.bodyLarge,
+          theme.textTheme.bodyMedium,
+        ], const TextStyle(fontSize: 18));
         final TextStyle phoneticStyle = _resolveTextStyle(
           <TextStyle?>[
             theme.textTheme.bodyMedium,
@@ -1038,9 +1044,7 @@ class _WordPanel extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxWidth: effectiveWordWidth,
-                ),
+                constraints: BoxConstraints(maxWidth: effectiveWordWidth),
                 child: wordDisplay,
               ),
               if (canPlayPronunciation)
@@ -1049,7 +1053,9 @@ class _WordPanel extends StatelessWidget {
                   child: IconButton(
                     tooltip: '播放发音',
                     visualDensity: VisualDensity.compact,
-                    onPressed: playPronunciationEnabled ? controller.playCurrentPronunciation : null,
+                    onPressed: playPronunciationEnabled
+                        ? controller.playCurrentPronunciation
+                        : null,
                     style: IconButton.styleFrom(
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       padding: const EdgeInsets.all(6),
@@ -1099,7 +1105,9 @@ class _WordPanel extends StatelessWidget {
               child: SizedBox(
                 width: maxWidth,
                 child: _ScaledSingleLineText(
-                  text: word.translationText.isEmpty ? '（无释义）' : word.translationText,
+                  text: word.translationText.isEmpty
+                      ? '（无释义）'
+                      : word.translationText,
                   style: translationStyle,
                   textAlign: TextAlign.center,
                 ),
@@ -1108,10 +1116,7 @@ class _WordPanel extends StatelessWidget {
           );
         }
 
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: children,
-        );
+        return Column(mainAxisSize: MainAxisSize.min, children: children);
       },
     );
 
@@ -1210,7 +1215,8 @@ class _WordDisplay extends StatelessWidget {
       final LetterState state = i < states.length
           ? states[i]
           : LetterState.idle;
-      final bool shouldHideLetter = dictationMode && state != LetterState.correct;
+      final bool shouldHideLetter =
+          dictationMode && state != LetterState.correct;
       final String visibleLetter = shouldHideLetter ? '_' : letter;
       letters.add(
         _LetterTile(letter: visibleLetter, state: state, style: baseStyle),
@@ -1359,8 +1365,6 @@ class _ScaledSingleLineText extends StatelessWidget {
       case TextAlign.center:
       case TextAlign.justify:
         return Alignment.center;
-      default:
-        return Alignment.center;
     }
   }
 }
@@ -1503,11 +1507,7 @@ class _SloganFooter extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
-      child: Text(
-        '坚持练习，进步就在眼前。',
-        style: style,
-        textAlign: TextAlign.center,
-      ),
+      child: Text('坚持练习，进步就在眼前。', style: style, textAlign: TextAlign.center),
     );
   }
 }
