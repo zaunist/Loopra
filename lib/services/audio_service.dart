@@ -8,61 +8,138 @@ import 'pronunciation_audio_player.dart';
 
 enum PronunciationVariant { us, uk }
 
+enum _PronunciationEngine { youdao, googleTranslate }
+
 class _PronunciationProfile {
   const _PronunciationProfile({
     this.le,
     this.supportsVariants = false,
     this.prefersPhoneticInput = false,
     this.inputSanitizer,
-  });
+    this.googleLanguageCode,
+    this.webSpeechLanguageCode,
+    List<_PronunciationEngine>? engines,
+  }) : engines =
+            engines ?? const <_PronunciationEngine>[_PronunciationEngine.youdao];
 
   final String? le;
   final bool supportsVariants;
   final bool prefersPhoneticInput;
   final String Function(String text)? inputSanitizer;
+  final String? googleLanguageCode;
+  final String? webSpeechLanguageCode;
+  final List<_PronunciationEngine> engines;
 
   String prepareInput(String text) {
     final String sanitized = inputSanitizer != null ? inputSanitizer!(text) : text;
     return sanitized.trim();
   }
 
-  String buildUrl(String text, PronunciationVariant variant) {
+  List<String> buildUrls(String text, PronunciationVariant variant) {
     final String trimmed = prepareInput(text);
     if (trimmed.isEmpty) {
-      return '';
+      return const <String>[];
     }
     final String encoded = Uri.encodeComponent(trimmed);
-    final List<String> params = <String>['audio=$encoded'];
-    if (supportsVariants) {
-      params.add('type=${variant == PronunciationVariant.uk ? '1' : '2'}');
+    final List<String> urls = <String>[];
+    for (final _PronunciationEngine engine in engines) {
+      switch (engine) {
+        case _PronunciationEngine.youdao:
+          final List<String> params = <String>['audio=$encoded'];
+          if (supportsVariants) {
+            params.add('type=${variant == PronunciationVariant.uk ? '1' : '2'}');
+          }
+          if (le != null && le!.isNotEmpty) {
+            params.add('le=${Uri.encodeComponent(le!)}');
+          }
+          urls.add('https://dict.youdao.com/dictvoice?${params.join('&')}');
+          break;
+        case _PronunciationEngine.googleTranslate:
+          final String? language = googleLanguageCode;
+          if (language == null || language.isEmpty) {
+            continue;
+          }
+          final String encodedLanguage = Uri.encodeComponent(language);
+          urls.add(
+            'https://translate.googleapis.com/translate_tts'
+            '?ie=UTF-8&client=tw-ob&tl=$encodedLanguage&q=$encoded',
+          );
+          break;
+      }
     }
-    if (le != null && le!.isNotEmpty) {
-      params.add('le=${Uri.encodeComponent(le!)}');
-    }
-    return 'https://dict.youdao.com/dictvoice?${params.join('&')}';
+    return urls;
   }
 }
 
 class AudioService {
-  // Youdao voice service language mappings. Extend this map when new languages are added.
+  // Pronunciation service mappings. Extend this map when new languages are added
+  // or when a language needs a different provider/fallback chain.
   static const Map<String, _PronunciationProfile> _profiles =
       <String, _PronunciationProfile>{
-    'en': _PronunciationProfile(supportsVariants: true),
-    'code': _PronunciationProfile(supportsVariants: true),
+    'en': _PronunciationProfile(
+      supportsVariants: true,
+      webSpeechLanguageCode: 'en-US',
+    ),
+    'code': _PronunciationProfile(
+      supportsVariants: true,
+      webSpeechLanguageCode: 'en-US',
+    ),
     'ja': _PronunciationProfile(
       le: 'jap',
       prefersPhoneticInput: true,
       inputSanitizer: _stripJapaneseFurigana,
+      webSpeechLanguageCode: 'ja-JP',
     ),
-    'zh': _PronunciationProfile(le: 'zh'),
-    'de': _PronunciationProfile(le: 'de'),
-    'fr': _PronunciationProfile(le: 'fr'),
-    'es': _PronunciationProfile(le: 'es'),
-    'ar': _PronunciationProfile(le: 'ar'),
-    'ko': _PronunciationProfile(le: 'ko'),
-    'it': _PronunciationProfile(le: 'it'),
-    'ru': _PronunciationProfile(le: 'ru'),
-    'pt': _PronunciationProfile(le: 'pt'),
+    'zh': _PronunciationProfile(
+      le: 'zh',
+      webSpeechLanguageCode: 'zh-CN',
+    ),
+    'de': _PronunciationProfile(
+      le: 'de',
+      googleLanguageCode: 'de',
+      webSpeechLanguageCode: 'de-DE',
+      engines: <_PronunciationEngine>[
+        _PronunciationEngine.youdao,
+        _PronunciationEngine.googleTranslate,
+      ],
+    ),
+    'fr': _PronunciationProfile(
+      le: 'fr',
+      webSpeechLanguageCode: 'fr-FR',
+    ),
+    'es': _PronunciationProfile(
+      le: 'es',
+      webSpeechLanguageCode: 'es-ES',
+    ),
+    'ar': _PronunciationProfile(
+      le: 'ar',
+      webSpeechLanguageCode: 'ar-SA',
+    ),
+    'ko': _PronunciationProfile(
+      le: 'ko',
+      webSpeechLanguageCode: 'ko-KR',
+    ),
+    'it': _PronunciationProfile(
+      le: 'it',
+      webSpeechLanguageCode: 'it-IT',
+    ),
+    'ru': _PronunciationProfile(
+      le: 'ru',
+      webSpeechLanguageCode: 'ru-RU',
+    ),
+    'pt': _PronunciationProfile(
+      le: 'pt',
+      webSpeechLanguageCode: 'pt-BR',
+    ),
+    'kk': _PronunciationProfile(
+      googleLanguageCode: 'kk',
+      webSpeechLanguageCode: 'kk-KZ',
+      engines: <_PronunciationEngine>[],
+    ),
+    'id': _PronunciationProfile(
+      le: 'id',
+      webSpeechLanguageCode: 'id-ID',
+    ),
   };
 
   AudioService() {
@@ -178,32 +255,65 @@ class AudioService {
     if (profile == null) {
       return;
     }
-    final String url = profile.buildUrl(text, variant);
-    if (url.isEmpty) {
-      return;
-    }
-    try {
-      await _pronunciationPlayer.play(url, volume);
-    } on MissingPluginException {
-      _isAudioPlaybackAvailable = false;
-    } on PlatformException catch (error, stackTrace) {
-      if (kIsWeb && error.code == 'WebAudioError') {
-        // Browsers can block remote audio without proper CORS headers; keep other sounds alive.
+    final List<String> urls = profile.buildUrls(text, variant);
+    if (urls.isEmpty) {
+      final bool spoken = await _fallbackToWebSpeech(text, profile);
+      if (spoken) {
         debugPrint(
-          'Web pronunciation playback failed for $url: ${error.message}',
+          'Pronunciation fallback using Web Speech API for "$text" (${profile.webSpeechLanguageCode ?? profile.googleLanguageCode ?? 'default'}).',
         );
         return;
       }
-      debugPrint('Pronunciation playback failed for $url: $error');
-      debugPrint('$stackTrace');
-    } catch (error, stackTrace) {
-      if (kIsWeb) {
+      return;
+    }
+    for (int index = 0; index < urls.length; index++) {
+      final String url = urls[index];
+      final bool isLastAttempt = index == urls.length - 1;
+      final bool requiresCrossOrigin = _requiresAnonymousCrossOrigin(url);
+      try {
+        await _pronunciationPlayer.play(
+          url,
+          volume,
+          useAnonymousCrossOrigin: requiresCrossOrigin,
+        );
+        return;
+      } on MissingPluginException {
+        _isAudioPlaybackAvailable = false;
+        return;
+      } on PlatformException catch (error, stackTrace) {
         debugPrint('Pronunciation playback failed for $url: $error');
         debugPrint('$stackTrace');
+        if (!isLastAttempt) {
+          debugPrint(
+            'Retrying pronunciation playback with fallback source (${index + 2}/${urls.length}).',
+          );
+          continue;
+        }
+        if (kIsWeb && error.code == 'WebAudioError') {
+          return;
+        }
+        return;
+      } catch (error, stackTrace) {
+        debugPrint('Pronunciation playback failed for $url: $error');
+        debugPrint('$stackTrace');
+        if (!isLastAttempt) {
+          debugPrint(
+            'Retrying pronunciation playback with fallback source (${index + 2}/${urls.length}).',
+          );
+          continue;
+        }
+        if (kIsWeb) {
+          return;
+        }
         return;
       }
-      debugPrint('Pronunciation playback failed for $url: $error');
-      debugPrint('$stackTrace');
+    }
+    final bool spoken = await _fallbackToWebSpeech(text, profile);
+    if (spoken) {
+      debugPrint(
+        'Pronunciation fallback using Web Speech API for "$text" (${profile.webSpeechLanguageCode ?? profile.googleLanguageCode ?? 'default'}).',
+      );
+      return;
     }
   }
 
@@ -257,6 +367,39 @@ class AudioService {
     final String collapsedWhitespace =
         withoutFurigana.replaceAll(RegExp(r'\s+'), '');
     return collapsedWhitespace;
+  }
+
+  bool _requiresAnonymousCrossOrigin(String url) {
+    final Uri? uri = Uri.tryParse(url);
+    if (uri == null || uri.host.isEmpty) {
+      return false;
+    }
+    const Set<String> allowAnonymousHosts = <String>{
+      // Populate when a provider explicitly requires CORS-enabled playback.
+    };
+    final String host = uri.host.toLowerCase();
+    return allowAnonymousHosts.contains(host);
+  }
+
+  Future<bool> _fallbackToWebSpeech(
+    String text,
+    _PronunciationProfile profile,
+  ) async {
+    if (!kIsWeb) {
+      return false;
+    }
+    final String trimmed = text.trim();
+    if (trimmed.isEmpty) {
+      return false;
+    }
+    final String? language = (profile.webSpeechLanguageCode != null &&
+            profile.webSpeechLanguageCode!.isNotEmpty)
+        ? profile.webSpeechLanguageCode
+        : profile.googleLanguageCode;
+    return _pronunciationPlayer.speakWithWebSpeech(
+      trimmed,
+      languageCode: language,
+    );
   }
 
   _PronunciationProfile? _profileFor(String languageCode) {

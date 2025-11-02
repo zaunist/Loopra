@@ -817,13 +817,6 @@
     "language": "en"
   },
   {
-    "id": "indonesian",
-    "name": "Indonesian",
-    "description": "印度尼西亚语词汇：Indonesian",
-    "asset": "Indonesian.json",
-    "language": "id"
-  },
-  {
     "id": "japvocablist-n1",
     "name": "JapVocabList.N1",
     "description": "日语词汇：Jap Vocab List.n1",
@@ -1745,13 +1738,6 @@
     "language": "en"
   },
   {
-    "id": "chinese-test",
-    "name": "chinese test",
-    "description": "中文词汇：Chinese Test",
-    "asset": "chinese_test.json",
-    "language": "zh"
-  },
-  {
     "id": "coca20000",
     "name": "coca20000",
     "description": "英语词汇：Coca20000",
@@ -1780,13 +1766,6 @@
     "language": "code"
   },
   {
-    "id": "en2german",
-    "name": "en2german",
-    "description": "德语词汇：En2german",
-    "asset": "en2german.json",
-    "language": "de"
-  },
-  {
     "id": "frequently-used-word01",
     "name": "frequently used word01",
     "description": "英语词汇：Frequently Used Word01",
@@ -1813,13 +1792,6 @@
     "description": "高考英语词汇：Gaokao Yuedu Gaopin",
     "asset": "gaokao-yuedu-gaopin.json",
     "language": "en"
-  },
-  {
-    "id": "german2en",
-    "name": "german2en",
-    "description": "德语词汇：German2en",
-    "asset": "german2en.json",
-    "language": "de"
   },
   {
     "id": "go-builtin",
@@ -2121,20 +2093,6 @@
     "description": "考研英语词汇：Kaoyanshanguo2025",
     "asset": "kaoyanshanguo2025.json",
     "language": "en"
-  },
-  {
-    "id": "kazakh-basic-3000-arabic-hapin",
-    "name": "kazakh basic 3000 arabic hapin",
-    "description": "哈萨克语词汇：Kazakh Basic 3000 Arabic Hapin",
-    "asset": "kazakh_basic_3000_arabic_hapin.json",
-    "language": "kk"
-  },
-  {
-    "id": "kazakh-basic-3000-cyrillic-hapin",
-    "name": "kazakh basic 3000 cyrillic hapin",
-    "description": "哈萨克语词汇：Kazakh Basic 3000 Cyrillic Hapin",
-    "asset": "kazakh_basic_3000_cyrillic_hapin.json",
-    "language": "kk"
   },
   {
     "id": "ket2021",
