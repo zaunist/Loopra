@@ -39,6 +39,9 @@ dependencies:
   web: ^1.1.1
   file_picker: ^8.0.0
   path_provider: ^2.1.4
+  http: ^1.2.2
+  supabase_flutter: ^2.6.0
+  url_launcher: ^6.3.0
 
 dev_dependencies:
   flutter_test:

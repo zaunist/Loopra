@@ -12,6 +12,13 @@ jobs:
   build:
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL || vars.SUPABASE_URL }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || vars.SUPABASE_ANON_KEY }}
+      CREEM_API_KEY: ${{ secrets.CREEM_API_KEY || vars.CREEM_API_KEY }}
+      CREEM_PRODUCT_ID: ${{ secrets.CREEM_PRODUCT_ID || vars.CREEM_PRODUCT_ID }}
+      CREEM_API_BASE_URL: ${{ secrets.CREEM_API_BASE_URL || vars.CREEM_API_BASE_URL }}
+      CREEM_SEND_API_KEY: ${{ secrets.CREEM_SEND_API_KEY || vars.CREEM_SEND_API_KEY }}
     strategy:
       fail-fast: false
       matrix:
@@ -19,8 +26,8 @@ jobs:
           - name: Android APK
             os: ubuntu-latest
             build_cmd: flutter build apk --release
-            artifact_name: android-apk
-            package_file: android-app.apk
+            artifact_name: Loopra-apk
+            package_file: Loopra.apk
             package_script_bash: |
               set -euo pipefail
               mkdir -p dist
@@ -29,8 +36,8 @@ jobs:
           - name: Android App Bundle
             os: ubuntu-latest
             build_cmd: flutter build appbundle --release
-            artifact_name: android-appbundle
-            package_file: android-appbundle.aab
+            artifact_name: Loopra-appbundle
+            package_file: Loopra-appbundle.aab
             package_script_bash: |
               set -euo pipefail
               mkdir -p dist
@@ -50,8 +57,8 @@ jobs:
           - name: Linux Desktop
             os: ubuntu-latest
             build_cmd: flutter build linux --release
-            artifact_name: linux-desktop
-            package_file: linux-bundle.tar.gz
+            artifact_name: Loopra-linux-desktop
+            package_file: Loopra-linux-bundle.tar.gz
             package_script_bash: |
               set -euo pipefail
               mkdir -p dist
@@ -62,8 +69,8 @@ jobs:
           - name: Windows Desktop
             os: windows-latest
             build_cmd: flutter build windows --release
-            artifact_name: windows-desktop
-            package_file: windows-bundle.zip
+            artifact_name: Loopra-windows-desktop
+            package_file: Loopra-windows-bundle.zip
             package_script_bash: ""
             package_script_pwsh: |
               $dist = Join-Path (Get-Location) 'dist'
@@ -73,8 +80,8 @@ jobs:
           - name: macOS Desktop
             os: macos-latest
             build_cmd: flutter build macos --release
-            artifact_name: macos-desktop
-            package_file: macos-app.zip
+            artifact_name: Loopra-macos-desktop
+            package_file: Loopra-macos-app.zip
             package_script_bash: |
               set -euo pipefail
               mkdir -p dist
@@ -89,8 +96,8 @@ jobs:
           - name: iOS
             os: macos-latest
             build_cmd: flutter build ios --release --no-codesign
-            artifact_name: ios
-            package_file: ios-app.zip
+            artifact_name: Loopra-ios
+            package_file: Loopra-ios-app.zip
             package_script_bash: |
               set -euo pipefail
               mkdir -p dist
@@ -127,8 +134,81 @@ jobs:
       - name: Fetch packages
         run: flutter pub get
 
-      - name: Build ${{ matrix.name }}
-        run: ${{ matrix.build_cmd }}
+      - name: Prepare dart-define arguments
+        if: runner.os != 'Windows'
+        run: |
+          set -euo pipefail
+          keys=(
+            SUPABASE_URL
+            SUPABASE_ANON_KEY
+            CREEM_API_KEY
+            CREEM_PRODUCT_ID
+            CREEM_API_BASE_URL
+            CREEM_SEND_API_KEY
+          )
+          args=()
+          for key in "${keys[@]}"; do
+            value="${!key:-}"
+            if [ -n "${value}" ]; then
+              echo "::add-mask::${value}"
+              args+=("--dart-define=${key}=${value}")
+            fi
+          done
+          if [ "${#args[@]}" -gt 0 ]; then
+            printf 'DART_DEFINE_ARGS=%s\n' "${args[*]}" >> "${GITHUB_ENV}"
+          else
+            printf 'DART_DEFINE_ARGS=\n' >> "${GITHUB_ENV}"
+          fi
+        shell: bash
+
+      - name: Prepare dart-define arguments (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          $keys = @(
+            'SUPABASE_URL'
+            'SUPABASE_ANON_KEY'
+            'CREEM_API_KEY'
+            'CREEM_PRODUCT_ID'
+            'CREEM_API_BASE_URL'
+            'CREEM_SEND_API_KEY'
+          )
+          $args = @()
+          foreach ($key in $keys) {
+            $value = (Get-Item -Path "Env:$key" -ErrorAction SilentlyContinue).Value
+            if ($null -ne $value -and $value -ne '') {
+              Write-Output "::add-mask::$value"
+              $args += "--dart-define=$key=$value"
+            }
+          }
+          $dartDefines = [string]::Join(' ', $args)
+          Add-Content -Path $env:GITHUB_ENV -Value "DART_DEFINE_ARGS=$dartDefines"
+        shell: pwsh
+
+      - name: Build ${{ matrix.name }} (Unix)
+        if: runner.os != 'Windows'
+        run: |
+          set -euo pipefail
+          if [ -n "${DART_DEFINE_ARGS:-}" ]; then
+            eval "${BUILD_CMD} ${DART_DEFINE_ARGS}"
+          else
+            eval "${BUILD_CMD}"
+          fi
+        shell: bash
+        env:
+          BUILD_CMD: ${{ matrix.build_cmd }}
+
+      - name: Build ${{ matrix.name }} (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          $args = $env:DART_DEFINE_ARGS
+          if ([string]::IsNullOrWhiteSpace($args)) {
+            Invoke-Expression $env:BUILD_CMD
+          } else {
+            Invoke-Expression "$env:BUILD_CMD $args"
+          }
+        shell: pwsh
+        env:
+          BUILD_CMD: ${{ matrix.build_cmd }}
 
       - name: Package ${{ matrix.name }} (Unix)
         if: runner.os != 'Windows'

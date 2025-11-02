@@ -13,7 +13,9 @@ import 'statistics_controller.dart';
 enum LetterState { idle, correct, wrong }
 
 class TypingController extends ChangeNotifier {
-  TypingController(this._repository, this._audioService, this._statistics);
+  TypingController(this._repository, this._audioService, this._statistics) {
+    _statistics.addListener(_handleStatisticsUpdated);
+  }
 
   final DictionaryRepository _repository;
   final AudioService _audioService;
@@ -53,6 +55,8 @@ class TypingController extends ChangeNotifier {
   bool _sessionRecorded = false;
 
   bool _disposed = false;
+  PracticeSessionRecord? _pendingSessionProgress;
+  String? _lastAppliedSessionId;
 
   bool get _shouldUseSystemKeyFeedback {
     if (kIsWeb) {
@@ -108,6 +112,7 @@ class TypingController extends ChangeNotifier {
 
     _isLoading = false;
     notifyListeners();
+    unawaited(_applyPendingSessionIfPossible());
   }
 
   List<DictionaryMeta> get dictionaries => _dictionaries;
@@ -202,6 +207,29 @@ class TypingController extends ChangeNotifier {
   bool get canSkipCurrentWord => _wrongAttempts >= 4 && !_isFinished && !_isLoading && currentWord != null;
 
   bool get isSessionReady => _chapterWords.isNotEmpty;
+
+  void _handleStatisticsUpdated() {
+    if (!_statistics.isReady) {
+      return;
+    }
+    final List<PracticeSessionRecord> sessions = _statistics.sessions;
+    if (sessions.isEmpty) {
+      return;
+    }
+    final PracticeSessionRecord latest = sessions.last;
+    if (latest.id.isEmpty) {
+      return;
+    }
+    if (_lastAppliedSessionId == latest.id) {
+      return;
+    }
+    if (_selectedDictionary?.id == latest.dictionaryId && _selectedChapter == latest.chapterIndex) {
+      _lastAppliedSessionId = latest.id;
+      return;
+    }
+    _pendingSessionProgress = latest;
+    unawaited(_applyPendingSessionIfPossible());
+  }
 
   Future<void> selectDictionary(String id) async {
     if (_selectedDictionary?.id == id) {
@@ -515,6 +543,49 @@ class TypingController extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> _applyPendingSessionIfPossible() async {
+    final PracticeSessionRecord? session = _pendingSessionProgress;
+    if (session == null) {
+      return;
+    }
+    if (!_statistics.isReady) {
+      return;
+    }
+    if (_isTyping || _isFinished || _isLoading) {
+      return;
+    }
+    if (_dictionaries.isEmpty) {
+      return;
+    }
+
+    final DictionaryMeta? dictionary = _findDictionaryById(_dictionaries, session.dictionaryId);
+    if (dictionary == null) {
+      return;
+    }
+
+    // Clear pending marker before making recursive updates to avoid re-entry loops.
+    _pendingSessionProgress = null;
+
+    if (_selectedDictionary?.id != dictionary.id) {
+      await _refreshDictionaries(
+        preferId: dictionary.id,
+        resetChapter: false,
+        refresh: false,
+      );
+    }
+
+    final int chapterCount = _chapterCount;
+    if (chapterCount <= 0) {
+      _lastAppliedSessionId = session.id;
+      return;
+    }
+    final int targetChapter = session.chapterIndex.clamp(0, chapterCount - 1);
+    if (_selectedChapter != targetChapter) {
+      await selectChapter(targetChapter);
+    }
+    _lastAppliedSessionId = session.id;
+  }
+
   Future<void> _refreshDictionaries({
     String? preferId,
     bool resetChapter = false,
@@ -551,6 +622,8 @@ class TypingController extends ChangeNotifier {
     }
 
     await _reloadDictionaryChapter();
+
+    await _applyPendingSessionIfPossible();
   }
 
   DictionaryMeta? _findDictionaryById(List<DictionaryMeta> source, String id) {
@@ -798,6 +871,7 @@ class TypingController extends ChangeNotifier {
   @override
   void dispose() {
     _disposed = true;
+    _statistics.removeListener(_handleStatisticsUpdated);
     _cancelTimer();
     super.dispose();
   }

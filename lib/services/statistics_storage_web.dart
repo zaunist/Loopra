@@ -2,18 +2,18 @@ import 'dart:convert';
 
 import 'package:web/web.dart' as web;
 
-const String _storageKey = 'loopra.practice_statistics';
+const String _storageKeyPrefix = 'loopra.practice_statistics';
 
 Future<void> ensureInitialized() async {
   // No-op for localStorage-backed storage.
 }
 
-Future<Map<String, dynamic>> loadStatistics() async {
+Future<Map<String, dynamic>> loadStatistics(String profileId) async {
   final web.Storage? storage = _getStorage();
   if (storage == null) {
     return _emptyPayload;
   }
-  final String? raw = storage.getItem(_storageKey);
+  final String? raw = storage.getItem(_buildKey(profileId));
   if (raw == null || raw.trim().isEmpty) {
     return _emptyPayload;
   }
@@ -30,13 +30,20 @@ Future<Map<String, dynamic>> loadStatistics() async {
   return _emptyPayload;
 }
 
-Future<void> saveStatistics(Map<String, dynamic> data) async {
+Future<void> saveStatistics(String profileId, Map<String, dynamic> data) async {
   final web.Storage? storage = _getStorage();
   if (storage == null) {
     throw StateError('当前浏览器不支持本地存储，无法保存练习统计数据。');
   }
-  storage.setItem(_storageKey, jsonEncode(data));
+  storage.setItem(_buildKey(profileId), jsonEncode(data));
 }
+
+Future<void> clearStatistics(String profileId) async {
+  final web.Storage? storage = _getStorage();
+  storage?.removeItem(_buildKey(profileId));
+}
+
+String _buildKey(String profileId) => '$_storageKeyPrefix::$profileId';
 
 web.Storage? _getStorage() {
   try {
