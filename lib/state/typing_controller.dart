@@ -45,6 +45,7 @@ class TypingController extends ChangeNotifier {
   bool _isLoading = false;
   bool _isTyping = false;
   bool _isFinished = false;
+  bool _awaitingFirstInteraction = true;
 
   int _elapsedSeconds = 0;
   Timer? _timer;
@@ -412,12 +413,18 @@ class TypingController extends ChangeNotifier {
     if (_isTyping) {
       _isTyping = false;
       _cancelTimer();
-    } else {
-      _isTyping = true;
-      _ensureSessionStarted();
-      _ensureTimer();
+      notifyListeners();
+      return;
     }
-    notifyListeners();
+
+    final bool shouldAnnounce = _awaitingFirstInteraction;
+    if (shouldAnnounce) {
+      _awaitingFirstInteraction = false;
+    }
+    _startTypingSession();
+    if (shouldAnnounce) {
+      _announceCurrentWord();
+    }
   }
 
   Future<void> restartChapter() async {
@@ -466,18 +473,22 @@ class TypingController extends ChangeNotifier {
       return false;
     }
 
-    if (!_isTyping) {
-      _isTyping = true;
-      _ensureSessionStarted();
-      _ensureTimer();
-      notifyListeners();
+    WordEntry word = currentWord!;
+
+    if (_awaitingFirstInteraction) {
+      final bool consumed = _handleInitialInteraction(character, word);
+      if (consumed) {
+        return true;
+      }
+      word = currentWord!;
     }
+
+    _startTypingSession();
 
     if (_hasWrong) {
       return true;
     }
 
-    final WordEntry word = currentWord!;
     final String expected = word.headword;
     if (_input.length >= expected.length) {
       return true;
@@ -642,6 +653,7 @@ class TypingController extends ChangeNotifier {
   }
 
   Future<void> _reloadDictionaryChapter() async {
+    _awaitingFirstInteraction = true;
     final DictionaryMeta? meta = _selectedDictionary;
     if (meta == null) {
       _chapterWords = const <WordEntry>[];
@@ -662,7 +674,6 @@ class TypingController extends ChangeNotifier {
     _chapterCount = await _repository.chapterCount(meta.id);
     _currentIndex = 0;
     _resetCurrentWordState();
-    _announceCurrentWord();
 
     _elapsedSeconds = 0;
     _correctKeystrokes = 0;
@@ -702,6 +713,37 @@ class TypingController extends ChangeNotifier {
       word.displayWord.length,
       (_) => LetterState.idle,
     );
+  }
+
+  void _startTypingSession() {
+    if (_isTyping) {
+      return;
+    }
+    _isTyping = true;
+    _ensureSessionStarted();
+    _ensureTimer();
+    notifyListeners();
+  }
+
+  bool _handleInitialInteraction(String character, WordEntry word) {
+    if (!_awaitingFirstInteraction) {
+      return false;
+    }
+
+    _awaitingFirstInteraction = false;
+    _startTypingSession();
+    _announceCurrentWord();
+
+    final String expected = word.headword;
+    if (expected.isEmpty) {
+      return true;
+    }
+
+    final String effectiveChar = character[0];
+    final String expectedChar = expected[0];
+    final String normalizedExpected = _ignoreCase ? expectedChar.toLowerCase() : expectedChar;
+    final String normalizedInput = _ignoreCase ? effectiveChar.toLowerCase() : effectiveChar;
+    return normalizedInput != normalizedExpected;
   }
 
   void _ensureSessionStarted() {
@@ -777,6 +819,9 @@ class TypingController extends ChangeNotifier {
   }
 
   void _announceCurrentWord() {
+    if (_awaitingFirstInteraction) {
+      return;
+    }
     if (!_autoPronunciationEnabled || !supportsPronunciation) {
       return;
     }
