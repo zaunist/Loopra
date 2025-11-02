@@ -97,6 +97,8 @@ class TypingController extends ChangeNotifier {
     LogicalKeyboardKey.home,
   };
 
+  static const String _defaultDictionaryId = 'cet4';
+
   Future<void> initialise() async {
     _isLoading = true;
     notifyListeners();
@@ -104,7 +106,8 @@ class TypingController extends ChangeNotifier {
 
     final List<DictionaryMeta> dictionaries = await _repository.loadManifest();
     _dictionaries = dictionaries;
-    _selectedDictionary = dictionaries.isNotEmpty ? dictionaries.first : null;
+    _selectedDictionary = _findDictionaryById(dictionaries, _defaultDictionaryId) ??
+        (dictionaries.isNotEmpty ? dictionaries.first : null);
 
     if (_selectedDictionary != null) {
       await _reloadDictionaryChapter();
@@ -602,6 +605,9 @@ class TypingController extends ChangeNotifier {
     }
     if (next == null && previousId != null) {
       next = _findDictionaryById(fetched, previousId);
+    }
+    if (next == null) {
+      next = _findDictionaryById(fetched, _defaultDictionaryId);
     }
     next ??= fetched.isNotEmpty ? fetched.first : null;
 

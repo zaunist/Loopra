@@ -91,7 +91,12 @@ class AuthController extends ChangeNotifier {
     _lastError = null;
     notifyListeners();
     try {
-      final AuthResponse response = await _repository.signUp(email: email, password: password);
+      final AuthResponse response = await _repository.signUp(
+        email: email,
+        password: password,
+        emailRedirectTo:
+            AppConfig.supabaseEmailRedirectTo.isNotEmpty ? AppConfig.supabaseEmailRedirectTo : null,
+      );
       final User? sessionUser = response.session?.user;
       final User? user = response.user;
 

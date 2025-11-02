@@ -13,6 +13,11 @@ class AppConfig {
     defaultValue: '',
   );
 
+  static const String supabaseEmailRedirectTo = String.fromEnvironment(
+    'SUPABASE_EMAIL_REDIRECT_TO',
+    defaultValue: 'https://loopra.vercel.app',
+  );
+
   static const String creemApiKey = String.fromEnvironment(
     'CREEM_API_KEY',
     defaultValue: '',

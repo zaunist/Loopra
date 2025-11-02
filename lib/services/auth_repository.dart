@@ -20,8 +20,16 @@ class AuthRepository {
   Stream<AuthState> get authStateChanges =>
       _client?.auth.onAuthStateChange ?? const Stream<AuthState>.empty();
 
-  Future<AuthResponse> signUp({required String email, required String password}) {
-    return client.auth.signUp(email: email, password: password);
+  Future<AuthResponse> signUp({
+    required String email,
+    required String password,
+    String? emailRedirectTo,
+  }) {
+    return client.auth.signUp(
+      email: email,
+      password: password,
+      emailRedirectTo: emailRedirectTo,
+    );
   }
 
   Future<AuthResponse> signIn({required String email, required String password}) {
