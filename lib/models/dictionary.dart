@@ -134,6 +134,10 @@ extension DictionaryLanguageX on DictionaryLanguage {
         return '西班牙语';
       case 'ko':
         return '韩语';
+      case 'kk':
+        return '哈萨克语';
+      case 'id':
+        return '印尼语';
       case '':
         return '未标注';
       default:

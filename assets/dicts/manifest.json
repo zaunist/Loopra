@@ -1,5 +1,152 @@
 [
   {
+    "id": "2024hongbao-t1",
+    "name": "2024HongBao T1",
+    "description": "英语词汇：2024 Hong Bao T1",
+    "asset": "2024HongBao_T1.json",
+    "language": "en"
+  },
+  {
+    "id": "2024hongbao-t2",
+    "name": "2024HongBao T2",
+    "description": "英语词汇：2024 Hong Bao T2",
+    "asset": "2024HongBao_T2.json",
+    "language": "en"
+  },
+  {
+    "id": "2025kaoyanhongbaoshu",
+    "name": "2025KaoYanHongBaoShu",
+    "description": "考研英语词汇：2025 Kao Yan Hong Bao Shu",
+    "asset": "2025KaoYanHongBaoShu.json",
+    "language": "en"
+  },
+  {
+    "id": "3000-classroom-english-words",
+    "name": "3000 ClassRoom English Words",
+    "description": "英语词汇：3000 Class Room English Words",
+    "asset": "3000_ClassRoom_English_Words.json",
+    "language": "en"
+  },
+  {
+    "id": "4000-essential-english-words-meaning",
+    "name": "4000 Essential English Words meaning",
+    "description": "英语词汇：4000 Essential English Words Meaning",
+    "asset": "4000_Essential_English_Words-meaning.json",
+    "language": "en"
+  },
+  {
+    "id": "4000-essential-english-words-sentence",
+    "name": "4000 Essential English Words sentence",
+    "description": "英语词汇：4000 Essential English Words Sentence",
+    "asset": "4000_Essential_English_Words-sentence.json",
+    "language": "en"
+  },
+  {
+    "id": "926",
+    "name": "926",
+    "description": "英语词汇：926",
+    "asset": "926.json",
+    "language": "en"
+  },
+  {
+    "id": "audiokey",
+    "name": "AudioKey",
+    "description": "英语词汇：Audio Key",
+    "asset": "AudioKey.json",
+    "language": "en"
+  },
+  {
+    "id": "bec-2-t",
+    "name": "BEC 2 T",
+    "description": "BEC 商务英语词汇：BEC 2 T",
+    "asset": "BEC_2_T.json",
+    "language": "en"
+  },
+  {
+    "id": "bec-3-t",
+    "name": "BEC 3 T",
+    "description": "BEC 商务英语词汇：BEC 3 T",
+    "asset": "BEC_3_T.json",
+    "language": "en"
+  },
+  {
+    "id": "beishigaozhong-10-t",
+    "name": "BeiShiGaoZhong 10 T",
+    "description": "高中英语词汇：Bei Shi Gao Zhong 10 T",
+    "asset": "BeiShiGaoZhong_10_T.json",
+    "language": "en"
+  },
+  {
+    "id": "beishigaozhong-11-t",
+    "name": "BeiShiGaoZhong 11 T",
+    "description": "高中英语词汇：Bei Shi Gao Zhong 11 T",
+    "asset": "BeiShiGaoZhong_11_T.json",
+    "language": "en"
+  },
+  {
+    "id": "beishigaozhong-1-t",
+    "name": "BeiShiGaoZhong 1 T",
+    "description": "高中英语词汇：Bei Shi Gao Zhong 1 T",
+    "asset": "BeiShiGaoZhong_1_T.json",
+    "language": "en"
+  },
+  {
+    "id": "beishigaozhong-2-t",
+    "name": "BeiShiGaoZhong 2 T",
+    "description": "高中英语词汇：Bei Shi Gao Zhong 2 T",
+    "asset": "BeiShiGaoZhong_2_T.json",
+    "language": "en"
+  },
+  {
+    "id": "beishigaozhong-3-t",
+    "name": "BeiShiGaoZhong 3 T",
+    "description": "高中英语词汇：Bei Shi Gao Zhong 3 T",
+    "asset": "BeiShiGaoZhong_3_T.json",
+    "language": "en"
+  },
+  {
+    "id": "beishigaozhong-4-t",
+    "name": "BeiShiGaoZhong 4 T",
+    "description": "高中英语词汇：Bei Shi Gao Zhong 4 T",
+    "asset": "BeiShiGaoZhong_4_T.json",
+    "language": "en"
+  },
+  {
+    "id": "beishigaozhong-5-t",
+    "name": "BeiShiGaoZhong 5 T",
+    "description": "高中英语词汇：Bei Shi Gao Zhong 5 T",
+    "asset": "BeiShiGaoZhong_5_T.json",
+    "language": "en"
+  },
+  {
+    "id": "beishigaozhong-6-t",
+    "name": "BeiShiGaoZhong 6 T",
+    "description": "高中英语词汇：Bei Shi Gao Zhong 6 T",
+    "asset": "BeiShiGaoZhong_6_T.json",
+    "language": "en"
+  },
+  {
+    "id": "beishigaozhong-7-t",
+    "name": "BeiShiGaoZhong 7 T",
+    "description": "高中英语词汇：Bei Shi Gao Zhong 7 T",
+    "asset": "BeiShiGaoZhong_7_T.json",
+    "language": "en"
+  },
+  {
+    "id": "beishigaozhong-8-t",
+    "name": "BeiShiGaoZhong 8 T",
+    "description": "高中英语词汇：Bei Shi Gao Zhong 8 T",
+    "asset": "BeiShiGaoZhong_8_T.json",
+    "language": "en"
+  },
+  {
+    "id": "beishigaozhong-9-t",
+    "name": "BeiShiGaoZhong 9 T",
+    "description": "高中英语词汇：Bei Shi Gao Zhong 9 T",
+    "asset": "BeiShiGaoZhong_9_T.json",
+    "language": "en"
+  },
+  {
     "id": "cet4",
     "name": "CET-4",
     "description": "大学英语四级词库",
@@ -16,12 +163,257 @@
     "category": "中国考试"
   },
   {
+    "id": "cambridge-join-in",
+    "name": "Cambridge JOIN IN",
+    "description": "英语词汇：Cambridge JOIN IN",
+    "asset": "Cambridge_JOIN_IN.json",
+    "language": "en"
+  },
+  {
+    "id": "child-cpp",
+    "name": "Child cpp",
+    "description": "编程词汇：Child Cpp",
+    "asset": "Child_cpp.json",
+    "language": "code"
+  },
+  {
+    "id": "child-python-code",
+    "name": "Child python code",
+    "description": "编程词汇：Child Python Code",
+    "asset": "Child_python_code.json",
+    "language": "code"
+  },
+  {
+    "id": "child-python-turtle-code",
+    "name": "Child python turtle code",
+    "description": "编程词汇：Child Python Turtle Code",
+    "asset": "Child_python_turtle_code.json",
+    "language": "code"
+  },
+  {
+    "id": "chuzhongluan-2-t",
+    "name": "ChuZhongluan 2 T",
+    "description": "英语词汇：Chu Zhongluan 2 T",
+    "asset": "ChuZhongluan_2_T.json",
+    "language": "en"
+  },
+  {
+    "id": "common-phrases-fce-unofficial",
+    "name": "Common Phrases FCE Unofficial",
+    "description": "英语词汇：Common Phrases FCE Unofficial",
+    "asset": "Common-Phrases-FCE-Unofficial.json",
+    "language": "en"
+  },
+  {
+    "id": "common-phrases-pte-unofficial",
+    "name": "Common Phrases PTE Unofficial",
+    "description": "PTE 高频词汇：Common Phrases PTE Unofficial",
+    "asset": "Common-Phrases-PTE-Unofficial.json",
+    "language": "en"
+  },
+  {
+    "id": "dancidejianfa-4",
+    "name": "DanCiDeJianFa 4",
+    "description": "英语词汇：Dan Ci De Jian Fa 4",
+    "asset": "DanCiDeJianFa_4.json",
+    "language": "en"
+  },
+  {
+    "id": "dancidejianfa-6",
+    "name": "DanCiDeJianFa 6",
+    "description": "英语词汇：Dan Ci De Jian Fa 6",
+    "asset": "DanCiDeJianFa_6.json",
+    "language": "en"
+  },
+  {
+    "id": "dancidemimi-1",
+    "name": "DanCiDeMimi 1",
+    "description": "英语词汇：Dan Ci De Mimi 1",
+    "asset": "DanCiDeMimi_1.json",
+    "language": "en"
+  },
+  {
+    "id": "dancidemimi-2",
+    "name": "DanCiDeMimi 2",
+    "description": "英语词汇：Dan Ci De Mimi 2",
+    "asset": "DanCiDeMimi_2.json",
+    "language": "en"
+  },
+  {
+    "id": "duckcircle-ielts",
+    "name": "DuckCircle IELTS",
+    "description": "IELTS 高频词汇：Duck Circle IELTS",
+    "asset": "DuckCircle_IELTS.json",
+    "language": "en"
+  },
+  {
+    "id": "duolingo-vocabulary-b1",
+    "name": "Duolingo Vocabulary B1",
+    "description": "Duolingo 词汇：Duolingo Vocabulary B1",
+    "asset": "Duolingo_Vocabulary_B1.json",
+    "language": "en"
+  },
+  {
+    "id": "duolingo-vocabulary-b2",
+    "name": "Duolingo Vocabulary B2",
+    "description": "Duolingo 词汇：Duolingo Vocabulary B2",
+    "asset": "Duolingo_Vocabulary_B2.json",
+    "language": "en"
+  },
+  {
+    "id": "duolingo-vocabulary-c1",
+    "name": "Duolingo Vocabulary C1",
+    "description": "Duolingo 词汇：Duolingo Vocabulary C1",
+    "asset": "Duolingo_Vocabulary_C1.json",
+    "language": "en"
+  },
+  {
+    "id": "ef-level-1",
+    "name": "EF LEVEL 1",
+    "description": "英语词汇：EF LEVEL 1",
+    "asset": "EF_LEVEL_1.json",
+    "language": "en"
+  },
+  {
+    "id": "ef-level-10",
+    "name": "EF LEVEL 10",
+    "description": "英语词汇：EF LEVEL 10",
+    "asset": "EF_LEVEL_10.json",
+    "language": "en"
+  },
+  {
+    "id": "ef-level-11",
+    "name": "EF LEVEL 11",
+    "description": "英语词汇：EF LEVEL 11",
+    "asset": "EF_LEVEL_11.json",
+    "language": "en"
+  },
+  {
+    "id": "ef-level-12",
+    "name": "EF LEVEL 12",
+    "description": "英语词汇：EF LEVEL 12",
+    "asset": "EF_LEVEL_12.json",
+    "language": "en"
+  },
+  {
+    "id": "ef-level-13",
+    "name": "EF LEVEL 13",
+    "description": "英语词汇：EF LEVEL 13",
+    "asset": "EF_LEVEL_13.json",
+    "language": "en"
+  },
+  {
+    "id": "ef-level-14",
+    "name": "EF LEVEL 14",
+    "description": "英语词汇：EF LEVEL 14",
+    "asset": "EF_LEVEL_14.json",
+    "language": "en"
+  },
+  {
+    "id": "ef-level-15",
+    "name": "EF LEVEL 15",
+    "description": "英语词汇：EF LEVEL 15",
+    "asset": "EF_LEVEL_15.json",
+    "language": "en"
+  },
+  {
+    "id": "ef-level-16",
+    "name": "EF LEVEL 16",
+    "description": "英语词汇：EF LEVEL 16",
+    "asset": "EF_LEVEL_16.json",
+    "language": "en"
+  },
+  {
+    "id": "ef-level-2",
+    "name": "EF LEVEL 2",
+    "description": "英语词汇：EF LEVEL 2",
+    "asset": "EF_LEVEL_2.json",
+    "language": "en"
+  },
+  {
+    "id": "ef-level-3",
+    "name": "EF LEVEL 3",
+    "description": "英语词汇：EF LEVEL 3",
+    "asset": "EF_LEVEL_3.json",
+    "language": "en"
+  },
+  {
+    "id": "ef-level-4",
+    "name": "EF LEVEL 4",
+    "description": "英语词汇：EF LEVEL 4",
+    "asset": "EF_LEVEL_4.json",
+    "language": "en"
+  },
+  {
+    "id": "ef-level-5",
+    "name": "EF LEVEL 5",
+    "description": "英语词汇：EF LEVEL 5",
+    "asset": "EF_LEVEL_5.json",
+    "language": "en"
+  },
+  {
+    "id": "ef-level-6",
+    "name": "EF LEVEL 6",
+    "description": "英语词汇：EF LEVEL 6",
+    "asset": "EF_LEVEL_6.json",
+    "language": "en"
+  },
+  {
+    "id": "ef-level-7",
+    "name": "EF LEVEL 7",
+    "description": "英语词汇：EF LEVEL 7",
+    "asset": "EF_LEVEL_7.json",
+    "language": "en"
+  },
+  {
+    "id": "ef-level-8",
+    "name": "EF LEVEL 8",
+    "description": "英语词汇：EF LEVEL 8",
+    "asset": "EF_LEVEL_8.json",
+    "language": "en"
+  },
+  {
+    "id": "ef-level-9",
+    "name": "EF LEVEL 9",
+    "description": "英语词汇：EF LEVEL 9",
+    "asset": "EF_LEVEL_9.json",
+    "language": "en"
+  },
+  {
+    "id": "english-ii",
+    "name": "English II",
+    "description": "英语词汇：English II",
+    "asset": "English_II.json",
+    "language": "en"
+  },
+  {
     "id": "gmat",
     "name": "GMAT",
     "description": "GMAT 词库",
     "asset": "GMAT_3_T.json",
     "language": "en",
     "category": "国际考试"
+  },
+  {
+    "id": "gre-computer-based-test",
+    "name": "GRE computer based test",
+    "description": "GRE 高频词汇：GRE Computer Based Test",
+    "asset": "GRE-computer-based-test.json",
+    "language": "en"
+  },
+  {
+    "id": "gre3000-3-t",
+    "name": "GRE3000 3 T",
+    "description": "GRE 高频词汇：GRE3000 3 T",
+    "asset": "GRE3000_3_T.json",
+    "language": "en"
+  },
+  {
+    "id": "gre-1500",
+    "name": "GRE 1500",
+    "description": "GRE 高频词汇：GRE 1500",
+    "asset": "GRE_1500.json",
+    "language": "en"
   },
   {
     "id": "gre",
@@ -32,6 +424,335 @@
     "category": "国际考试"
   },
   {
+    "id": "gre-equivalent",
+    "name": "GRE equivalent",
+    "description": "GRE 高频词汇：GRE Equivalent",
+    "asset": "GRE_equivalent.json",
+    "language": "en"
+  },
+  {
+    "id": "gaokaozhentihexingaopin",
+    "name": "GaoKaoZhenTiHeXinGaoPin",
+    "description": "高考英语词汇：Gao Kao Zhen Ti He Xin Gao Pin",
+    "asset": "GaoKaoZhenTiHeXinGaoPin.json",
+    "language": "en"
+  },
+  {
+    "id": "gaokao-3500",
+    "name": "GaoKao 3500",
+    "description": "高考英语词汇：Gao Kao 3500",
+    "asset": "GaoKao_3500.json",
+    "language": "en"
+  },
+  {
+    "id": "gaozhongluan-2-t",
+    "name": "GaoZhongluan 2 T",
+    "description": "高中英语词汇：Gao Zhongluan 2 T",
+    "asset": "GaoZhongluan_2_T.json",
+    "language": "en"
+  },
+  {
+    "id": "heqiong-ielts",
+    "name": "HeQiong IELTS",
+    "description": "IELTS 高频词汇：He Qiong IELTS",
+    "asset": "HeQiong_IELTS.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-listening-18days-day1",
+    "name": "IELTS listening 18days day1",
+    "description": "IELTS 听力词汇：IELTS Listening 18days Day1",
+    "asset": "IELTS-listening-18days-day1.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-listening-18days-day10",
+    "name": "IELTS listening 18days day10",
+    "description": "IELTS 听力词汇：IELTS Listening 18days Day10",
+    "asset": "IELTS-listening-18days-day10.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-listening-18days-day11",
+    "name": "IELTS listening 18days day11",
+    "description": "IELTS 听力词汇：IELTS Listening 18days Day11",
+    "asset": "IELTS-listening-18days-day11.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-listening-18days-day12",
+    "name": "IELTS listening 18days day12",
+    "description": "IELTS 听力词汇：IELTS Listening 18days Day12",
+    "asset": "IELTS-listening-18days-day12.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-listening-18days-day13",
+    "name": "IELTS listening 18days day13",
+    "description": "IELTS 听力词汇：IELTS Listening 18days Day13",
+    "asset": "IELTS-listening-18days-day13.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-listening-18days-day14",
+    "name": "IELTS listening 18days day14",
+    "description": "IELTS 听力词汇：IELTS Listening 18days Day14",
+    "asset": "IELTS-listening-18days-day14.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-listening-18days-day15",
+    "name": "IELTS listening 18days day15",
+    "description": "IELTS 听力词汇：IELTS Listening 18days Day15",
+    "asset": "IELTS-listening-18days-day15.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-listening-18days-day16",
+    "name": "IELTS listening 18days day16",
+    "description": "IELTS 听力词汇：IELTS Listening 18days Day16",
+    "asset": "IELTS-listening-18days-day16.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-listening-18days-day17",
+    "name": "IELTS listening 18days day17",
+    "description": "IELTS 听力词汇：IELTS Listening 18days Day17",
+    "asset": "IELTS-listening-18days-day17.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-listening-18days-day18",
+    "name": "IELTS listening 18days day18",
+    "description": "IELTS 听力词汇：IELTS Listening 18days Day18",
+    "asset": "IELTS-listening-18days-day18.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-listening-18days-day2",
+    "name": "IELTS listening 18days day2",
+    "description": "IELTS 听力词汇：IELTS Listening 18days Day2",
+    "asset": "IELTS-listening-18days-day2.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-listening-18days-day3",
+    "name": "IELTS listening 18days day3",
+    "description": "IELTS 听力词汇：IELTS Listening 18days Day3",
+    "asset": "IELTS-listening-18days-day3.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-listening-18days-day4",
+    "name": "IELTS listening 18days day4",
+    "description": "IELTS 听力词汇：IELTS Listening 18days Day4",
+    "asset": "IELTS-listening-18days-day4.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-listening-18days-day5",
+    "name": "IELTS listening 18days day5",
+    "description": "IELTS 听力词汇：IELTS Listening 18days Day5",
+    "asset": "IELTS-listening-18days-day5.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-listening-18days-day6",
+    "name": "IELTS listening 18days day6",
+    "description": "IELTS 听力词汇：IELTS Listening 18days Day6",
+    "asset": "IELTS-listening-18days-day6.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-listening-18days-day7",
+    "name": "IELTS listening 18days day7",
+    "description": "IELTS 听力词汇：IELTS Listening 18days Day7",
+    "asset": "IELTS-listening-18days-day7.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-listening-18days-day8",
+    "name": "IELTS listening 18days day8",
+    "description": "IELTS 听力词汇：IELTS Listening 18days Day8",
+    "asset": "IELTS-listening-18days-day8.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-listening-18days-day9",
+    "name": "IELTS listening 18days day9",
+    "description": "IELTS 听力词汇：IELTS Listening 18days Day9",
+    "asset": "IELTS-listening-18days-day9.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-listening-neworientaldirect-task1",
+    "name": "IELTS listening NewOrientalDirect Task1",
+    "description": "IELTS 听力词汇：IELTS Listening New Oriental Direct Task1",
+    "asset": "IELTS-listening-NewOrientalDirect-Task1.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-listening-neworientaldirect-task10",
+    "name": "IELTS listening NewOrientalDirect Task10",
+    "description": "IELTS 听力词汇：IELTS Listening New Oriental Direct Task10",
+    "asset": "IELTS-listening-NewOrientalDirect-Task10.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-listening-neworientaldirect-task11",
+    "name": "IELTS listening NewOrientalDirect Task11",
+    "description": "IELTS 听力词汇：IELTS Listening New Oriental Direct Task11",
+    "asset": "IELTS-listening-NewOrientalDirect-Task11.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-listening-neworientaldirect-task12",
+    "name": "IELTS listening NewOrientalDirect Task12",
+    "description": "IELTS 听力词汇：IELTS Listening New Oriental Direct Task12",
+    "asset": "IELTS-listening-NewOrientalDirect-Task12.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-listening-neworientaldirect-task13",
+    "name": "IELTS listening NewOrientalDirect Task13",
+    "description": "IELTS 听力词汇：IELTS Listening New Oriental Direct Task13",
+    "asset": "IELTS-listening-NewOrientalDirect-Task13.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-listening-neworientaldirect-task14",
+    "name": "IELTS listening NewOrientalDirect Task14",
+    "description": "IELTS 听力词汇：IELTS Listening New Oriental Direct Task14",
+    "asset": "IELTS-listening-NewOrientalDirect-Task14.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-listening-neworientaldirect-task15",
+    "name": "IELTS listening NewOrientalDirect Task15",
+    "description": "IELTS 听力词汇：IELTS Listening New Oriental Direct Task15",
+    "asset": "IELTS-listening-NewOrientalDirect-Task15.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-listening-neworientaldirect-task16",
+    "name": "IELTS listening NewOrientalDirect Task16",
+    "description": "IELTS 听力词汇：IELTS Listening New Oriental Direct Task16",
+    "asset": "IELTS-listening-NewOrientalDirect-Task16.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-listening-neworientaldirect-task17",
+    "name": "IELTS listening NewOrientalDirect Task17",
+    "description": "IELTS 听力词汇：IELTS Listening New Oriental Direct Task17",
+    "asset": "IELTS-listening-NewOrientalDirect-Task17.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-listening-neworientaldirect-task18",
+    "name": "IELTS listening NewOrientalDirect Task18",
+    "description": "IELTS 听力词汇：IELTS Listening New Oriental Direct Task18",
+    "asset": "IELTS-listening-NewOrientalDirect-Task18.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-listening-neworientaldirect-task19",
+    "name": "IELTS listening NewOrientalDirect Task19",
+    "description": "IELTS 听力词汇：IELTS Listening New Oriental Direct Task19",
+    "asset": "IELTS-listening-NewOrientalDirect-Task19.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-listening-neworientaldirect-task2",
+    "name": "IELTS listening NewOrientalDirect Task2",
+    "description": "IELTS 听力词汇：IELTS Listening New Oriental Direct Task2",
+    "asset": "IELTS-listening-NewOrientalDirect-Task2.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-listening-neworientaldirect-task3",
+    "name": "IELTS listening NewOrientalDirect Task3",
+    "description": "IELTS 听力词汇：IELTS Listening New Oriental Direct Task3",
+    "asset": "IELTS-listening-NewOrientalDirect-Task3.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-listening-neworientaldirect-task4",
+    "name": "IELTS listening NewOrientalDirect Task4",
+    "description": "IELTS 听力词汇：IELTS Listening New Oriental Direct Task4",
+    "asset": "IELTS-listening-NewOrientalDirect-Task4.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-listening-neworientaldirect-task5",
+    "name": "IELTS listening NewOrientalDirect Task5",
+    "description": "IELTS 听力词汇：IELTS Listening New Oriental Direct Task5",
+    "asset": "IELTS-listening-NewOrientalDirect-Task5.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-listening-neworientaldirect-task6",
+    "name": "IELTS listening NewOrientalDirect Task6",
+    "description": "IELTS 听力词汇：IELTS Listening New Oriental Direct Task6",
+    "asset": "IELTS-listening-NewOrientalDirect-Task6.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-listening-neworientaldirect-task7",
+    "name": "IELTS listening NewOrientalDirect Task7",
+    "description": "IELTS 听力词汇：IELTS Listening New Oriental Direct Task7",
+    "asset": "IELTS-listening-NewOrientalDirect-Task7.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-listening-neworientaldirect-task8",
+    "name": "IELTS listening NewOrientalDirect Task8",
+    "description": "IELTS 听力词汇：IELTS Listening New Oriental Direct Task8",
+    "asset": "IELTS-listening-NewOrientalDirect-Task8.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-listening-neworientaldirect-task9",
+    "name": "IELTS listening NewOrientalDirect Task9",
+    "description": "IELTS 听力词汇：IELTS Listening New Oriental Direct Task9",
+    "asset": "IELTS-listening-NewOrientalDirect-Task9.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-oral-900",
+    "name": "IELTS oral 900",
+    "description": "IELTS 口语表达词汇：IELTS Oral 900",
+    "asset": "IELTS-oral-900.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts9988wangyong",
+    "name": "IELTS9988wangyong",
+    "description": "IELTS 高频词汇：Ielts9988wangyong",
+    "asset": "IELTS9988wangyong.json",
+    "language": "en"
+  },
+  {
+    "id": "ieltskinglu807",
+    "name": "IELTSKingLu807",
+    "description": "IELTS 高频词汇：Ieltsking Lu807",
+    "asset": "IELTSKingLu807.json",
+    "language": "en"
+  },
+  {
+    "id": "ieltsliuhongbo538",
+    "name": "IELTSLiuHongbo538",
+    "description": "IELTS 高频词汇：Ieltsliu Hongbo538",
+    "asset": "IELTSLiuHongbo538.json",
+    "language": "en"
+  },
+  {
+    "id": "ieltsvocabularybible",
+    "name": "IELTSVocabularyBible",
+    "description": "IELTS 高频词汇：Ieltsvocabulary Bible",
+    "asset": "IELTSVocabularyBible.json",
+    "language": "en"
+  },
+  {
     "id": "ielts",
     "name": "IELTS",
     "description": "IELTS 词库",
@@ -40,20 +761,165 @@
     "category": "国际考试"
   },
   {
-    "id": "toefl",
-    "name": "TOEFL",
-    "description": "TOEFL 词库",
-    "asset": "TOEFL_3_T.json",
-    "language": "en",
-    "category": "国际考试"
+    "id": "ielts-wang-11",
+    "name": "IELTS WANG 11",
+    "description": "IELTS 王老师系列词汇：IELTS WANG 11",
+    "asset": "IELTS_WANG_11.json",
+    "language": "en"
   },
   {
-    "id": "sat",
-    "name": "SAT",
-    "description": "SAT 词库",
-    "asset": "SAT_3_T.json",
-    "language": "en",
-    "category": "国际考试"
+    "id": "ielts-wang-3",
+    "name": "IELTS WANG 3",
+    "description": "IELTS 王老师系列词汇：IELTS WANG 3",
+    "asset": "IELTS_WANG_3.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-wang-4",
+    "name": "IELTS WANG 4",
+    "description": "IELTS 王老师系列词汇：IELTS WANG 4",
+    "asset": "IELTS_WANG_4.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-wang-5",
+    "name": "IELTS WANG 5",
+    "description": "IELTS 王老师系列词汇：IELTS WANG 5",
+    "asset": "IELTS_WANG_5.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-xdf-7000",
+    "name": "IELTS XDF 7000",
+    "description": "IELTS 高频词汇：IELTS XDF 7000",
+    "asset": "IELTS_XDF_7000.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-disorder",
+    "name": "IELTS disorder",
+    "description": "IELTS 高频词汇：IELTS Disorder",
+    "asset": "IELTS_disorder.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-order",
+    "name": "IELTS order",
+    "description": "IELTS 高频词汇：IELTS Order",
+    "asset": "IELTS_order.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-tinglichangjing",
+    "name": "IELTS tinglichangjing",
+    "description": "IELTS 高频词汇：IELTS Tinglichangjing",
+    "asset": "IELTS_tinglichangjing.json",
+    "language": "en"
+  },
+  {
+    "id": "indonesian",
+    "name": "Indonesian",
+    "description": "印度尼西亚语词汇：Indonesian",
+    "asset": "Indonesian.json",
+    "language": "id"
+  },
+  {
+    "id": "japvocablist-n1",
+    "name": "JapVocabList.N1",
+    "description": "日语词汇：Jap Vocab List.n1",
+    "asset": "JapVocabList.N1.json",
+    "language": "ja"
+  },
+  {
+    "id": "japvocablist-n1-zh",
+    "name": "JapVocabList.N1 zh",
+    "description": "日语词汇：Jap Vocab List.n1 Zh",
+    "asset": "JapVocabList.N1_zh.json",
+    "language": "ja"
+  },
+  {
+    "id": "japvocablist-n2",
+    "name": "JapVocabList.N2",
+    "description": "日语词汇：Jap Vocab List.n2",
+    "asset": "JapVocabList.N2.json",
+    "language": "ja"
+  },
+  {
+    "id": "japvocablist-n2-zh",
+    "name": "JapVocabList.N2 zh",
+    "description": "日语词汇：Jap Vocab List.n2 Zh",
+    "asset": "JapVocabList.N2_zh.json",
+    "language": "ja"
+  },
+  {
+    "id": "japvocablist-n3",
+    "name": "JapVocabList.N3",
+    "description": "日语词汇：Jap Vocab List.n3",
+    "asset": "JapVocabList.N3.json",
+    "language": "ja"
+  },
+  {
+    "id": "japvocablist-n3-zh",
+    "name": "JapVocabList.N3 zh",
+    "description": "日语词汇：Jap Vocab List.n3 Zh",
+    "asset": "JapVocabList.N3_zh.json",
+    "language": "ja"
+  },
+  {
+    "id": "japvocablist-n4",
+    "name": "JapVocabList.N4",
+    "description": "日语词汇：Jap Vocab List.n4",
+    "asset": "JapVocabList.N4.json",
+    "language": "ja"
+  },
+  {
+    "id": "japvocablist-n4-zh",
+    "name": "JapVocabList.N4 zh",
+    "description": "日语词汇：Jap Vocab List.n4 Zh",
+    "asset": "JapVocabList.N4_zh.json",
+    "language": "ja"
+  },
+  {
+    "id": "japvocablist-n5",
+    "name": "JapVocabList.N5",
+    "description": "日语词汇：Jap Vocab List.n5",
+    "asset": "JapVocabList.N5.json",
+    "language": "ja"
+  },
+  {
+    "id": "japvocablist-n5-zh",
+    "name": "JapVocabList.N5 zh",
+    "description": "日语词汇：Jap Vocab List.n5 Zh",
+    "asset": "JapVocabList.N5_zh.json",
+    "language": "ja"
+  },
+  {
+    "id": "jap-high-frequency-n1",
+    "name": "Jap High Frequency N1",
+    "description": "日语词汇：Jap High Frequency N1",
+    "asset": "Jap_High-Frequency_N1.json",
+    "language": "ja"
+  },
+  {
+    "id": "jap-high-frequency-n2",
+    "name": "Jap High Frequency N2",
+    "description": "日语词汇：Jap High Frequency N2",
+    "asset": "Jap_High-Frequency_N2.json",
+    "language": "ja"
+  },
+  {
+    "id": "jap-high-frequency-n3",
+    "name": "Jap High Frequency N3",
+    "description": "日语词汇：Jap High Frequency N3",
+    "asset": "Jap_High-Frequency_N3.json",
+    "language": "ja"
+  },
+  {
+    "id": "jap-high-frequency-n4n5",
+    "name": "Jap High Frequency N4N5",
+    "description": "日语词汇：Jap High Frequency N4 N5",
+    "asset": "Jap_High-Frequency_N4N5.json",
+    "language": "ja"
   },
   {
     "id": "japanese-basic-en",
@@ -70,5 +936,1701 @@
     "asset": "Japanesebasicword_zh.json",
     "language": "ja",
     "category": "日语基础"
+  },
+  {
+    "id": "kaoyanshanguo-2023",
+    "name": "KaoYanShanGuo 2023",
+    "description": "考研英语词汇：Kao Yan Shan Guo 2023",
+    "asset": "KaoYanShanGuo_2023.json",
+    "language": "en"
+  },
+  {
+    "id": "kaoyan-2024",
+    "name": "KaoYan 2024",
+    "description": "考研英语词汇：Kao Yan 2024",
+    "asset": "KaoYan_2024.json",
+    "language": "en"
+  },
+  {
+    "id": "kaoyan-3-t",
+    "name": "KaoYan 3 T",
+    "description": "考研英语词汇：Kao Yan 3 T",
+    "asset": "KaoYan_3_T.json",
+    "language": "en"
+  },
+  {
+    "id": "level4luan-2-t",
+    "name": "Level4luan 2 T",
+    "description": "英语词汇：Level4luan 2 T",
+    "asset": "Level4luan_2_T.json",
+    "language": "en"
+  },
+  {
+    "id": "level8luan-2-t",
+    "name": "Level8luan 2 T",
+    "description": "英语词汇：Level8luan 2 T",
+    "asset": "Level8luan_2_T.json",
+    "language": "en"
+  },
+  {
+    "id": "longman-communication-3000",
+    "name": "Longman Communication 3000",
+    "description": "朗文精选词汇：Longman Communication 3000",
+    "asset": "Longman_Communication_3000.json",
+    "language": "en"
+  },
+  {
+    "id": "macmillan7000",
+    "name": "Macmillan7000",
+    "description": "麦克米伦词汇：Macmillan7000",
+    "asset": "Macmillan7000.json",
+    "language": "en"
+  },
+  {
+    "id": "merriam-webster-svocabularybuilder",
+    "name": "Merriam Webster sVocabularyBuilder",
+    "description": "英语词汇：Merriam Webster S Vocabulary Builder",
+    "asset": "Merriam_Webster_sVocabularyBuilder.json",
+    "language": "en"
+  },
+  {
+    "id": "nce-1",
+    "name": "NCE 1",
+    "description": "英语词汇：NCE 1",
+    "asset": "NCE_1.json",
+    "language": "en"
+  },
+  {
+    "id": "nce-2",
+    "name": "NCE 2",
+    "description": "英语词汇：NCE 2",
+    "asset": "NCE_2.json",
+    "language": "en"
+  },
+  {
+    "id": "nce-3",
+    "name": "NCE 3",
+    "description": "英语词汇：NCE 3",
+    "asset": "NCE_3.json",
+    "language": "en"
+  },
+  {
+    "id": "nce-4",
+    "name": "NCE 4",
+    "description": "英语词汇：NCE 4",
+    "asset": "NCE_4.json",
+    "language": "en"
+  },
+  {
+    "id": "newwaiyan7-1",
+    "name": "Newwaiyan7 1",
+    "description": "英语词汇：Newwaiyan7 1",
+    "asset": "Newwaiyan7-1.json",
+    "language": "en"
+  },
+  {
+    "id": "newwaiyan7-2",
+    "name": "Newwaiyan7 2",
+    "description": "英语词汇：Newwaiyan7 2",
+    "asset": "Newwaiyan7-2.json",
+    "language": "en"
+  },
+  {
+    "id": "node-fs",
+    "name": "Node fs",
+    "description": "编程词汇：Node Fs",
+    "asset": "Node-fs.json",
+    "language": "code"
+  },
+  {
+    "id": "node-path",
+    "name": "Node path",
+    "description": "编程词汇：Node Path",
+    "asset": "Node-path.json",
+    "language": "code"
+  },
+  {
+    "id": "oi-xcpc",
+    "name": "OI XCPC",
+    "description": "英语词汇：OI XCPC",
+    "asset": "OI_XCPC.json",
+    "language": "en"
+  },
+  {
+    "id": "oxford3000",
+    "name": "Oxford3000",
+    "description": "英语词汇：Oxford3000",
+    "asset": "Oxford3000.json",
+    "language": "en"
+  },
+  {
+    "id": "oxford5000",
+    "name": "Oxford5000",
+    "description": "英语词汇：Oxford5000",
+    "asset": "Oxford5000.json",
+    "language": "en"
+  },
+  {
+    "id": "oxfordvocabulary-juniormiddlesh",
+    "name": "OxfordVocabulary juniorMiddleSH",
+    "description": "英语词汇：Oxford Vocabulary Junior Middle SH",
+    "asset": "OxfordVocabulary_juniorMiddleSH.json",
+    "language": "en"
+  },
+  {
+    "id": "pepchuzhong7-1-t",
+    "name": "PEPChuZhong7 1 T",
+    "description": "人教版教材词汇：Pepchu Zhong7 1 T",
+    "asset": "PEPChuZhong7_1_T.json",
+    "language": "en"
+  },
+  {
+    "id": "pepchuzhong7-2-t",
+    "name": "PEPChuZhong7 2 T",
+    "description": "人教版教材词汇：Pepchu Zhong7 2 T",
+    "asset": "PEPChuZhong7_2_T.json",
+    "language": "en"
+  },
+  {
+    "id": "pepchuzhong8-1-t",
+    "name": "PEPChuZhong8 1 T",
+    "description": "人教版教材词汇：Pepchu Zhong8 1 T",
+    "asset": "PEPChuZhong8_1_T.json",
+    "language": "en"
+  },
+  {
+    "id": "pepchuzhong8-2-t",
+    "name": "PEPChuZhong8 2 T",
+    "description": "人教版教材词汇：Pepchu Zhong8 2 T",
+    "asset": "PEPChuZhong8_2_T.json",
+    "language": "en"
+  },
+  {
+    "id": "pepchuzhong9-1-t",
+    "name": "PEPChuZhong9 1 T",
+    "description": "人教版教材词汇：Pepchu Zhong9 1 T",
+    "asset": "PEPChuZhong9_1_T.json",
+    "language": "en"
+  },
+  {
+    "id": "pepgaozhong-10-t",
+    "name": "PEPGaoZhong 10 T",
+    "description": "人教版教材词汇：Pepgao Zhong 10 T",
+    "asset": "PEPGaoZhong_10_T.json",
+    "language": "en"
+  },
+  {
+    "id": "pepgaozhong-11-t",
+    "name": "PEPGaoZhong 11 T",
+    "description": "人教版教材词汇：Pepgao Zhong 11 T",
+    "asset": "PEPGaoZhong_11_T.json",
+    "language": "en"
+  },
+  {
+    "id": "pepgaozhong-1-t",
+    "name": "PEPGaoZhong 1 T",
+    "description": "人教版教材词汇：Pepgao Zhong 1 T",
+    "asset": "PEPGaoZhong_1_T.json",
+    "language": "en"
+  },
+  {
+    "id": "pepgaozhong-2-t",
+    "name": "PEPGaoZhong 2 T",
+    "description": "人教版教材词汇：Pepgao Zhong 2 T",
+    "asset": "PEPGaoZhong_2_T.json",
+    "language": "en"
+  },
+  {
+    "id": "pepgaozhong-3-t",
+    "name": "PEPGaoZhong 3 T",
+    "description": "人教版教材词汇：Pepgao Zhong 3 T",
+    "asset": "PEPGaoZhong_3_T.json",
+    "language": "en"
+  },
+  {
+    "id": "pepgaozhong-4-t",
+    "name": "PEPGaoZhong 4 T",
+    "description": "人教版教材词汇：Pepgao Zhong 4 T",
+    "asset": "PEPGaoZhong_4_T.json",
+    "language": "en"
+  },
+  {
+    "id": "pepgaozhong-5-t",
+    "name": "PEPGaoZhong 5 T",
+    "description": "人教版教材词汇：Pepgao Zhong 5 T",
+    "asset": "PEPGaoZhong_5_T.json",
+    "language": "en"
+  },
+  {
+    "id": "pepgaozhong-6-t",
+    "name": "PEPGaoZhong 6 T",
+    "description": "人教版教材词汇：Pepgao Zhong 6 T",
+    "asset": "PEPGaoZhong_6_T.json",
+    "language": "en"
+  },
+  {
+    "id": "pepgaozhong-7-t",
+    "name": "PEPGaoZhong 7 T",
+    "description": "人教版教材词汇：Pepgao Zhong 7 T",
+    "asset": "PEPGaoZhong_7_T.json",
+    "language": "en"
+  },
+  {
+    "id": "pepgaozhong-8-t",
+    "name": "PEPGaoZhong 8 T",
+    "description": "人教版教材词汇：Pepgao Zhong 8 T",
+    "asset": "PEPGaoZhong_8_T.json",
+    "language": "en"
+  },
+  {
+    "id": "pepgaozhong-9-t",
+    "name": "PEPGaoZhong 9 T",
+    "description": "人教版教材词汇：Pepgao Zhong 9 T",
+    "asset": "PEPGaoZhong_9_T.json",
+    "language": "en"
+  },
+  {
+    "id": "pepxiaoxue3-1-t",
+    "name": "PEPXiaoXue3 1 T",
+    "description": "人教版教材词汇：Pepxiao Xue3 1 T",
+    "asset": "PEPXiaoXue3_1_T.json",
+    "language": "en"
+  },
+  {
+    "id": "pepxiaoxue3-2-t",
+    "name": "PEPXiaoXue3 2 T",
+    "description": "人教版教材词汇：Pepxiao Xue3 2 T",
+    "asset": "PEPXiaoXue3_2_T.json",
+    "language": "en"
+  },
+  {
+    "id": "pepxiaoxue4-1-t",
+    "name": "PEPXiaoXue4 1 T",
+    "description": "人教版教材词汇：Pepxiao Xue4 1 T",
+    "asset": "PEPXiaoXue4_1_T.json",
+    "language": "en"
+  },
+  {
+    "id": "pepxiaoxue4-2-t",
+    "name": "PEPXiaoXue4 2 T",
+    "description": "人教版教材词汇：Pepxiao Xue4 2 T",
+    "asset": "PEPXiaoXue4_2_T.json",
+    "language": "en"
+  },
+  {
+    "id": "pepxiaoxue5-1-t",
+    "name": "PEPXiaoXue5 1 T",
+    "description": "人教版教材词汇：Pepxiao Xue5 1 T",
+    "asset": "PEPXiaoXue5_1_T.json",
+    "language": "en"
+  },
+  {
+    "id": "pepxiaoxue5-2-t",
+    "name": "PEPXiaoXue5 2 T",
+    "description": "人教版教材词汇：Pepxiao Xue5 2 T",
+    "asset": "PEPXiaoXue5_2_T.json",
+    "language": "en"
+  },
+  {
+    "id": "pepxiaoxue6-1-t",
+    "name": "PEPXiaoXue6 1 T",
+    "description": "人教版教材词汇：Pepxiao Xue6 1 T",
+    "asset": "PEPXiaoXue6_1_T.json",
+    "language": "en"
+  },
+  {
+    "id": "pepxiaoxue6-2-t",
+    "name": "PEPXiaoXue6 2 T",
+    "description": "人教版教材词汇：Pepxiao Xue6 2 T",
+    "asset": "PEPXiaoXue6_2_T.json",
+    "language": "en"
+  },
+  {
+    "id": "pep-sl-xiaoxue1-1-t",
+    "name": "PEP SL XiaoXue1 1 t",
+    "description": "人教版教材词汇：PEP SL Xiao Xue1 1 T",
+    "asset": "PEP_SL_XiaoXue1_1_t.json",
+    "language": "en"
+  },
+  {
+    "id": "pep-sl-xiaoxue1-2-t",
+    "name": "PEP SL XiaoXue1 2 t",
+    "description": "人教版教材词汇：PEP SL Xiao Xue1 2 T",
+    "asset": "PEP_SL_XiaoXue1_2_t.json",
+    "language": "en"
+  },
+  {
+    "id": "pep-sl-xiaoxue2-1-t",
+    "name": "PEP SL XiaoXue2 1 t",
+    "description": "人教版教材词汇：PEP SL Xiao Xue2 1 T",
+    "asset": "PEP_SL_XiaoXue2_1_t.json",
+    "language": "en"
+  },
+  {
+    "id": "pep-sl-xiaoxue2-2-t",
+    "name": "PEP SL XiaoXue2 2 t",
+    "description": "人教版教材词汇：PEP SL Xiao Xue2 2 T",
+    "asset": "PEP_SL_XiaoXue2_2_t.json",
+    "language": "en"
+  },
+  {
+    "id": "pep-sl-xiaoxue3-1-t",
+    "name": "PEP SL XiaoXue3 1 t",
+    "description": "人教版教材词汇：PEP SL Xiao Xue3 1 T",
+    "asset": "PEP_SL_XiaoXue3_1_t.json",
+    "language": "en"
+  },
+  {
+    "id": "pep-sl-xiaoxue3-2-t",
+    "name": "PEP SL XiaoXue3 2 t",
+    "description": "人教版教材词汇：PEP SL Xiao Xue3 2 T",
+    "asset": "PEP_SL_XiaoXue3_2_t.json",
+    "language": "en"
+  },
+  {
+    "id": "pep-sl-xiaoxue4-1-t",
+    "name": "PEP SL XiaoXue4 1 t",
+    "description": "人教版教材词汇：PEP SL Xiao Xue4 1 T",
+    "asset": "PEP_SL_XiaoXue4_1_t.json",
+    "language": "en"
+  },
+  {
+    "id": "pep-sl-xiaoxue4-2-t",
+    "name": "PEP SL XiaoXue4 2 t",
+    "description": "人教版教材词汇：PEP SL Xiao Xue4 2 T",
+    "asset": "PEP_SL_XiaoXue4_2_t.json",
+    "language": "en"
+  },
+  {
+    "id": "pep-sl-xiaoxue5-1-t",
+    "name": "PEP SL XiaoXue5 1 t",
+    "description": "人教版教材词汇：PEP SL Xiao Xue5 1 T",
+    "asset": "PEP_SL_XiaoXue5_1_t.json",
+    "language": "en"
+  },
+  {
+    "id": "pep-sl-xiaoxue5-2-t",
+    "name": "PEP SL XiaoXue5 2 t",
+    "description": "人教版教材词汇：PEP SL Xiao Xue5 2 T",
+    "asset": "PEP_SL_XiaoXue5_2_t.json",
+    "language": "en"
+  },
+  {
+    "id": "pep-sl-xiaoxue6-1-t",
+    "name": "PEP SL XiaoXue6 1 t",
+    "description": "人教版教材词汇：PEP SL Xiao Xue6 1 T",
+    "asset": "PEP_SL_XiaoXue6_1_t.json",
+    "language": "en"
+  },
+  {
+    "id": "pep-sl-xiaoxue6-2-t",
+    "name": "PEP SL XiaoXue6 2 t",
+    "description": "人教版教材词汇：PEP SL Xiao Xue6 2 T",
+    "asset": "PEP_SL_XiaoXue6_2_t.json",
+    "language": "en"
+  },
+  {
+    "id": "pets3-2023",
+    "name": "PETS3 2023",
+    "description": "PETS 考试词汇：PETS3 2023",
+    "asset": "PETS3-2023.json",
+    "language": "en"
+  },
+  {
+    "id": "pets-3",
+    "name": "PETS 3",
+    "description": "PETS 考试词汇：PETS 3",
+    "asset": "PETS_3.json",
+    "language": "en"
+  },
+  {
+    "id": "pte-advanced-apeuni",
+    "name": "PTE Advanced apeuni",
+    "description": "PTE 高频词汇：PTE Advanced Apeuni",
+    "asset": "PTE_Advanced_apeuni.json",
+    "language": "en"
+  },
+  {
+    "id": "pte-basic-apeuni",
+    "name": "PTE Basic apeuni",
+    "description": "PTE 高频词汇：PTE Basic Apeuni",
+    "asset": "PTE_Basic_apeuni.json",
+    "language": "en"
+  },
+  {
+    "id": "pte-fib-l",
+    "name": "PTE FIB L",
+    "description": "PTE 高频词汇：PTE FIB L",
+    "asset": "PTE_FIB_L.json",
+    "language": "en"
+  },
+  {
+    "id": "pte-fib-r-junior",
+    "name": "PTE FIB R junior",
+    "description": "PTE 高频词汇：PTE FIB R Junior",
+    "asset": "PTE_FIB_R_junior.json",
+    "language": "en"
+  },
+  {
+    "id": "pte-fib-r-senior",
+    "name": "PTE FIB R senior",
+    "description": "PTE 高频词汇：PTE FIB R Senior",
+    "asset": "PTE_FIB_R_senior.json",
+    "language": "en"
+  },
+  {
+    "id": "pte-listening-apeuni",
+    "name": "PTE Listening apeuni",
+    "description": "PTE 高频词汇：PTE Listening Apeuni",
+    "asset": "PTE_Listening_apeuni.json",
+    "language": "en"
+  },
+  {
+    "id": "pte-read-apeuni",
+    "name": "PTE Read apeuni",
+    "description": "PTE 高频词汇：PTE Read Apeuni",
+    "asset": "PTE_Read_apeuni.json",
+    "language": "en"
+  },
+  {
+    "id": "pte-wfd",
+    "name": "PTE WFD",
+    "description": "PTE 高频词汇：PTE WFD",
+    "asset": "PTE_WFD.json",
+    "language": "en"
+  },
+  {
+    "id": "pte-wfdgaopinci",
+    "name": "PTE WFDgaopinci",
+    "description": "PTE 高频词汇：PTE Wfdgaopinci",
+    "asset": "PTE_WFDgaopinci.json",
+    "language": "en"
+  },
+  {
+    "id": "pte-junior",
+    "name": "PTE junior",
+    "description": "PTE 高频词汇：PTE Junior",
+    "asset": "PTE_junior.json",
+    "language": "en"
+  },
+  {
+    "id": "pte-senior",
+    "name": "PTE senior",
+    "description": "PTE 高频词汇：PTE Senior",
+    "asset": "PTE_senior.json",
+    "language": "en"
+  },
+  {
+    "id": "readingexplorer3",
+    "name": "ReadingExplorer3",
+    "description": "英语词汇：Reading Explorer3",
+    "asset": "ReadingExplorer3.json",
+    "language": "en"
+  },
+  {
+    "id": "rogerswords",
+    "name": "RogersWords",
+    "description": "英语词汇：Rogers Words",
+    "asset": "RogersWords.json",
+    "language": "en"
+  },
+  {
+    "id": "sat",
+    "name": "SAT",
+    "description": "SAT 词库",
+    "asset": "SAT_3_T.json",
+    "language": "en",
+    "category": "国际考试"
+  },
+  {
+    "id": "saten",
+    "name": "SATen",
+    "description": "SAT 高频词汇：Saten",
+    "asset": "SATen.json",
+    "language": "en"
+  },
+  {
+    "id": "sql-statement-lower-case",
+    "name": "SQL statement lower case",
+    "description": "编程词汇：SQL Statement Lower Case",
+    "asset": "SQL_statement_lower-case.json",
+    "language": "code"
+  },
+  {
+    "id": "sql-statement-upper-case",
+    "name": "SQL statement upper case",
+    "description": "编程词汇：SQL Statement Upper Case",
+    "asset": "SQL_statement_upper-case.json",
+    "language": "code"
+  },
+  {
+    "id": "toefl",
+    "name": "TOEFL",
+    "description": "TOEFL 词库",
+    "asset": "TOEFL_3_T.json",
+    "language": "en",
+    "category": "国际考试"
+  },
+  {
+    "id": "toefl-zhanghongyan",
+    "name": "TOEFL ZhangHongYan",
+    "description": "TOEFL 高频词汇：TOEFL Zhang Hong Yan",
+    "asset": "TOEFL_ZhangHongYan.json",
+    "language": "en"
+  },
+  {
+    "id": "toeic",
+    "name": "TOEIC",
+    "description": "英语词汇：TOEIC",
+    "asset": "TOEIC.json",
+    "language": "en"
+  },
+  {
+    "id": "top1000verbwords",
+    "name": "Top1000VerbWords",
+    "description": "英语词汇：Top1000 Verb Words",
+    "asset": "Top1000VerbWords.json",
+    "language": "en"
+  },
+  {
+    "id": "top1500nounwords",
+    "name": "Top1500NounWords",
+    "description": "英语词汇：Top1500 Noun Words",
+    "asset": "Top1500NounWords.json",
+    "language": "en"
+  },
+  {
+    "id": "top250adverbwords",
+    "name": "Top250AdverbWords",
+    "description": "英语词汇：Top250 Adverb Words",
+    "asset": "Top250AdverbWords.json",
+    "language": "en"
+  },
+  {
+    "id": "top500adjectivewords",
+    "name": "Top500AdjectiveWords",
+    "description": "英语词汇：Top500 Adjective Words",
+    "asset": "Top500AdjectiveWords.json",
+    "language": "en"
+  },
+  {
+    "id": "top50prepositions",
+    "name": "Top50Prepositions",
+    "description": "英语词汇：Top50 Prepositions",
+    "asset": "Top50Prepositions.json",
+    "language": "en"
+  },
+  {
+    "id": "top60pronouns",
+    "name": "Top60Pronouns",
+    "description": "英语词汇：Top60 Pronouns",
+    "asset": "Top60Pronouns.json",
+    "language": "en"
+  },
+  {
+    "id": "waiyanshechuzhong-1-volume-down",
+    "name": "WaiYanSheChuZhong 1 Volume down",
+    "description": "英语词汇：Wai Yan She Chu Zhong 1 Volume Down",
+    "asset": "WaiYanSheChuZhong_1-Volume-down.json",
+    "language": "en"
+  },
+  {
+    "id": "waiyanshechuzhong-1-volume-up",
+    "name": "WaiYanSheChuZhong 1 Volume up",
+    "description": "英语词汇：Wai Yan She Chu Zhong 1 Volume Up",
+    "asset": "WaiYanSheChuZhong_1-Volume-up.json",
+    "language": "en"
+  },
+  {
+    "id": "waiyanshechuzhong-1-t",
+    "name": "WaiYanSheChuZhong 1 T",
+    "description": "英语词汇：Wai Yan She Chu Zhong 1 T",
+    "asset": "WaiYanSheChuZhong_1_T.json",
+    "language": "en"
+  },
+  {
+    "id": "waiyanshechuzhong-2-volume-down",
+    "name": "WaiYanSheChuZhong 2 Volume down",
+    "description": "英语词汇：Wai Yan She Chu Zhong 2 Volume Down",
+    "asset": "WaiYanSheChuZhong_2-Volume-down.json",
+    "language": "en"
+  },
+  {
+    "id": "waiyanshechuzhong-2-volume-top",
+    "name": "WaiYanSheChuZhong 2 Volume top",
+    "description": "英语词汇：Wai Yan She Chu Zhong 2 Volume Top",
+    "asset": "WaiYanSheChuZhong_2-Volume-top.json",
+    "language": "en"
+  },
+  {
+    "id": "waiyanshechuzhong-2-t",
+    "name": "WaiYanSheChuZhong 2 T",
+    "description": "英语词汇：Wai Yan She Chu Zhong 2 T",
+    "asset": "WaiYanSheChuZhong_2_T.json",
+    "language": "en"
+  },
+  {
+    "id": "waiyanshechuzhong-3-volume-down",
+    "name": "WaiYanSheChuZhong 3 Volume down",
+    "description": "英语词汇：Wai Yan She Chu Zhong 3 Volume Down",
+    "asset": "WaiYanSheChuZhong_3-Volume-down.json",
+    "language": "en"
+  },
+  {
+    "id": "waiyanshechuzhong-3-volume-top",
+    "name": "WaiYanSheChuZhong 3 Volume top",
+    "description": "英语词汇：Wai Yan She Chu Zhong 3 Volume Top",
+    "asset": "WaiYanSheChuZhong_3-Volume-top.json",
+    "language": "en"
+  },
+  {
+    "id": "waiyanshechuzhong-3-t",
+    "name": "WaiYanSheChuZhong 3 T",
+    "description": "英语词汇：Wai Yan She Chu Zhong 3 T",
+    "asset": "WaiYanSheChuZhong_3_T.json",
+    "language": "en"
+  },
+  {
+    "id": "waiyanshechuzhong-4-volume-down",
+    "name": "WaiYanSheChuZhong 4 Volume down",
+    "description": "英语词汇：Wai Yan She Chu Zhong 4 Volume Down",
+    "asset": "WaiYanSheChuZhong_4-Volume-down.json",
+    "language": "en"
+  },
+  {
+    "id": "waiyanshechuzhong-4-volume-top",
+    "name": "WaiYanSheChuZhong 4 Volume top",
+    "description": "英语词汇：Wai Yan She Chu Zhong 4 Volume Top",
+    "asset": "WaiYanSheChuZhong_4-Volume-top.json",
+    "language": "en"
+  },
+  {
+    "id": "waiyanshechuzhong-4-t",
+    "name": "WaiYanSheChuZhong 4 T",
+    "description": "英语词汇：Wai Yan She Chu Zhong 4 T",
+    "asset": "WaiYanSheChuZhong_4_T.json",
+    "language": "en"
+  },
+  {
+    "id": "waiyanshechuzhong-5-volume-down",
+    "name": "WaiYanSheChuZhong 5 Volume down",
+    "description": "英语词汇：Wai Yan She Chu Zhong 5 Volume Down",
+    "asset": "WaiYanSheChuZhong_5-Volume-down.json",
+    "language": "en"
+  },
+  {
+    "id": "waiyanshechuzhong-5-volume-top",
+    "name": "WaiYanSheChuZhong 5 Volume top",
+    "description": "英语词汇：Wai Yan She Chu Zhong 5 Volume Top",
+    "asset": "WaiYanSheChuZhong_5-Volume-top.json",
+    "language": "en"
+  },
+  {
+    "id": "waiyanshechuzhong-5-t",
+    "name": "WaiYanSheChuZhong 5 T",
+    "description": "英语词汇：Wai Yan She Chu Zhong 5 T",
+    "asset": "WaiYanSheChuZhong_5_T.json",
+    "language": "en"
+  },
+  {
+    "id": "waiyanshechuzhong-6-volume-down",
+    "name": "WaiYanSheChuZhong 6 Volume down",
+    "description": "英语词汇：Wai Yan She Chu Zhong 6 Volume Down",
+    "asset": "WaiYanSheChuZhong_6-Volume-down.json",
+    "language": "en"
+  },
+  {
+    "id": "waiyanshechuzhong-6-volume-top",
+    "name": "WaiYanSheChuZhong 6 Volume top",
+    "description": "英语词汇：Wai Yan She Chu Zhong 6 Volume Top",
+    "asset": "WaiYanSheChuZhong_6-Volume-top.json",
+    "language": "en"
+  },
+  {
+    "id": "waiyanshechuzhong-6-t",
+    "name": "WaiYanSheChuZhong 6 T",
+    "description": "英语词汇：Wai Yan She Chu Zhong 6 T",
+    "asset": "WaiYanSheChuZhong_6_T.json",
+    "language": "en"
+  },
+  {
+    "id": "waiyanshegaozhong-1-t",
+    "name": "WaiYanSheGaoZhong 1 T",
+    "description": "高中英语词汇：Wai Yan She Gao Zhong 1 T",
+    "asset": "WaiYanSheGaoZhong_1_T.json",
+    "language": "en"
+  },
+  {
+    "id": "waiyanshegaozhong-2-t",
+    "name": "WaiYanSheGaoZhong 2 T",
+    "description": "高中英语词汇：Wai Yan She Gao Zhong 2 T",
+    "asset": "WaiYanSheGaoZhong_2_T.json",
+    "language": "en"
+  },
+  {
+    "id": "yilin-1",
+    "name": "YiLin 1",
+    "description": "英语词汇：Yi Lin 1",
+    "asset": "YiLin_1.json",
+    "language": "en"
+  },
+  {
+    "id": "yilin-2",
+    "name": "YiLin 2",
+    "description": "英语词汇：Yi Lin 2",
+    "asset": "YiLin_2.json",
+    "language": "en"
+  },
+  {
+    "id": "yilin-3",
+    "name": "YiLin 3",
+    "description": "英语词汇：Yi Lin 3",
+    "asset": "YiLin_3.json",
+    "language": "en"
+  },
+  {
+    "id": "zaiyaoniming-gre3000",
+    "name": "ZaiYaoNiMing GRE3000",
+    "description": "GRE 高频词汇：Zai Yao Ni Ming GRE3000",
+    "asset": "ZaiYaoNiMing_GRE3000.json",
+    "language": "en"
+  },
+  {
+    "id": "zhongkaohexin",
+    "name": "ZhongKaoHeXin",
+    "description": "英语词汇：Zhong Kao He Xin",
+    "asset": "ZhongKaoHeXin.json",
+    "language": "en"
+  },
+  {
+    "id": "adult-self-study-examination",
+    "name": "adult self study examination",
+    "description": "英语词汇：Adult Self Study Examination",
+    "asset": "adult-self-study-examination.json",
+    "language": "en"
+  },
+  {
+    "id": "ai-for-science",
+    "name": "ai for science",
+    "description": "英语词汇：Ai For Science",
+    "asset": "ai_for_science.json",
+    "language": "en"
+  },
+  {
+    "id": "ai-machine-learning",
+    "name": "ai machine learning",
+    "description": "英语词汇：Ai Machine Learning",
+    "asset": "ai_machine_learning.json",
+    "language": "en"
+  },
+  {
+    "id": "archvocabulary",
+    "name": "archVocabulary",
+    "description": "英语词汇：Arch Vocabulary",
+    "asset": "archVocabulary.json",
+    "language": "en"
+  },
+  {
+    "id": "arduino-keywords",
+    "name": "arduino keywords",
+    "description": "编程词汇：Arduino Keywords",
+    "asset": "arduino_keywords.json",
+    "language": "code"
+  },
+  {
+    "id": "beijing-junior-high-school",
+    "name": "beijing junior high school",
+    "description": "英语词汇：Beijing Junior High School",
+    "asset": "beijing_junior_high_school.json",
+    "language": "en"
+  },
+  {
+    "id": "chinese-test",
+    "name": "chinese test",
+    "description": "中文词汇：Chinese Test",
+    "asset": "chinese_test.json",
+    "language": "zh"
+  },
+  {
+    "id": "coca20000",
+    "name": "coca20000",
+    "description": "英语词汇：Coca20000",
+    "asset": "coca20000.json",
+    "language": "en"
+  },
+  {
+    "id": "csharp-keywords",
+    "name": "csharp keywords",
+    "description": "编程词汇：Csharp Keywords",
+    "asset": "csharp-keywords.json",
+    "language": "code"
+  },
+  {
+    "id": "csharp-list",
+    "name": "csharp list",
+    "description": "编程词汇：Csharp List",
+    "asset": "csharp-list.json",
+    "language": "code"
+  },
+  {
+    "id": "csharp-string",
+    "name": "csharp string",
+    "description": "编程词汇：Csharp String",
+    "asset": "csharp-string.json",
+    "language": "code"
+  },
+  {
+    "id": "en2german",
+    "name": "en2german",
+    "description": "德语词汇：En2german",
+    "asset": "en2german.json",
+    "language": "de"
+  },
+  {
+    "id": "frequently-used-word01",
+    "name": "frequently used word01",
+    "description": "英语词汇：Frequently Used Word01",
+    "asset": "frequently_used_word01.json",
+    "language": "en"
+  },
+  {
+    "id": "frequently-used-word02",
+    "name": "frequently used word02",
+    "description": "英语词汇：Frequently Used Word02",
+    "asset": "frequently_used_word02.json",
+    "language": "en"
+  },
+  {
+    "id": "frequently-used-word03",
+    "name": "frequently used word03",
+    "description": "英语词汇：Frequently Used Word03",
+    "asset": "frequently_used_word03.json",
+    "language": "en"
+  },
+  {
+    "id": "gaokao-yuedu-gaopin",
+    "name": "gaokao yuedu gaopin",
+    "description": "高考英语词汇：Gaokao Yuedu Gaopin",
+    "asset": "gaokao-yuedu-gaopin.json",
+    "language": "en"
+  },
+  {
+    "id": "german2en",
+    "name": "german2en",
+    "description": "德语词汇：German2en",
+    "asset": "german2en.json",
+    "language": "de"
+  },
+  {
+    "id": "go-builtin",
+    "name": "go builtin",
+    "description": "编程词汇：Go Builtin",
+    "asset": "go_builtin.json",
+    "language": "code"
+  },
+  {
+    "id": "go-keyword",
+    "name": "go keyword",
+    "description": "编程词汇：Go Keyword",
+    "asset": "go_keyword.json",
+    "language": "code"
+  },
+  {
+    "id": "gre-ciyileiji",
+    "name": "gre ciyileiji",
+    "description": "GRE 高频词汇：Gre Ciyileiji",
+    "asset": "gre-ciyileiji.json",
+    "language": "en"
+  },
+  {
+    "id": "hongbaoshu-2026",
+    "name": "hongbaoshu 2026",
+    "description": "英语词汇：Hongbaoshu 2026",
+    "asset": "hongbaoshu-2026.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-807",
+    "name": "ielts 807",
+    "description": "IELTS 高频词汇：Ielts 807",
+    "asset": "ielts-807.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-real-1",
+    "name": "ielts real 1",
+    "description": "IELTS 高频词汇：Ielts Real 1",
+    "asset": "ielts-real-1.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-real-2",
+    "name": "ielts real 2",
+    "description": "IELTS 高频词汇：Ielts Real 2",
+    "asset": "ielts-real-2.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-real-3",
+    "name": "ielts real 3",
+    "description": "IELTS 高频词汇：Ielts Real 3",
+    "asset": "ielts-real-3.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-real-4",
+    "name": "ielts real 4",
+    "description": "IELTS 高频词汇：Ielts Real 4",
+    "asset": "ielts-real-4.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-real-5",
+    "name": "ielts real 5",
+    "description": "IELTS 高频词汇：Ielts Real 5",
+    "asset": "ielts-real-5.json",
+    "language": "en"
+  },
+  {
+    "id": "ielts-real-high",
+    "name": "ielts real high",
+    "description": "IELTS 高频词汇：Ielts Real High",
+    "asset": "ielts-real-high.json",
+    "language": "en"
+  },
+  {
+    "id": "it-words",
+    "name": "it words",
+    "description": "编程词汇：It Words",
+    "asset": "it-words.json",
+    "language": "code"
+  },
+  {
+    "id": "itvocabulary",
+    "name": "itVocabulary",
+    "description": "编程词汇：It Vocabulary",
+    "asset": "itVocabulary.json",
+    "language": "code"
+  },
+  {
+    "id": "japanese-test",
+    "name": "japanese test",
+    "description": "日语词汇：Japanese Test",
+    "asset": "japanese_test.json",
+    "language": "ja"
+  },
+  {
+    "id": "java-arraylist",
+    "name": "java arraylist",
+    "description": "编程词汇：Java Arraylist",
+    "asset": "java-arraylist.json",
+    "language": "code"
+  },
+  {
+    "id": "java-character",
+    "name": "java character",
+    "description": "编程词汇：Java Character",
+    "asset": "java-character.json",
+    "language": "code"
+  },
+  {
+    "id": "java-hashmap",
+    "name": "java hashmap",
+    "description": "编程词汇：Java Hashmap",
+    "asset": "java-hashmap.json",
+    "language": "code"
+  },
+  {
+    "id": "java-linkedlist",
+    "name": "java linkedlist",
+    "description": "编程词汇：Java Linkedlist",
+    "asset": "java-linkedlist.json",
+    "language": "code"
+  },
+  {
+    "id": "java-string",
+    "name": "java string",
+    "description": "编程词汇：Java String",
+    "asset": "java-string.json",
+    "language": "code"
+  },
+  {
+    "id": "java-stringbuffer",
+    "name": "java stringBuffer",
+    "description": "编程词汇：Java String Buffer",
+    "asset": "java-stringBuffer.json",
+    "language": "code"
+  },
+  {
+    "id": "jijiao3-1",
+    "name": "jiJiao3 1",
+    "description": "英语词汇：Ji Jiao3 1",
+    "asset": "jiJiao3-1.json",
+    "language": "en"
+  },
+  {
+    "id": "jijiao3-2",
+    "name": "jiJiao3 2",
+    "description": "英语词汇：Ji Jiao3 2",
+    "asset": "jiJiao3-2.json",
+    "language": "en"
+  },
+  {
+    "id": "jijiao4-1",
+    "name": "jiJiao4 1",
+    "description": "英语词汇：Ji Jiao4 1",
+    "asset": "jiJiao4-1.json",
+    "language": "en"
+  },
+  {
+    "id": "jijiao4-2",
+    "name": "jiJiao4 2",
+    "description": "英语词汇：Ji Jiao4 2",
+    "asset": "jiJiao4-2.json",
+    "language": "en"
+  },
+  {
+    "id": "jijiao5-1",
+    "name": "jiJiao5 1",
+    "description": "英语词汇：Ji Jiao5 1",
+    "asset": "jiJiao5-1.json",
+    "language": "en"
+  },
+  {
+    "id": "jijiao5-2",
+    "name": "jiJiao5 2",
+    "description": "英语词汇：Ji Jiao5 2",
+    "asset": "jiJiao5-2.json",
+    "language": "en"
+  },
+  {
+    "id": "jijiao6-1",
+    "name": "jiJiao6 1",
+    "description": "英语词汇：Ji Jiao6 1",
+    "asset": "jiJiao6-1.json",
+    "language": "en"
+  },
+  {
+    "id": "jijiao6-2",
+    "name": "jiJiao6 2",
+    "description": "英语词汇：Ji Jiao6 2",
+    "asset": "jiJiao6-2.json",
+    "language": "en"
+  },
+  {
+    "id": "jijiao7-1",
+    "name": "jiJiao7 1",
+    "description": "英语词汇：Ji Jiao7 1",
+    "asset": "jiJiao7-1.json",
+    "language": "en"
+  },
+  {
+    "id": "jijiao7-2",
+    "name": "jiJiao7 2",
+    "description": "英语词汇：Ji Jiao7 2",
+    "asset": "jiJiao7-2.json",
+    "language": "en"
+  },
+  {
+    "id": "jijiao8-1",
+    "name": "jiJiao8 1",
+    "description": "英语词汇：Ji Jiao8 1",
+    "asset": "jiJiao8-1.json",
+    "language": "en"
+  },
+  {
+    "id": "jijiao8-2",
+    "name": "jiJiao8 2",
+    "description": "英语词汇：Ji Jiao8 2",
+    "asset": "jiJiao8-2.json",
+    "language": "en"
+  },
+  {
+    "id": "jijiao9",
+    "name": "jiJiao9",
+    "description": "英语词汇：Ji Jiao9",
+    "asset": "jiJiao9.json",
+    "language": "en"
+  },
+  {
+    "id": "js-array",
+    "name": "js array",
+    "description": "编程词汇：Js Array",
+    "asset": "js-array.json",
+    "language": "code"
+  },
+  {
+    "id": "js-date",
+    "name": "js date",
+    "description": "编程词汇：Js Date",
+    "asset": "js-date.json",
+    "language": "code"
+  },
+  {
+    "id": "js-global",
+    "name": "js global",
+    "description": "编程词汇：Js Global",
+    "asset": "js-global.json",
+    "language": "code"
+  },
+  {
+    "id": "js-map-set",
+    "name": "js map set",
+    "description": "编程词汇：Js Map Set",
+    "asset": "js-map-set.json",
+    "language": "code"
+  },
+  {
+    "id": "js-math",
+    "name": "js math",
+    "description": "编程词汇：Js Math",
+    "asset": "js-math.json",
+    "language": "code"
+  },
+  {
+    "id": "js-number",
+    "name": "js number",
+    "description": "编程词汇：Js Number",
+    "asset": "js-number.json",
+    "language": "code"
+  },
+  {
+    "id": "js-object",
+    "name": "js object",
+    "description": "编程词汇：Js Object",
+    "asset": "js-object.json",
+    "language": "code"
+  },
+  {
+    "id": "js-promise",
+    "name": "js promise",
+    "description": "编程词汇：Js Promise",
+    "asset": "js-promise.json",
+    "language": "code"
+  },
+  {
+    "id": "js-string",
+    "name": "js string",
+    "description": "编程词汇：Js String",
+    "asset": "js-string.json",
+    "language": "code"
+  },
+  {
+    "id": "kaoyanshanguo2025",
+    "name": "kaoyanshanguo2025",
+    "description": "考研英语词汇：Kaoyanshanguo2025",
+    "asset": "kaoyanshanguo2025.json",
+    "language": "en"
+  },
+  {
+    "id": "kazakh-basic-3000-arabic-hapin",
+    "name": "kazakh basic 3000 arabic hapin",
+    "description": "哈萨克语词汇：Kazakh Basic 3000 Arabic Hapin",
+    "asset": "kazakh_basic_3000_arabic_hapin.json",
+    "language": "kk"
+  },
+  {
+    "id": "kazakh-basic-3000-cyrillic-hapin",
+    "name": "kazakh basic 3000 cyrillic hapin",
+    "description": "哈萨克语词汇：Kazakh Basic 3000 Cyrillic Hapin",
+    "asset": "kazakh_basic_3000_cyrillic_hapin.json",
+    "language": "kk"
+  },
+  {
+    "id": "ket2021",
+    "name": "ket2021",
+    "description": "英语词汇：Ket2021",
+    "asset": "ket2021.json",
+    "language": "en"
+  },
+  {
+    "id": "linux-command",
+    "name": "linux command",
+    "description": "编程词汇：Linux Command",
+    "asset": "linux-command.json",
+    "language": "code"
+  },
+  {
+    "id": "nce-new-1",
+    "name": "nce new 1",
+    "description": "英语词汇：Nce New 1",
+    "asset": "nce-new-1.json",
+    "language": "en"
+  },
+  {
+    "id": "nce-new-2",
+    "name": "nce new 2",
+    "description": "英语词汇：Nce New 2",
+    "asset": "nce-new-2.json",
+    "language": "en"
+  },
+  {
+    "id": "nce-new-3",
+    "name": "nce new 3",
+    "description": "英语词汇：Nce New 3",
+    "asset": "nce-new-3.json",
+    "language": "en"
+  },
+  {
+    "id": "nce-new-4",
+    "name": "nce new 4",
+    "description": "英语词汇：Nce New 4",
+    "asset": "nce-new-4.json",
+    "language": "en"
+  },
+  {
+    "id": "pet-vacabulary-list-2024",
+    "name": "pet vacabulary list 2024",
+    "description": "英语词汇：Pet Vacabulary List 2024",
+    "asset": "pet-vacabulary-list-2024.json",
+    "language": "en"
+  },
+  {
+    "id": "python-array",
+    "name": "python array",
+    "description": "编程词汇：Python Array",
+    "asset": "python-array.json",
+    "language": "code"
+  },
+  {
+    "id": "python-builtin",
+    "name": "python builtin",
+    "description": "编程词汇：Python Builtin",
+    "asset": "python-builtin.json",
+    "language": "code"
+  },
+  {
+    "id": "python-class",
+    "name": "python class",
+    "description": "编程词汇：Python Class",
+    "asset": "python-class.json",
+    "language": "code"
+  },
+  {
+    "id": "python-date",
+    "name": "python date",
+    "description": "编程词汇：Python Date",
+    "asset": "python-date.json",
+    "language": "code"
+  },
+  {
+    "id": "python-file",
+    "name": "python file",
+    "description": "编程词汇：Python File",
+    "asset": "python-file.json",
+    "language": "code"
+  },
+  {
+    "id": "python-math",
+    "name": "python math",
+    "description": "编程词汇：Python Math",
+    "asset": "python-math.json",
+    "language": "code"
+  },
+  {
+    "id": "python-set",
+    "name": "python set",
+    "description": "编程词汇：Python Set",
+    "asset": "python-set.json",
+    "language": "code"
+  },
+  {
+    "id": "python-string",
+    "name": "python string",
+    "description": "编程词汇：Python String",
+    "asset": "python-string.json",
+    "language": "code"
+  },
+  {
+    "id": "python-sys",
+    "name": "python sys",
+    "description": "编程词汇：Python Sys",
+    "asset": "python-sys.json",
+    "language": "code"
+  },
+  {
+    "id": "raz-a",
+    "name": "raz A",
+    "description": "Raz 阅读等级词汇：Raz A",
+    "asset": "raz-A.json",
+    "language": "en"
+  },
+  {
+    "id": "raz-aa",
+    "name": "raz AA",
+    "description": "Raz 阅读等级词汇：Raz AA",
+    "asset": "raz-AA.json",
+    "language": "en"
+  },
+  {
+    "id": "raz-b",
+    "name": "raz B",
+    "description": "Raz 阅读等级词汇：Raz B",
+    "asset": "raz-B.json",
+    "language": "en"
+  },
+  {
+    "id": "raz-c",
+    "name": "raz C",
+    "description": "Raz 阅读等级词汇：Raz C",
+    "asset": "raz-C.json",
+    "language": "en"
+  },
+  {
+    "id": "raz-d",
+    "name": "raz D",
+    "description": "Raz 阅读等级词汇：Raz D",
+    "asset": "raz-D.json",
+    "language": "en"
+  },
+  {
+    "id": "raz-e",
+    "name": "raz E",
+    "description": "Raz 阅读等级词汇：Raz E",
+    "asset": "raz-E.json",
+    "language": "en"
+  },
+  {
+    "id": "raz-f",
+    "name": "raz F",
+    "description": "Raz 阅读等级词汇：Raz F",
+    "asset": "raz-F.json",
+    "language": "en"
+  },
+  {
+    "id": "raz-g",
+    "name": "raz G",
+    "description": "Raz 阅读等级词汇：Raz G",
+    "asset": "raz-G.json",
+    "language": "en"
+  },
+  {
+    "id": "raz-h",
+    "name": "raz H",
+    "description": "Raz 阅读等级词汇：Raz H",
+    "asset": "raz-H.json",
+    "language": "en"
+  },
+  {
+    "id": "raz-i",
+    "name": "raz I",
+    "description": "Raz 阅读等级词汇：Raz I",
+    "asset": "raz-I.json",
+    "language": "en"
+  },
+  {
+    "id": "raz-j",
+    "name": "raz J",
+    "description": "Raz 阅读等级词汇：Raz J",
+    "asset": "raz-J.json",
+    "language": "en"
+  },
+  {
+    "id": "raz-k",
+    "name": "raz K",
+    "description": "Raz 阅读等级词汇：Raz K",
+    "asset": "raz-K.json",
+    "language": "en"
+  },
+  {
+    "id": "raz-l",
+    "name": "raz L",
+    "description": "Raz 阅读等级词汇：Raz L",
+    "asset": "raz-L.json",
+    "language": "en"
+  },
+  {
+    "id": "raz-m",
+    "name": "raz M",
+    "description": "Raz 阅读等级词汇：Raz M",
+    "asset": "raz-M.json",
+    "language": "en"
+  },
+  {
+    "id": "raz-n",
+    "name": "raz N",
+    "description": "Raz 阅读等级词汇：Raz N",
+    "asset": "raz-N.json",
+    "language": "en"
+  },
+  {
+    "id": "raz-o",
+    "name": "raz O",
+    "description": "Raz 阅读等级词汇：Raz O",
+    "asset": "raz-O.json",
+    "language": "en"
+  },
+  {
+    "id": "raz-p",
+    "name": "raz P",
+    "description": "Raz 阅读等级词汇：Raz P",
+    "asset": "raz-P.json",
+    "language": "en"
+  },
+  {
+    "id": "raz-q",
+    "name": "raz Q",
+    "description": "Raz 阅读等级词汇：Raz Q",
+    "asset": "raz-Q.json",
+    "language": "en"
+  },
+  {
+    "id": "raz-r",
+    "name": "raz R",
+    "description": "Raz 阅读等级词汇：Raz R",
+    "asset": "raz-R.json",
+    "language": "en"
+  },
+  {
+    "id": "raz-s",
+    "name": "raz S",
+    "description": "Raz 阅读等级词汇：Raz S",
+    "asset": "raz-S.json",
+    "language": "en"
+  },
+  {
+    "id": "raz-t",
+    "name": "raz T",
+    "description": "Raz 阅读等级词汇：Raz T",
+    "asset": "raz-T.json",
+    "language": "en"
+  },
+  {
+    "id": "raz-u",
+    "name": "raz U",
+    "description": "Raz 阅读等级词汇：Raz U",
+    "asset": "raz-U.json",
+    "language": "en"
+  },
+  {
+    "id": "raz-v",
+    "name": "raz V",
+    "description": "Raz 阅读等级词汇：Raz V",
+    "asset": "raz-V.json",
+    "language": "en"
+  },
+  {
+    "id": "raz-w",
+    "name": "raz W",
+    "description": "Raz 阅读等级词汇：Raz W",
+    "asset": "raz-W.json",
+    "language": "en"
+  },
+  {
+    "id": "raz-x",
+    "name": "raz X",
+    "description": "Raz 阅读等级词汇：Raz X",
+    "asset": "raz-X.json",
+    "language": "en"
+  },
+  {
+    "id": "raz-y",
+    "name": "raz Y",
+    "description": "Raz 阅读等级词汇：Raz Y",
+    "asset": "raz-Y.json",
+    "language": "en"
+  },
+  {
+    "id": "raz-z",
+    "name": "raz Z",
+    "description": "Raz 阅读等级词汇：Raz Z",
+    "asset": "raz-Z.json",
+    "language": "en"
+  },
+  {
+    "id": "raz-z1",
+    "name": "raz Z1",
+    "description": "Raz 阅读等级词汇：Raz Z1",
+    "asset": "raz-Z1.json",
+    "language": "en"
+  },
+  {
+    "id": "raz-z2",
+    "name": "raz Z2",
+    "description": "Raz 阅读等级词汇：Raz Z2",
+    "asset": "raz-Z2.json",
+    "language": "en"
+  },
+  {
+    "id": "raz-all",
+    "name": "raz all",
+    "description": "Raz 阅读等级词汇：Raz All",
+    "asset": "raz-all.json",
+    "language": "en"
+  },
+  {
+    "id": "rust-hashmap",
+    "name": "rust hashmap",
+    "description": "编程词汇：Rust Hashmap",
+    "asset": "rust-hashmap.json",
+    "language": "code"
+  },
+  {
+    "id": "rust-keyword",
+    "name": "rust keyword",
+    "description": "编程词汇：Rust Keyword",
+    "asset": "rust-keyword.json",
+    "language": "code"
+  },
+  {
+    "id": "rust-string",
+    "name": "rust string",
+    "description": "编程词汇：Rust String",
+    "asset": "rust-string.json",
+    "language": "code"
+  },
+  {
+    "id": "rust-vector",
+    "name": "rust vector",
+    "description": "编程词汇：Rust Vector",
+    "asset": "rust-vector.json",
+    "language": "code"
+  },
+  {
+    "id": "self-study-english1",
+    "name": "self study English1",
+    "description": "英语词汇：Self Study English1",
+    "asset": "self-study_English1.json",
+    "language": "en"
+  },
+  {
+    "id": "self-study-english2",
+    "name": "self study English2",
+    "description": "英语词汇：Self Study English2",
+    "asset": "self-study_English2.json",
+    "language": "en"
+  },
+  {
+    "id": "self-study-english3",
+    "name": "self study English3",
+    "description": "英语词汇：Self Study English3",
+    "asset": "self-study_English3.json",
+    "language": "en"
+  },
+  {
+    "id": "shanghai-6-2-word",
+    "name": "shanghai 6 2 word",
+    "description": "英语词汇：Shanghai 6 2 Word",
+    "asset": "shanghai-6-2-word.json",
+    "language": "en"
+  },
+  {
+    "id": "suffix-word",
+    "name": "suffix word",
+    "description": "英语词汇：Suffix Word",
+    "asset": "suffix_word.json",
+    "language": "en"
+  },
+  {
+    "id": "tingshuokaoshi",
+    "name": "tingshuokaoshi",
+    "description": "英语词汇：Tingshuokaoshi",
+    "asset": "tingshuokaoshi.json",
+    "language": "en"
+  },
+  {
+    "id": "top2000words",
+    "name": "top2000words",
+    "description": "英语词汇：Top2000words",
+    "asset": "top2000words.json",
+    "language": "en"
+  },
+  {
+    "id": "voa",
+    "name": "voa",
+    "description": "VOA 英语词汇：Voa",
+    "asset": "voa.json",
+    "language": "en"
+  },
+  {
+    "id": "waiyan-xin-3-1",
+    "name": "waiyan xin 3 1",
+    "description": "英语词汇：Waiyan Xin 3 1",
+    "asset": "waiyan-xin-3-1.json",
+    "language": "en"
+  },
+  {
+    "id": "waiyan-xin-3-2",
+    "name": "waiyan xin 3 2",
+    "description": "英语词汇：Waiyan Xin 3 2",
+    "asset": "waiyan-xin-3-2.json",
+    "language": "en"
+  },
+  {
+    "id": "waiyan-xin-4-1",
+    "name": "waiyan xin 4 1",
+    "description": "英语词汇：Waiyan Xin 4 1",
+    "asset": "waiyan-xin-4-1.json",
+    "language": "en"
+  },
+  {
+    "id": "waiyan-xin-4-2",
+    "name": "waiyan xin 4 2",
+    "description": "英语词汇：Waiyan Xin 4 2",
+    "asset": "waiyan-xin-4-2.json",
+    "language": "en"
+  },
+  {
+    "id": "waiyan-xin-5-1",
+    "name": "waiyan xin 5 1",
+    "description": "英语词汇：Waiyan Xin 5 1",
+    "asset": "waiyan-xin-5-1.json",
+    "language": "en"
+  },
+  {
+    "id": "waiyan-xin-5-2",
+    "name": "waiyan xin 5 2",
+    "description": "英语词汇：Waiyan Xin 5 2",
+    "asset": "waiyan-xin-5-2.json",
+    "language": "en"
+  },
+  {
+    "id": "waiyan-xin-6-1",
+    "name": "waiyan xin 6 1",
+    "description": "英语词汇：Waiyan Xin 6 1",
+    "asset": "waiyan-xin-6-1.json",
+    "language": "en"
+  },
+  {
+    "id": "waiyan-xin-6-2",
+    "name": "waiyan xin 6 2",
+    "description": "英语词汇：Waiyan Xin 6 2",
+    "asset": "waiyan-xin-6-2.json",
+    "language": "en"
+  },
+  {
+    "id": "word-roots1",
+    "name": "word roots1",
+    "description": "英语词汇：Word Roots1",
+    "asset": "word_roots1.json",
+    "language": "en"
+  },
+  {
+    "id": "xinghuoqiaoji-4",
+    "name": "xinghuoqiaoji 4",
+    "description": "英语词汇：Xinghuoqiaoji 4",
+    "asset": "xinghuoqiaoji_4.json",
+    "language": "en"
+  },
+  {
+    "id": "xinghuoqiaoji-6",
+    "name": "xinghuoqiaoji 6",
+    "description": "英语词汇：Xinghuoqiaoji 6",
+    "asset": "xinghuoqiaoji_6.json",
+    "language": "en"
+  },
+  {
+    "id": "xueshiyingyu",
+    "name": "xueshiyingyu",
+    "description": "英语词汇：Xueshiyingyu",
+    "asset": "xueshiyingyu.json",
+    "language": "en"
+  },
+  {
+    "id": "zhuan-cha-ben",
+    "name": "zhuan cha ben",
+    "description": "英语词汇：Zhuan Cha Ben",
+    "asset": "zhuan-cha-ben.json",
+    "language": "en"
   }
 ]
