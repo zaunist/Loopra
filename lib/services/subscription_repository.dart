@@ -8,16 +8,19 @@ import '../models/subscription.dart';
 
 /// 封装 Creem.io 订阅 API 的访问逻辑。
 class SubscriptionRepository {
-  SubscriptionRepository({http.Client? httpClient}) : _httpClient = httpClient ?? http.Client();
+  SubscriptionRepository({http.Client? httpClient})
+    : _httpClient = httpClient ?? http.Client();
 
   static final Uri _defaultBaseUri = Uri.parse('https://api.creem.io');
   static const String _productPath = '/v1/products';
   static const String _productsSearchPath = '/v1/products/search';
   static const String _transactionsSearchPath = '/v1/transactions/search';
   static const String _checkoutPath = '/v1/checkouts';
+  static const String _customersPath = '/v1/customers';
 
   final http.Client _httpClient;
   final Random _random = Random();
+  final Map<String, String> _customerIdCache = <String, String>{};
 
   bool get isConfigured => AppConfig.hasCreemConfig;
 
@@ -34,7 +37,10 @@ class SubscriptionRepository {
 
     final Uri uri = _buildUri(path, queryParameters);
 
-    final http.Response response = await _httpClient.get(uri, headers: _headers());
+    final http.Response response = await _httpClient.get(
+      uri,
+      headers: _headers(),
+    );
     if (response.statusCode == 204) {
       return const <SubscriptionPlan>[];
     }
@@ -56,7 +62,8 @@ class SubscriptionRepository {
         continue;
       }
 
-      final String? billingType = (item['billing_type'] as String?)?.toLowerCase();
+      final String? billingType = (item['billing_type'] as String?)
+          ?.toLowerCase();
       if (billingType != 'onetime') {
         continue;
       }
@@ -78,19 +85,20 @@ class SubscriptionRepository {
       );
     }
 
-    plans.sort(
-      (SubscriptionPlan a, SubscriptionPlan b) {
-        if (a.price != null && b.price != null) {
-          return a.price!.compareTo(b.price!);
-        }
-        return a.name.compareTo(b.name);
-      },
-    );
+    plans.sort((SubscriptionPlan a, SubscriptionPlan b) {
+      if (a.price != null && b.price != null) {
+        return a.price!.compareTo(b.price!);
+      }
+      return a.name.compareTo(b.name);
+    });
 
     return plans;
   }
 
-  Future<SubscriptionStatus> fetchStatus({required String email}) async {
+  Future<SubscriptionStatus> fetchStatus({
+    required String email,
+    String? userId,
+  }) async {
     if (!isConfigured) {
       return const SubscriptionStatus.disabled();
     }
@@ -100,16 +108,25 @@ class SubscriptionRepository {
       return const SubscriptionStatus.pending();
     }
 
+    final String? customerId = await _resolveCustomerId(normalisedEmail);
+    if (customerId == null) {
+      return const SubscriptionStatus.inactive();
+    }
+
     final Map<String, String> queryParameters = <String, String>{
       'page_size': '50',
-      'customer_email': normalisedEmail,
-      'metadata.customerEmail': normalisedEmail,
-      'metadata.customer_email': normalisedEmail,
-    }..removeWhere((_, String value) => value.isEmpty);
+      'customer_id': customerId,
+    };
+    if (AppConfig.creemProductId.isNotEmpty) {
+      queryParameters['product_id'] = AppConfig.creemProductId;
+    }
 
     final Uri uri = _buildUri(_transactionsSearchPath, queryParameters);
 
-    final http.Response response = await _httpClient.get(uri, headers: _headers());
+    final http.Response response = await _httpClient.get(
+      uri,
+      headers: _headers(),
+    );
 
     if (response.statusCode == 404 || response.statusCode == 204) {
       return const SubscriptionStatus.inactive();
@@ -123,19 +140,24 @@ class SubscriptionRepository {
       return const SubscriptionStatus.inactive();
     }
 
-    List<Map<String, dynamic>> scoped = _filterTransactionsByEmail(items, normalisedEmail);
-    if (scoped.isEmpty) {
-      scoped = items;
-    }
-
-    scoped.sort(
+    final List<Map<String, dynamic>> ordered = List<Map<String, dynamic>>.from(
+      items,
+    );
+    ordered.sort(
       (Map<String, dynamic> a, Map<String, dynamic> b) =>
           _extractCreatedAt(b).compareTo(_extractCreatedAt(a)),
     );
 
     final Map<String, dynamic>? completed = _findTransactionByStatus(
-      scoped,
-      <String>{'completed', 'paid', 'success', 'succeeded', 'captured', 'fulfilled'},
+      ordered,
+      <String>{
+        'completed',
+        'paid',
+        'success',
+        'succeeded',
+        'captured',
+        'fulfilled',
+      },
     );
     if (completed != null) {
       final String? planId = _resolveProductId(completed);
@@ -145,10 +167,14 @@ class SubscriptionRepository {
       );
     }
 
-    final Map<String, dynamic>? pending = _findTransactionByStatus(
-      scoped,
-      <String>{'pending', 'processing', 'requires_action', 'requires_payment_method', 'authorized'},
-    );
+    final Map<String, dynamic>? pending =
+        _findTransactionByStatus(ordered, <String>{
+          'pending',
+          'processing',
+          'requires_action',
+          'requires_payment_method',
+          'authorized',
+        });
     if (pending != null) {
       return const SubscriptionStatus.pending();
     }
@@ -167,11 +193,7 @@ class SubscriptionRepository {
     }
 
     if (plan.type != SubscriptionPlanType.lifetime) {
-      throw ArgumentError.value(
-        plan.type,
-        'plan.type',
-        '当前仅支持一次性付费（终身会员）计划。',
-      );
+      throw ArgumentError.value(plan.type, 'plan.type', '当前仅支持一次性付费（终身会员）计划。');
     }
 
     final String normalisedEmail = _normaliseEmail(email);
@@ -179,17 +201,23 @@ class SubscriptionRepository {
       throw ArgumentError.value(email, 'email', '邮箱地址无效，无法创建订阅。');
     }
 
+    final String? normalisedUserId = _normaliseIdentifier(userId);
+
     final Map<String, dynamic> payload = <String, dynamic>{
       'product_id': plan.id,
       'units': 1,
       'request_id': _generateRequestId(normalisedEmail),
-      'customer': <String, String>{
-        'email': normalisedEmail,
-      },
+      'customer': <String, String>{'email': normalisedEmail},
       'metadata': <String, String>{
         'planId': plan.id,
         'customerEmail': normalisedEmail,
-        if (userId != null && userId.isNotEmpty) 'userId': userId,
+        'customer_email': normalisedEmail,
+        if (normalisedUserId != null) ...<String, String>{
+          'userId': normalisedUserId,
+          'user_id': normalisedUserId,
+          'customerId': normalisedUserId,
+          'customer_id': normalisedUserId,
+        },
       },
     };
     if (returnUrl != null && returnUrl.isNotEmpty) {
@@ -210,7 +238,8 @@ class SubscriptionRepository {
       throw StateError('Creem API 响应格式异常，未包含 checkout_url。');
     }
 
-    final String? checkoutUrl = decoded['checkout_url'] as String? ?? decoded['success_url'] as String?;
+    final String? checkoutUrl =
+        decoded['checkout_url'] as String? ?? decoded['success_url'] as String?;
     if (checkoutUrl == null || checkoutUrl.isEmpty) {
       throw StateError('Creem API 响应缺少 checkout_url。');
     }
@@ -226,7 +255,8 @@ class SubscriptionRepository {
     final Map<String, String> headers = <String, String>{
       'Accept': 'application/json',
     };
-    if (AppConfig.creemSendApiKeyFromClient && AppConfig.creemApiKey.isNotEmpty) {
+    if (AppConfig.creemSendApiKeyFromClient &&
+        AppConfig.creemApiKey.isNotEmpty) {
       headers['x-api-key'] = AppConfig.creemApiKey;
     }
     if (contentTypeJson) {
@@ -239,16 +269,17 @@ class SubscriptionRepository {
     final Uri base = _resolveBaseUri();
     final String combinedPath = _combinePath(base.path, path);
     final Map<String, String> mergedQuery = <String, String>{
-      if (base.hasQuery) ...base.queryParametersAll.map((String key, List<String> values) => MapEntry(key, values.isEmpty ? '' : values.last)),
+      if (base.hasQuery)
+        ...base.queryParametersAll.map(
+          (String key, List<String> values) =>
+              MapEntry(key, values.isEmpty ? '' : values.last),
+        ),
       if (queryParameters != null) ...queryParameters,
     };
     if (mergedQuery.isEmpty) {
       return base.replace(path: combinedPath);
     }
-    return base.replace(
-      path: combinedPath,
-      queryParameters: mergedQuery,
-    );
+    return base.replace(path: combinedPath, queryParameters: mergedQuery);
   }
 
   Uri _resolveBaseUri() {
@@ -268,7 +299,9 @@ class SubscriptionRepository {
       if (basePath.isEmpty || basePath == '/') {
         return '';
       }
-      return basePath.endsWith('/') ? basePath.substring(0, basePath.length - 1) : basePath;
+      return basePath.endsWith('/')
+          ? basePath.substring(0, basePath.length - 1)
+          : basePath;
     }();
     final String trimmedRelative = relativePath.isEmpty
         ? ''
@@ -298,6 +331,53 @@ class SubscriptionRepository {
       return null;
     }
     return jsonDecode(body);
+  }
+
+  Future<String?> _resolveCustomerId(String email) async {
+    final String normalisedEmail = _normaliseEmail(email);
+    if (normalisedEmail.isEmpty) {
+      return null;
+    }
+
+    final String cacheKey = normalisedEmail;
+    final String? cached = _customerIdCache[cacheKey];
+    if (cached != null && cached.isNotEmpty) {
+      return cached;
+    }
+
+    final String? fetchedId = await _retrieveCustomerIdByEmail(normalisedEmail);
+    if (fetchedId != null && fetchedId.isNotEmpty) {
+      _customerIdCache[cacheKey] = fetchedId;
+      return fetchedId;
+    }
+
+    return null;
+  }
+
+  Future<String?> _retrieveCustomerIdByEmail(String email) async {
+    final Uri uri = _buildUri(_customersPath, <String, String>{'email': email});
+    final http.Response response = await _httpClient.get(
+      uri,
+      headers: _headers(),
+    );
+    if (response.statusCode == 404 || response.statusCode == 204) {
+      return null;
+    }
+
+    _ensureSuccess(response, context: '查询客户失败');
+
+    final dynamic decoded = _decodeBody(response.body);
+    return _extractCustomerId(decoded);
+  }
+
+  String? _extractCustomerId(dynamic payload) {
+    if (payload is Map<String, dynamic>) {
+      final Object? id = payload['id'];
+      if (id is String && id.isNotEmpty) {
+        return id;
+      }
+    }
+    return null;
   }
 
   List<Map<String, dynamic>> _extractList(dynamic data) {
@@ -367,7 +447,8 @@ class SubscriptionRepository {
       if (orderType != null) {
         return orderType == 'onetime' || orderType == 'lifetime';
       }
-      final String? billingType = (order['billing_type'] as String?)?.toLowerCase();
+      final String? billingType = (order['billing_type'] as String?)
+          ?.toLowerCase();
       if (billingType != null) {
         return billingType == 'onetime';
       }
@@ -375,7 +456,9 @@ class SubscriptionRepository {
 
     final Object? metadata = item['metadata'];
     if (metadata is Map<String, dynamic>) {
-      final String? planType = _normaliseStatus(metadata['planType'] ?? metadata['plan_type']);
+      final String? planType = _normaliseStatus(
+        metadata['planType'] ?? metadata['plan_type'],
+      );
       if (planType == 'lifetime') {
         return true;
       }
@@ -411,104 +494,9 @@ class SubscriptionRepository {
     return null;
   }
 
-  List<Map<String, dynamic>> _filterTransactionsByEmail(
-    List<Map<String, dynamic>> items,
-    String email,
-  ) {
-    if (email.isEmpty) {
-      return items;
-    }
-    final List<Map<String, dynamic>> matches = <Map<String, dynamic>>[];
-    for (final Map<String, dynamic> item in items) {
-      if (_transactionMatchesEmail(item, email)) {
-        matches.add(item);
-      }
-    }
-    return matches;
-  }
-
-  bool _transactionMatchesEmail(Map<String, dynamic> item, String email) {
-    for (final String candidate in _extractEmailsFromTransaction(item)) {
-      if (candidate == email) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  Iterable<String> _extractEmailsFromTransaction(Map<String, dynamic> item) {
-    final Set<String> emails = <String>{};
-
-    void addCandidate(Object? value) {
-      if (value is! String) {
-        return;
-      }
-      final String normalised = _normaliseEmail(value);
-      if (normalised.isNotEmpty) {
-        emails.add(normalised);
-      }
-    }
-
-    addCandidate(item['customer_email']);
-    addCandidate(item['customerEmail']);
-
-    final Object? metadata = item['metadata'];
-    if (metadata is Map<String, dynamic>) {
-      addCandidate(metadata['customerEmail']);
-      addCandidate(metadata['customer_email']);
-      addCandidate(metadata['email']);
-    }
-
-    final Object? customer = item['customer'];
-    if (customer is Map<String, dynamic>) {
-      addCandidate(customer['email']);
-      addCandidate(customer['primary_email']);
-    }
-
-    final Object? order = item['order'];
-    if (order is Map<String, dynamic>) {
-      addCandidate(order['customer_email']);
-      addCandidate(order['customerEmail']);
-    }
-
-    final Object? billing = item['billing'];
-    if (billing is Map<String, dynamic>) {
-      addCandidate(billing['email']);
-    }
-
-    final String? fromRequestId = _extractEmailFromRequestId(item['request_id'] as String?);
-    if (fromRequestId != null) {
-      addCandidate(fromRequestId);
-    }
-
-    return emails;
-  }
-
-  String? _extractEmailFromRequestId(String? requestId) {
-    if (requestId == null || requestId.isEmpty) {
-      return null;
-    }
-    const String prefix = 'loopra_';
-    if (!requestId.startsWith(prefix)) {
-      return null;
-    }
-    final String rest = requestId.substring(prefix.length);
-    final int lastUnderscore = rest.lastIndexOf('_');
-    if (lastUnderscore <= 0) {
-      return null;
-    }
-    final String withoutRandom = rest.substring(0, lastUnderscore);
-    final int separatorIndex = withoutRandom.indexOf('_');
-    if (separatorIndex < 0 || separatorIndex + 1 >= withoutRandom.length) {
-      return null;
-    }
-    final String candidate = withoutRandom.substring(separatorIndex + 1);
-    final String normalised = _normaliseEmail(candidate);
-    return normalised.isEmpty ? null : normalised;
-  }
-
   int _extractCreatedAt(Map<String, dynamic> item) {
-    final Object? raw = item['created_at'] ?? item['createdAt'] ?? item['created'];
+    final Object? raw =
+        item['created_at'] ?? item['createdAt'] ?? item['created'];
     if (raw is num) {
       return raw.toInt();
     }
@@ -547,6 +535,17 @@ class SubscriptionRepository {
     return trimmed.toLowerCase();
   }
 
+  String? _normaliseIdentifier(Object? value) {
+    if (value == null) {
+      return null;
+    }
+    final String trimmed = value.toString().trim();
+    if (trimmed.isEmpty) {
+      return null;
+    }
+    return trimmed;
+  }
+
   num? _toNum(Object? value) {
     if (value is num) {
       return value;
@@ -578,7 +577,9 @@ class SubscriptionRepository {
         : identifier.replaceAll(RegExp(r'[^a-zA-Z0-9@._-]'), '');
     if (sanitized.isNotEmpty) {
       buffer.write('_');
-      buffer.write(sanitized.length > 40 ? sanitized.substring(0, 40) : sanitized);
+      buffer.write(
+        sanitized.length > 40 ? sanitized.substring(0, 40) : sanitized,
+      );
     }
     buffer.write('_');
     for (int i = 0; i < 8; i++) {

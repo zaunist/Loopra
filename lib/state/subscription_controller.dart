@@ -127,7 +127,10 @@ class SubscriptionController extends ChangeNotifier {
       final String? email = _authController.email;
       if (email != null && email.isNotEmpty) {
         try {
-          _status = await _repository.fetchStatus(email: email);
+          _status = await _repository.fetchStatus(
+            email: email,
+            userId: _authController.user?.id,
+          );
           _note = null;
         } on UnimplementedError catch (error) {
           _status = const SubscriptionStatus.pending();

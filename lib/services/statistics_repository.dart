@@ -22,7 +22,8 @@ class StatisticsRepository {
 
   Future<PracticeStatisticsSnapshot> loadSnapshot() async {
     await StatisticsStorage.ensureInitialized();
-    Map<String, dynamic> raw = await StatisticsStorage.loadStatistics();
+    final String profileId = _storageProfileId();
+    Map<String, dynamic> raw = await StatisticsStorage.loadStatistics(profileId: profileId);
     PracticeStatisticsSnapshot snapshot = PracticeStatisticsSnapshot.fromJson(raw);
 
     if (_shouldSync()) {
@@ -33,7 +34,7 @@ class StatisticsRepository {
           if (remote != null && remote.isNotEmpty) {
             snapshot = PracticeStatisticsSnapshot.fromJson(remote);
             raw = remote;
-            await StatisticsStorage.saveStatistics(raw);
+            await StatisticsStorage.saveStatistics(raw, profileId: profileId);
           } else if (snapshot.sessions.isNotEmpty) {
             await _remoteService.upsertSnapshot(userId, snapshot.toJson());
           }
@@ -48,7 +49,7 @@ class StatisticsRepository {
 
   Future<void> saveSnapshot(PracticeStatisticsSnapshot snapshot) async {
     await StatisticsStorage.ensureInitialized();
-    await StatisticsStorage.saveStatistics(snapshot.toJson());
+    await StatisticsStorage.saveStatistics(snapshot.toJson(), profileId: _storageProfileId());
     await _syncRemoteSnapshot(snapshot);
   }
 
@@ -69,6 +70,14 @@ class StatisticsRepository {
 
   bool _shouldSync() {
     return _remoteService.isAvailable && _canSyncProvider();
+  }
+
+  String _storageProfileId() {
+    final String? userId = _currentUserId();
+    if (userId == null || userId.trim().isEmpty) {
+      return 'anonymous';
+    }
+    return 'user_${userId.trim()}';
   }
 
   String? _currentUserId() {

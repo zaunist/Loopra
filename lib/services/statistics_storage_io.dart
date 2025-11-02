@@ -3,8 +3,9 @@ import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
 
-File? _statsFile;
+Directory? _baseDirectory;
 bool _initialized = false;
+final Map<String, File> _profileFiles = <String, File>{};
 
 Future<void> ensureInitialized() async {
   if (_initialized) {
@@ -16,22 +17,12 @@ Future<void> ensureInitialized() async {
   if (!await directory.exists()) {
     await directory.create(recursive: true);
   }
-  final File statsFile = File('${directory.path}${separator}statistics.json');
-  if (!await statsFile.exists()) {
-    await statsFile.writeAsString(jsonEncode(_emptyPayload));
-  } else if ((await statsFile.length()) == 0) {
-    await statsFile.writeAsString(jsonEncode(_emptyPayload));
-  }
-  _statsFile = statsFile;
+  _baseDirectory = directory;
   _initialized = true;
 }
 
-Future<Map<String, dynamic>> loadStatistics() async {
-  await ensureInitialized();
-  final File? file = _statsFile;
-  if (file == null) {
-    return _emptyPayload;
-  }
+Future<Map<String, dynamic>> loadStatistics(String profileId) async {
+  final File file = await _ensureProfileFile(profileId);
   try {
     final String contents = await file.readAsString();
     if (contents.trim().isEmpty) {
@@ -40,8 +31,7 @@ Future<Map<String, dynamic>> loadStatistics() async {
     final dynamic decoded = jsonDecode(contents);
     if (decoded is Map) {
       return decoded.map<String, dynamic>(
-        (dynamic key, dynamic value) =>
-            MapEntry<String, dynamic>(key.toString(), value),
+        (dynamic key, dynamic value) => MapEntry<String, dynamic>(key.toString(), value),
       );
     }
   } catch (_) {
@@ -50,17 +40,46 @@ Future<Map<String, dynamic>> loadStatistics() async {
   return _emptyPayload;
 }
 
-Future<void> saveStatistics(Map<String, dynamic> data) async {
-  await ensureInitialized();
-  final File? file = _statsFile;
-  if (file == null) {
-    return;
-  }
+Future<void> saveStatistics(String profileId, Map<String, dynamic> data) async {
+  final File file = await _ensureProfileFile(profileId);
   final String payload = jsonEncode(data);
   await file.writeAsString(payload);
 }
 
+Future<void> clearStatistics(String profileId) async {
+  final File file = await _ensureProfileFile(profileId);
+  await file.writeAsString(jsonEncode(_emptyPayload));
+}
+
+Future<File> _ensureProfileFile(String profileId) async {
+  await ensureInitialized();
+  final Directory? directory = _baseDirectory;
+  if (directory == null) {
+    throw StateError('Statistics storage directory unavailable.');
+  }
+  final File? existing = _profileFiles[profileId];
+  if (existing != null) {
+    return existing;
+  }
+  final String sanitized = _sanitizeProfile(profileId);
+  final String separator = Platform.pathSeparator;
+  final File file = File('${directory.path}${separator}statistics_$sanitized.json');
+  if (!await file.exists() || (await file.length()) == 0) {
+    await file.writeAsString(jsonEncode(_emptyPayload));
+  }
+  _profileFiles[profileId] = file;
+  return file;
+}
+
+String _sanitizeProfile(String profileId) {
+  if (profileId.isEmpty) {
+    return 'anonymous';
+  }
+  final String sanitized = profileId.replaceAll(RegExp(r'[^a-z0-9_-]'), '_');
+  return sanitized.isEmpty ? 'anonymous' : sanitized;
+}
+
 Map<String, dynamic> get _emptyPayload => <String, dynamic>{
-  'version': 1,
-  'sessions': <dynamic>[],
-};
+      'version': 1,
+      'sessions': <dynamic>[],
+    };

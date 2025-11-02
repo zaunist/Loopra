@@ -446,7 +446,9 @@ class _AccountSyncSection extends StatelessWidget {
             _,
           ) {
             final bool isBusy =
-                auth.isLoading || subscription.isLoading || subscription.isCreatingCheckout;
+                auth.isLoading ||
+                subscription.isLoading ||
+                subscription.isCreatingCheckout;
             if (!auth.isConfigured) {
               return Card(
                 margin: EdgeInsets.zero,
@@ -558,9 +560,13 @@ class _AccountSyncSection extends StatelessWidget {
                         children: <Widget>[
                           if (!subscription.status.isActive)
                             FilledButton(
-                              onPressed: isBusy || subscription.availablePlans.isEmpty
+                              onPressed:
+                                  isBusy || subscription.availablePlans.isEmpty
                                   ? null
-                                  : () => _startLifetimeSubscription(context, subscription),
+                                  : () => _startLifetimeSubscription(
+                                      context,
+                                      subscription,
+                                    ),
                               child: Text(subscribeLabel),
                             ),
                           TextButton(
@@ -641,20 +647,21 @@ class _AccountSyncSection extends StatelessWidget {
     SubscriptionController subscription,
   ) async {
     final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
-    final SubscriptionPlan? plan =
-        _selectLifetimePlan(subscription.availablePlans);
+    final SubscriptionPlan? plan = _selectLifetimePlan(
+      subscription.availablePlans,
+    );
     if (plan == null) {
-      messenger.showSnackBar(
-        const SnackBar(content: Text('暂无可用订阅计划，请稍后再试。')),
-      );
+      messenger.showSnackBar(const SnackBar(content: Text('暂无可用订阅计划，请稍后再试。')));
       return;
     }
 
     try {
-      final Uri checkoutUrl =
-          await subscription.createCheckoutSession(plan: plan);
-      final LaunchMode mode =
-          kIsWeb ? LaunchMode.platformDefault : LaunchMode.externalApplication;
+      final Uri checkoutUrl = await subscription.createCheckoutSession(
+        plan: plan,
+      );
+      final LaunchMode mode = kIsWeb
+          ? LaunchMode.platformDefault
+          : LaunchMode.externalApplication;
       final bool launched = await launchUrl(checkoutUrl, mode: mode);
       if (!launched) {
         messenger.showSnackBar(
@@ -662,15 +669,14 @@ class _AccountSyncSection extends StatelessWidget {
         );
       }
     } catch (error) {
-      messenger.showSnackBar(
-        SnackBar(content: Text('订阅失败：$error')),
-      );
+      messenger.showSnackBar(SnackBar(content: Text('订阅失败：$error')));
     }
   }
 
   String _subscribeButtonLabel(SubscriptionController subscription) {
-    final SubscriptionPlan? plan =
-        _selectLifetimePlan(subscription.availablePlans);
+    final SubscriptionPlan? plan = _selectLifetimePlan(
+      subscription.availablePlans,
+    );
     if (plan == null) {
       return '订阅永久会员';
     }
@@ -678,7 +684,7 @@ class _AccountSyncSection extends StatelessWidget {
     if (priceLabel.isEmpty) {
       return '订阅永久会员';
     }
-    return '订阅永久会员（$priceLabel）';
+    return '订阅永久会员';
   }
 
   SubscriptionPlan? _selectLifetimePlan(List<SubscriptionPlan> plans) {
@@ -700,7 +706,9 @@ class _AccountSyncSection extends StatelessWidget {
     }
     final double value = plan.price!.toDouble();
     final bool isWhole = value == value.truncateToDouble();
-    final String amount = isWhole ? value.toStringAsFixed(0) : value.toStringAsFixed(2);
+    final String amount = isWhole
+        ? value.toStringAsFixed(0)
+        : value.toStringAsFixed(2);
     return '$amount ${plan.currency}';
   }
 }
