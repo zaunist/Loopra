@@ -38,11 +38,6 @@ Future<void> saveStatistics(String profileId, Map<String, dynamic> data) async {
   storage.setItem(_buildKey(profileId), jsonEncode(data));
 }
 
-Future<void> clearStatistics(String profileId) async {
-  final web.Storage? storage = _getStorage();
-  storage?.removeItem(_buildKey(profileId));
-}
-
 String _buildKey(String profileId) => '$_storageKeyPrefix::$profileId';
 
 web.Storage? _getStorage() {

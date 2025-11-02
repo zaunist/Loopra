@@ -46,11 +46,6 @@ Future<void> saveStatistics(String profileId, Map<String, dynamic> data) async {
   await file.writeAsString(payload);
 }
 
-Future<void> clearStatistics(String profileId) async {
-  final File file = await _ensureProfileFile(profileId);
-  await file.writeAsString(jsonEncode(_emptyPayload));
-}
-
 Future<File> _ensureProfileFile(String profileId) async {
   await ensureInitialized();
   final Directory? directory = _baseDirectory;

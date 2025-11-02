@@ -8,5 +8,3 @@ Future<Map<String, dynamic>> loadStatistics(String profileId) async => <String, 
 Future<void> saveStatistics(String profileId, Map<String, dynamic> data) async {
   throw UnsupportedError('Statistics persistence is not available on this platform.');
 }
-
-Future<void> clearStatistics(String profileId) async {}

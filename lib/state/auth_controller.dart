@@ -17,8 +17,6 @@ class AuthResult {
   final bool requiresVerification;
   final String? message;
 
-  static const AuthResult successResult = AuthResult(success: true);
-
   const AuthResult.success({String? message})
       : this(
           success: true,

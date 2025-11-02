@@ -13,9 +13,6 @@ class StatisticsStorage {
   static Future<void> saveStatistics(Map<String, dynamic> data, {String? profileId}) =>
       impl.saveStatistics(_normaliseProfileId(profileId), data);
 
-  static Future<void> clearStatistics({String? profileId}) =>
-      impl.clearStatistics(_normaliseProfileId(profileId));
-
   static String _normaliseProfileId(String? raw) {
     final String trimmed = raw?.trim() ?? '';
     if (trimmed.isEmpty) {

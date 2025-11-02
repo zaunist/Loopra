@@ -125,8 +125,6 @@ class TypingController extends ChangeNotifier {
 
   bool get canManageDictionaries => _repository.supportsDictionaryManagement;
 
-  bool get canDeleteSelectedDictionary => _selectedDictionary?.isCustom == true;
-
   int get selectedChapter => _selectedChapter;
 
   int get chapterCount => _chapterCount;
@@ -173,13 +171,7 @@ class TypingController extends ChangeNotifier {
 
   int get completedWords => _completedWords;
 
-  int get remainingWords => _chapterWords.length - _currentIndex - (_isFinished ? 0 : 1);
-
   int get totalWords => _chapterWords.length;
-
-  int get correctKeystrokes => _correctKeystrokes;
-
-  int get wrongKeystrokes => _wrongKeystrokes;
 
   double get accuracy {
     final int total = _correctKeystrokes + _wrongKeystrokes;
@@ -200,13 +192,7 @@ class TypingController extends ChangeNotifier {
   WordEntry? get currentWord =>
       _currentIndex >= 0 && _currentIndex < _chapterWords.length ? _chapterWords[_currentIndex] : null;
 
-  List<WordEntry> get words => _chapterWords;
-
-  int get currentIndex => _currentIndex;
-
   List<LetterState> get letterStates => _letterStates;
-
-  String get input => _input;
 
   bool get canSkipCurrentWord => _wrongAttempts >= 4 && !_isFinished && !_isLoading && currentWord != null;
 
