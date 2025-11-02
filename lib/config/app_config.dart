@@ -23,7 +23,7 @@ class AppConfig {
   );
   static const String creemApiBaseUrl = String.fromEnvironment(
     'CREEM_API_BASE_URL',
-    defaultValue: 'https://creem.mdzz.uk',
+    defaultValue: '',
   );
   static const bool creemSendApiKeyFromClient = bool.fromEnvironment(
     'CREEM_SEND_API_KEY',
