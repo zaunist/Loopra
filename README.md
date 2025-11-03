@@ -55,6 +55,12 @@ flutter build ios --release --no-codesign
 
 GitHub Actions 中的 `.github/workflows/build.yml` 已配置上述目标的自动构建与打包。
 
+## 支付测试说明
+
+本项目已接入 creem.io 的测试模式，完全免费，仅用于体验支付流程。你可以使用 Stripe 提供的测试卡完成订阅，具体卡号与操作方式请参考 [Stripe 测试卡文档](https://docs.stripe.com/testing)。
+
+主要就是卡号，支付卡号写 `4242 4242 4242 4242`，有效期填写未来的任意一个日期，其它的选项都随便填就好。
+
 ## 使用技巧
 
 - **章节管理**：在「设置」或桌面端顶部控件中选择词库与章节，完成后可一键进入下一章。

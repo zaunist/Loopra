@@ -43,8 +43,8 @@ class PronunciationAudioPlayer {
   }
 
   Future<void> stop() async {
-    final web.SpeechSynthesis? synthesis = web.window.speechSynthesis;
-    synthesis?.cancel();
+    final web.SpeechSynthesis synthesis = web.window.speechSynthesis;
+    synthesis.cancel();
 
     final web.HTMLAudioElement? element = _element;
     if (element == null) {
@@ -65,21 +65,16 @@ class PronunciationAudioPlayer {
     await stop();
   }
 
-  Future<bool> speakWithWebSpeech(
-    String text, {
-    String? languageCode,
-  }) async {
-    final web.SpeechSynthesis? synthesis = web.window.speechSynthesis;
-    if (synthesis == null) {
-      return false;
-    }
+  Future<bool> speakWithWebSpeech(String text, {String? languageCode}) async {
+    final web.SpeechSynthesis synthesis = web.window.speechSynthesis;
     final String trimmed = text.trim();
     if (trimmed.isEmpty) {
       return false;
     }
     await stop();
-    final web.SpeechSynthesisUtterance utterance =
-        web.SpeechSynthesisUtterance(trimmed);
+    final web.SpeechSynthesisUtterance utterance = web.SpeechSynthesisUtterance(
+      trimmed,
+    );
     if (languageCode != null && languageCode.isNotEmpty) {
       utterance.lang = languageCode;
     }

@@ -107,7 +107,8 @@ class TypingController extends ChangeNotifier {
 
     final List<DictionaryMeta> dictionaries = await _repository.loadManifest();
     _dictionaries = dictionaries;
-    _selectedDictionary = _findDictionaryById(dictionaries, _defaultDictionaryId) ??
+    _selectedDictionary =
+        _findDictionaryById(dictionaries, _defaultDictionaryId) ??
         (dictionaries.isNotEmpty ? dictionaries.first : null);
 
     if (_selectedDictionary != null) {
@@ -129,7 +130,8 @@ class TypingController extends ChangeNotifier {
 
   int get chapterCount => _chapterCount;
 
-  bool get hasNextChapter => _chapterCount > 0 && (_selectedChapter + 1) < _chapterCount;
+  bool get hasNextChapter =>
+      _chapterCount > 0 && (_selectedChapter + 1) < _chapterCount;
 
   bool get isLoading => _isLoading;
 
@@ -164,7 +166,9 @@ class TypingController extends ChangeNotifier {
     if (dict == null) {
       return false;
     }
-    return _audioService.supportsPronunciationVariants(dict.normalizedLanguageCode);
+    return _audioService.supportsPronunciationVariants(
+      dict.normalizedLanguageCode,
+    );
   }
 
   int get elapsedSeconds => _elapsedSeconds;
@@ -190,11 +194,14 @@ class TypingController extends ChangeNotifier {
   }
 
   WordEntry? get currentWord =>
-      _currentIndex >= 0 && _currentIndex < _chapterWords.length ? _chapterWords[_currentIndex] : null;
+      _currentIndex >= 0 && _currentIndex < _chapterWords.length
+      ? _chapterWords[_currentIndex]
+      : null;
 
   List<LetterState> get letterStates => _letterStates;
 
-  bool get canSkipCurrentWord => _wrongAttempts >= 4 && !_isFinished && !_isLoading && currentWord != null;
+  bool get canSkipCurrentWord =>
+      _wrongAttempts >= 4 && !_isFinished && !_isLoading && currentWord != null;
 
   bool get isSessionReady => _chapterWords.isNotEmpty;
 
@@ -213,7 +220,8 @@ class TypingController extends ChangeNotifier {
     if (_lastAppliedSessionId == latest.id) {
       return;
     }
-    if (_selectedDictionary?.id == latest.dictionaryId && _selectedChapter == latest.chapterIndex) {
+    if (_selectedDictionary?.id == latest.dictionaryId &&
+        _selectedChapter == latest.chapterIndex) {
       _lastAppliedSessionId = latest.id;
       return;
     }
@@ -384,11 +392,13 @@ class TypingController extends ChangeNotifier {
     if (pronunciationText == null) {
       return;
     }
-    unawaited(_audioService.playPronunciation(
-      pronunciationText,
-      variant: _pronunciationVariant,
-      languageCode: dict.normalizedLanguageCode,
-    ));
+    unawaited(
+      _audioService.playPronunciation(
+        pronunciationText,
+        variant: _pronunciationVariant,
+        languageCode: dict.normalizedLanguageCode,
+      ),
+    );
   }
 
   void toggleTyping() {
@@ -435,7 +445,9 @@ class TypingController extends ChangeNotifier {
       return true;
     }
     final HardwareKeyboard keyboard = HardwareKeyboard.instance;
-    if (keyboard.isControlPressed || keyboard.isAltPressed || keyboard.isMetaPressed) {
+    if (keyboard.isControlPressed ||
+        keyboard.isAltPressed ||
+        keyboard.isMetaPressed) {
       return true;
     }
 
@@ -488,8 +500,12 @@ class TypingController extends ChangeNotifier {
 
     final int index = _input.length;
     final String expectedChar = expected[index];
-    final String normalizedExpected = _ignoreCase ? expectedChar.toLowerCase() : expectedChar;
-    final String normalizedInput = _ignoreCase ? effectiveChar.toLowerCase() : effectiveChar;
+    final String normalizedExpected = _ignoreCase
+        ? expectedChar.toLowerCase()
+        : expectedChar;
+    final String normalizedInput = _ignoreCase
+        ? effectiveChar.toLowerCase()
+        : effectiveChar;
 
     if (normalizedInput == normalizedExpected) {
       _correctKeystrokes += 1;
@@ -558,7 +574,10 @@ class TypingController extends ChangeNotifier {
       return;
     }
 
-    final DictionaryMeta? dictionary = _findDictionaryById(_dictionaries, session.dictionaryId);
+    final DictionaryMeta? dictionary = _findDictionaryById(
+      _dictionaries,
+      session.dictionaryId,
+    );
     if (dictionary == null) {
       return;
     }
@@ -592,8 +611,12 @@ class TypingController extends ChangeNotifier {
     bool ignorePreviousSelection = false,
     bool refresh = true,
   }) async {
-    final String? previousId = ignorePreviousSelection ? null : _selectedDictionary?.id;
-    final List<DictionaryMeta> fetched = await _repository.loadManifest(refresh: refresh);
+    final String? previousId = ignorePreviousSelection
+        ? null
+        : _selectedDictionary?.id;
+    final List<DictionaryMeta> fetched = await _repository.loadManifest(
+      refresh: refresh,
+    );
     _dictionaries = fetched;
 
     DictionaryMeta? next;
@@ -603,9 +626,7 @@ class TypingController extends ChangeNotifier {
     if (next == null && previousId != null) {
       next = _findDictionaryById(fetched, previousId);
     }
-    if (next == null) {
-      next = _findDictionaryById(fetched, _defaultDictionaryId);
-    }
+    next ??= _findDictionaryById(fetched, _defaultDictionaryId);
     next ??= fetched.isNotEmpty ? fetched.first : null;
 
     final bool dictionaryChanged = next?.id != previousId;
@@ -655,7 +676,10 @@ class TypingController extends ChangeNotifier {
       _autoPronunciationEnabled = false;
     }
 
-    final List<WordEntry> newWords = await _repository.loadChapter(id: meta.id, chapter: _selectedChapter);
+    final List<WordEntry> newWords = await _repository.loadChapter(
+      id: meta.id,
+      chapter: _selectedChapter,
+    );
     _chapterWords = newWords;
     _chapterCount = await _repository.chapterCount(meta.id);
     _currentIndex = 0;
@@ -727,8 +751,12 @@ class TypingController extends ChangeNotifier {
 
     final String effectiveChar = character[0];
     final String expectedChar = expected[0];
-    final String normalizedExpected = _ignoreCase ? expectedChar.toLowerCase() : expectedChar;
-    final String normalizedInput = _ignoreCase ? effectiveChar.toLowerCase() : effectiveChar;
+    final String normalizedExpected = _ignoreCase
+        ? expectedChar.toLowerCase()
+        : expectedChar;
+    final String normalizedInput = _ignoreCase
+        ? effectiveChar.toLowerCase()
+        : effectiveChar;
     return normalizedInput != normalizedExpected;
   }
 
@@ -763,7 +791,8 @@ class TypingController extends ChangeNotifier {
     final int completed = _completedWords > total ? total : _completedWords;
     final DateTime completedAt = DateTime.now();
     final DateTime startedAt =
-        _sessionStartedAt ?? completedAt.subtract(Duration(seconds: _elapsedSeconds));
+        _sessionStartedAt ??
+        completedAt.subtract(Duration(seconds: _elapsedSeconds));
 
     final PracticeSessionRecord session = PracticeSessionRecord(
       id: '${dictionary.id}-${completedAt.microsecondsSinceEpoch}',
@@ -820,11 +849,13 @@ class TypingController extends ChangeNotifier {
     if (pronunciationText == null) {
       return;
     }
-    unawaited(_audioService.playPronunciation(
-      pronunciationText,
-      variant: _pronunciationVariant,
-      languageCode: dict.normalizedLanguageCode,
-    ));
+    unawaited(
+      _audioService.playPronunciation(
+        pronunciationText,
+        variant: _pronunciationVariant,
+        languageCode: dict.normalizedLanguageCode,
+      ),
+    );
   }
 
   void _finishSession() {
@@ -852,10 +883,12 @@ class TypingController extends ChangeNotifier {
     // some providers expect phonetic text (e.g. Japanese notation),
     // while others require the original headword.
     final PronunciationVariant variant = _pronunciationVariant;
-    final bool variantsSupported =
-        _audioService.supportsPronunciationVariants(dictionary.normalizedLanguageCode);
-    final bool preferPhoneticInput =
-        _audioService.prefersPhoneticInput(dictionary.normalizedLanguageCode);
+    final bool variantsSupported = _audioService.supportsPronunciationVariants(
+      dictionary.normalizedLanguageCode,
+    );
+    final bool preferPhoneticInput = _audioService.prefersPhoneticInput(
+      dictionary.normalizedLanguageCode,
+    );
 
     if (preferPhoneticInput) {
       if (variantsSupported) {
@@ -886,7 +919,10 @@ class TypingController extends ChangeNotifier {
 
     final String languageCode = dictionary.normalizedLanguageCode;
     for (final String? candidate in candidates) {
-      final String? normalized = _normalizePronunciationCandidate(candidate, languageCode);
+      final String? normalized = _normalizePronunciationCandidate(
+        candidate,
+        languageCode,
+      );
       if (normalized != null) {
         return normalized;
       }
